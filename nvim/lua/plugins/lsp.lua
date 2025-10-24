@@ -81,8 +81,14 @@ return {
                     { name = "nvim_lsp" },
                 },
                 mapping = cmp.mapping.preset.insert({
-                    ["<CR>"] = cmp.mapping.confirm({ select = false }),
+                    ["<CR>"] = cmp.mapping.confirm({ select = false }), -- confirm
                     ["<C-Space>"] = cmp.mapping.complete(),
+
+                    -- ↓ add these ↓
+                    ["<S-j>"] = cmp.mapping.select_next_item(),
+                    ["<S-k>"] = cmp.mapping.select_prev_item(),
+                    ["<Down>"] = cmp.mapping.select_next_item(),
+                    ["<Up>"] = cmp.mapping.select_prev_item(),
                 }),
                 snippet = {
                     expand = function(args)
