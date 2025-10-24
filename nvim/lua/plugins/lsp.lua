@@ -85,8 +85,8 @@ return {
                     ["<C-Space>"] = cmp.mapping.complete(),
 
                     -- ↓ add these ↓
-                    ["<S-j>"] = cmp.mapping.select_next_item(),
-                    ["<S-k>"] = cmp.mapping.select_prev_item(),
+                    ["<D-k>"] = cmp.mapping.select_prev_item(),
+                    ["<D-j>"] = cmp.mapping.select_next_item(),
                     ["<Down>"] = cmp.mapping.select_next_item(),
                     ["<Up>"] = cmp.mapping.select_prev_item(),
                 }),
