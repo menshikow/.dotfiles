@@ -27,7 +27,7 @@ source $ZSH/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 source $ZSH/custom/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 
 # Some useful aliases
-alias n='nvim'
+alias vim='nvim'
 alias ll='ls -la'
 alias gs='git status'
 alias gd='git diff'
