@@ -2,7 +2,7 @@
   "buffer_font_features": {
     "calt": false
   },
-  "buffer_font_family": "JetBrainsMono Nerd Font Mono",
+  "buffer_font_family": "JetBrainsMono Nerd Font",
   "cursor_blink": false,
   "prettier": {
     "allowed": false
@@ -13,7 +13,7 @@
     "dock": "right"
   },
   "cursor_shape": "block",
-  "ui_font_family": "JetBrainsMono Nerd Font Mono",
+  "ui_font_family": "JetBrainsMono Nerd Font",
   "icon_theme": "Symbols Icon Theme",
   "vim_mode": true,
   "ui_font_size": 16,
@@ -21,7 +21,7 @@
   "theme": {
     "mode": "dark",
     "light": "One Light",
-    "dark": "Gruvbox Dark Soft"
+    "dark": "Tokyo Night"
   },
   "git": {
     "inline_blame": {
