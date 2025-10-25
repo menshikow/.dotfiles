@@ -2,7 +2,7 @@
   "buffer_font_features": {
     "calt": false
   },
-  "buffer_font_family": ".ZedMono",
+  "buffer_font_family": "JetBrainsMono Nerd Font Mono",
   "cursor_blink": false,
   "prettier": {
     "allowed": false
@@ -13,15 +13,15 @@
     "dock": "right"
   },
   "cursor_shape": "block",
-  "ui_font_family": ".ZedSans",
+  "ui_font_family": "JetBrainsMono Nerd Font Mono",
   "icon_theme": "Symbols Icon Theme",
   "vim_mode": true,
   "ui_font_size": 16,
-  "buffer_font_size": 19.0,
+  "buffer_font_size": 17.0,
   "theme": {
     "mode": "dark",
     "light": "One Light",
-    "dark": "Tokyo Night"
+    "dark": "Gruvbox Dark Soft"
   },
   "git": {
     "inline_blame": {
@@ -31,5 +31,7 @@
   "scrollbar": {
     "show": "never"
   },
-  "relative_line_numbers": true
+  "relative_line_numbers": true,
+  "use_auto_surround": false,
+  "use_autoclose": false
 }
