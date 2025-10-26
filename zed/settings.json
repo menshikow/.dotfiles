@@ -21,7 +21,7 @@
   "theme": {
     "mode": "dark",
     "light": "One Light",
-    "dark": "Tokyo Night"
+    "dark": "Gruvbox Dark Hard"
   },
   "git": {
     "inline_blame": {

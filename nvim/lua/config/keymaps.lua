@@ -30,12 +30,12 @@ map("n", "<Esc>", "<cmd>nohlsearch<CR>", opts)
 
 -- Presenter mode toggle (you could make this a toggle)
 map("n", "<leader>;;", function()
-  vim.o.background = "light"
-  vim.cmd.colorscheme("retrobox")
+    vim.o.background = "light"
+    vim.cmd.colorscheme("retrobox")
 end, opts)
+
 
 -- === Diagnostics ===
 map("n", "gl", vim.diagnostic.open_float, opts)
 map("n", "[d", vim.diagnostic.goto_prev, opts)
 map("n", "]d", vim.diagnostic.goto_next, opts)
-
