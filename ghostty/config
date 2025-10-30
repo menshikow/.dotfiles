@@ -1,6 +1,6 @@
 theme = Gruvbox Dark 
 font-family = "JetBrainsMono Nerd Font"
-font-size = 17
+font-size = 18
 mouse-hide-while-typing = true
 fullscreen = true
 font-feature = -calt, -liga, -dlig
