@@ -38,7 +38,6 @@ return {
 
             vim.cmd.colorscheme("rose-pine")
 
-            -- hard override in case something else resets highlights
             vim.api.nvim_set_hl(0, "Normal", { bg = "#000000" })
             vim.api.nvim_set_hl(0, "NormalNC", { bg = "#000000" })
         end,
