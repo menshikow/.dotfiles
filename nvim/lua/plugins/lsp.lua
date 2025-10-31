@@ -7,8 +7,7 @@ return {
                 { path = '${3rd}/luv/library', words = { 'vim%.uv' } },
             },
         },
-    },
-    {
+    }, {
         "neovim/nvim-lspconfig",
         dependencies = {
             { "williamboman/mason.nvim", opts = {} },
@@ -84,7 +83,7 @@ return {
                     ["<CR>"] = cmp.mapping.confirm({ select = false }), -- confirm
                     ["<C-Space>"] = cmp.mapping.complete(),
 
-                    -- ↓ add these ↓
+                    -- moving by autosaggions
                     ["<D-k>"] = cmp.mapping.select_prev_item(),
                     ["<D-j>"] = cmp.mapping.select_next_item(),
                     ["<Down>"] = cmp.mapping.select_next_item(),
