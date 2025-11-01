@@ -1,8 +1,9 @@
-theme = Gruvbox Dark 
-font-family = "NotoSansMono"
+theme = dark:Rose Pine,light:Rose Pine Dawn
+font-family = "JetBrains Mono"
 font-size = 18
 mouse-hide-while-typing = true
 fullscreen = true
 font-feature = -calt, -liga, -dlig
 cursor-style = block
+background = #000000
 
