@@ -1,5 +1,4 @@
-theme = dark:Rose Pine,light:Rose Pine Dawn
-font-family = "JetBrains Mono"
+font-family = "NotoSans Mono"
 font-size = 18
 mouse-hide-while-typing = true
 fullscreen = true
