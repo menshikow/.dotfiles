@@ -101,8 +101,8 @@ return {
                     ["<C-Space>"] = cmp.mapping.complete(),
 
                     -- moving by suggestions
-                    ["<D-k>"] = cmp.mapping.select_prev_item(),
-                    ["<D-j>"] = cmp.mapping.select_next_item(),
+                    ["<Tab>"] = cmp.mapping.select_next_item(),
+                    ["<S-Tab>"] = cmp.mapping.select_prev_item(),
                     ["<Down>"] = cmp.mapping.select_next_item(),
                     ["<Up>"] = cmp.mapping.select_prev_item(),
                 }),
