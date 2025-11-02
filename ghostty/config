@@ -4,5 +4,5 @@ font-size = 18
 mouse-hide-while-typing = true
 font-feature = -calt, -liga, -dlig
 cursor-style = block
-background = #000000
+background = #111111
 fullscreen = true

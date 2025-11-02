@@ -7,7 +7,8 @@ return {
                 { path = '${3rd}/luv/library', words = { 'vim%.uv' } },
             },
         },
-    }, {
+    },
+    {
         "neovim/nvim-lspconfig",
         dependencies = {
             { "williamboman/mason.nvim", opts = {} },
@@ -30,7 +31,7 @@ return {
                         fallbackFlags = {
                             "-std=c++23",
                         },
-                    }
+                    },
                 },
                 lua_ls = {},
                 rust_analyzer = {},
@@ -47,8 +48,24 @@ return {
                         server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
                         require("lspconfig")[server_name].setup(server)
                     end,
-                }
+                },
             })
+
+            -- make diagnostic underlines straight (no undercurl)
+            vim.diagnostic.config({
+                underline = {
+                    severity = { min = vim.diagnostic.severity.HINT },
+                },
+            })
+
+            for _, group in ipairs({
+                "DiagnosticUnderlineError",
+                "DiagnosticUnderlineWarn",
+                "DiagnosticUnderlineInfo",
+                "DiagnosticUnderlineHint",
+            }) do
+                vim.api.nvim_set_hl(0, group, { underline = true, undercurl = false })
+            end
         end,
     },
     {
@@ -68,7 +85,7 @@ return {
         formatters_by_ft = {
             c = { "clang_format" },
             cpp = { "clang_format" },
-        }
+        },
     },
     {
         "hrsh7th/nvim-cmp",
@@ -83,7 +100,7 @@ return {
                     ["<CR>"] = cmp.mapping.confirm({ select = false }), -- confirm
                     ["<C-Space>"] = cmp.mapping.complete(),
 
-                    -- moving by autosaggions
+                    -- moving by suggestions
                     ["<D-k>"] = cmp.mapping.select_prev_item(),
                     ["<D-j>"] = cmp.mapping.select_next_item(),
                     ["<Down>"] = cmp.mapping.select_next_item(),
@@ -98,3 +115,4 @@ return {
         end,
     },
 }
+
