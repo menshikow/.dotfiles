@@ -8,7 +8,7 @@ fi
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
-ZSH_THEME="powerlevel10k/powerlevel10k"
+ZSH_THEME="robbyrussell"
 
 # Enable plugins
 plugins=(
@@ -26,7 +26,8 @@ source $ZSH/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 # Enable autosuggestions (recommended after sourcing oh-my-zsh)
 source $ZSH/custom/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 
-# Some useful aliases
+# aliases
+alias c='code --reuse-window'
 alias vim='nvim'
 alias ll='ls -la'
 alias gs='git status'
@@ -65,3 +66,13 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 [[ -s "/home/mda/.gvm/scripts/gvm" ]] && source "/home/mda/.gvm/scripts/gvm"
+
+export PATH=/Library/TeX/texbin:$PATH
+export PATH="/Library/TeX/texbin:$PATH"
+
+. "$HOME/.local/bin/env"
+
+# pyenv
+export PYENV_ROOT="$HOME/.pyenv"
+command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init -)"
