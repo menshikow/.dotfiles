@@ -1,8 +1,6 @@
-theme = Gruvbox Dark Hard
-font-family = "NotoSans Mono"
+theme = Rose Pine
 font-size = 18
 mouse-hide-while-typing = true
 font-feature = -calt, -liga, -dlig
 cursor-style = block
 background = #111111
-fullscreen = true
