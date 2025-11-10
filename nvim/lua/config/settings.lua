@@ -6,7 +6,6 @@ vim.opt.guicursor = {
 }
 
 -- statusline
-vim.opt.statusline = "%{expand('%:h:t')}/%t"
 vim.opt.laststatus = 2
 
 -- clipboard
