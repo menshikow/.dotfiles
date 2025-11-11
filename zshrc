@@ -76,3 +76,11 @@ export PATH="/Library/TeX/texbin:$PATH"
 export PYENV_ROOT="$HOME/.pyenv"
 command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
+
+# bun completions
+[ -s "/Users/madonnaprayer/.bun/_bun" ] && source "/Users/madonnaprayer/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
