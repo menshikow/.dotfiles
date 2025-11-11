@@ -1,6 +1,10 @@
+theme = TokyoNight
 font-family = "Fira Code"
 font-size = 15
 mouse-hide-while-typing = true
 font-feature = -calt, -liga, -dlig
 cursor-style = block
 background = #111111
+keybind = f19=text:\x1bPtmux-prefix\x1b\\
+
+
