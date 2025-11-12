@@ -1,10 +1,9 @@
-theme = TokyoNight
-font-family = "Fira Code"
-font-size = 15
+theme = "Rose pine"
+font-family = "JetBrains Mono"
+font-size = 18
 mouse-hide-while-typing = true
-font-feature = -calt, -liga, -dlig
 cursor-style = block
-background = #111111
+background = #000000
 keybind = f19=text:\x1bPtmux-prefix\x1b\\
 
 
