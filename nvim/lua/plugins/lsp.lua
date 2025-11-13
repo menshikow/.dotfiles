@@ -7,69 +7,86 @@ return {
                 { path = '${3rd}/luv/library', words = { 'vim%.uv' } },
             },
         },
+    }, {
+    "neovim/nvim-lspconfig",
+    dependencies = {
+        { "williamboman/mason.nvim", opts = {} },
+        "williamboman/mason-lspconfig.nvim",
+        "hrsh7th/cmp-nvim-lsp",
     },
-    {
-        "neovim/nvim-lspconfig",
-        dependencies = {
-            { "williamboman/mason.nvim", opts = {} },
-            "williamboman/mason-lspconfig.nvim",
-            "hrsh7th/cmp-nvim-lsp",
-        },
-        config = function()
-            local capabilities = require("cmp_nvim_lsp").default_capabilities()
-
-            local servers = {
-                basedpyright = {
-                    settings = {
-                        basedpyright = {
-                            typeCheckingMode = "off",
-                        },
+    config = function()
+        local capabilities = require("cmp_nvim_lsp").default_capabilities()
+        local servers = {
+            basedpyright = {
+                settings = {
+                    basedpyright = {
+                        typeCheckingMode = "off",
                     },
                 },
-                clangd = {
-                    init_options = {
-                        fallbackFlags = {
-                            "-std=c++23",
-                        },
+            },
+            clangd = {
+                init_options = {
+                    fallbackFlags = {
+                        "-std=c++23",
                     },
                 },
-                lua_ls = {},
-                rust_analyzer = {},
-            }
+            },
+            lua_ls = {},
+            rust_analyzer = {},
+        }
+        local ensure_installed = vim.tbl_keys(servers or {})
+        require("mason-lspconfig").setup({
+            ensure_installed = ensure_installed,
+            automatic_installation = false,
+            handlers = {
+                function(server_name)
+                    local server = servers[server_name] or {}
+                    server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
+                    require("lspconfig")[server_name].setup(server)
+                end,
+            },
+        })
 
-            local ensure_installed = vim.tbl_keys(servers or {})
+        vim.diagnostic.config({
+            -- floating window settings
+            float = {
+                border = "rounded",
+                source = "always",
+                header = "",
+                prefix = "",
+            },
 
-            require("mason-lspconfig").setup({
-                ensure_installed = ensure_installed,
-                automatic_installation = false,
-                handlers = {
-                    function(server_name)
-                        local server = servers[server_name] or {}
-                        server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
-                        require("lspconfig")[server_name].setup(server)
-                    end,
+            signs = {
+                text = {
+                    [vim.diagnostic.severity.ERROR] = "",
+                    [vim.diagnostic.severity.WARN] = "",
+                    [vim.diagnostic.severity.HINT] = "",
+                    [vim.diagnostic.severity.INFO] = "",
                 },
-            })
+            },
 
-            -- make diagnostic underlines straight (no undercurl)
-            vim.diagnostic.config({
-                underline = {
-                    severity = { min = vim.diagnostic.severity.HINT },
-                },
-            })
+            underline = {
+                severity = { min = vim.diagnostic.severity.HINT },
+            },
 
-            for _, group in ipairs({
-                "DiagnosticUnderlineError",
-                "DiagnosticUnderlineWarn",
-                "DiagnosticUnderlineInfo",
-                "DiagnosticUnderlineHint",
-            }) do
-                vim.api.nvim_set_hl(0, group, { underline = true, undercurl = false })
-            end
-        end,
-    },
+            update_in_insert = false,
+            severity_sort = true,
+        })
+
+        for _, group in ipairs({
+            "DiagnosticUnderlineError",
+            "DiagnosticUnderlineWarn",
+            "DiagnosticUnderlineInfo",
+            "DiagnosticUnderlineHint",
+        }) do
+            vim.api.nvim_set_hl(0, group, { underline = true, undercurl = false })
+        end
+    end,
+},
     {
         "stevearc/conform.nvim",
+        event = { "BufWritePre" },
+        cmd = { "ConformInfo" },
         keys = {
             {
                 "<leader>f",
@@ -81,10 +98,14 @@ return {
         },
         opts = {
             notify_on_error = false,
-        },
-        formatters_by_ft = {
-            c = { "clang_format" },
-            cpp = { "clang_format" },
+            format_on_save = {
+                timeout_ms = 500,
+                lsp_format = "fallback",
+            },
+            formatters_by_ft = {
+                c = { "clang_format" },
+                cpp = { "clang_format" },
+            },
         },
     },
     {
@@ -99,7 +120,6 @@ return {
                 mapping = cmp.mapping.preset.insert({
                     ["<CR>"] = cmp.mapping.confirm({ select = false }), -- confirm
                     ["<C-Space>"] = cmp.mapping.complete(),
-
                     -- moving by suggestions
                     ["<Tab>"] = cmp.mapping.select_next_item(),
                     ["<S-Tab>"] = cmp.mapping.select_prev_item(),
@@ -115,4 +135,3 @@ return {
         end,
     },
 }
-
