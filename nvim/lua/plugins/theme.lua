@@ -1,31 +1,27 @@
 return {
     {
-        "nvim-lualine/lualine.nvim",
-        opts = {
-            options = {
-                theme = "auto",
-            }
-        }
-    },
-    {
-        "ellisonleao/gruvbox.nvim",
-        name = "gruvbox",
+        "blazkowolf/gruber-darker.nvim",
+        lazy = false,
         priority = 1000,
         config = function()
-            require("gruvbox").setup({
-                contrast = "", -- "hard", "soft", or empty
-                transparent_mode = false,
-                bold = true,
+            require("gruber-darker").setup({
                 italic = {
                     strings = false,
                     comments = false,
                     operators = false,
                     folds = false,
                 },
+                bold = true,
+                underline = true,
+                undercurl = true,
+                invert = {
+                    signs = false,
+                    tabline = false,
+                    visual = false,
+                }
             })
 
-            vim.cmd.colorscheme("gruvbox")
-
+            vim.cmd.colorscheme("gruber-darker")
         end,
-    }
+    },
 }
