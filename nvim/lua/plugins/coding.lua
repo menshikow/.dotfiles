@@ -1,11 +1,6 @@
 return {
     { "tpope/vim-surround" },
     {
-        "windwp/nvim-autopairs",
-        event = "InsertEnter",
-        config = true
-    },
-    {
         "windwp/nvim-ts-autotag",
         opts = {}
     },
@@ -27,16 +22,5 @@ return {
                 },
             })
         end,
-    },
-    {
-      "zbirenbaum/copilot.lua",
-      cmd = "Copilot",
-      event = "InsertEnter",
-      config = function()
-        require("copilot").setup({
-          suggestion = { enabled = true },
-          panel = { enabled = false },
-        })
-      end,
     },
 }

@@ -5,9 +5,6 @@ vim.opt.guicursor = {
     "r-cr:hor20",
 }
 
--- statusline
-vim.opt.laststatus = 2
-
 -- clipboard
 vim.opt.clipboard = "unnamedplus"
 
