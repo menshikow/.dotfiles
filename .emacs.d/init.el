@@ -1,8 +1,6 @@
 ;;; -*- lexical-binding: t -*-
 
-;;; ================================================================
-;;; UI + Startup
-;;; ================================================================
+;;; ui + startup
 (add-to-list 'default-frame-alist '(fullscreen . fullboth))
 (menu-bar-mode -1)
 (tool-bar-mode -1)
@@ -28,14 +26,10 @@
 (dolist (hook '(term-mode-hook vterm-mode-hook shell-mode-hook eshell-mode-hook compilation-mode-hook))
   (add-hook hook (lambda () (display-line-numbers-mode 0))))
 
-
-;;; ================================================================
-;;; Package system
-;;; ================================================================
+;;; package system
 (require 'package)
 (setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
                          ("melpa" . "https://melpa.org/packages/")))
-
 (when (< emacs-major-version 27) (package-initialize))
 (unless package-archive-contents (package-refresh-contents))
 (unless (package-installed-p 'use-package) (package-install 'use-package))
@@ -45,26 +39,17 @@
 (setq custom-file (locate-user-emacs-file "custom.el"))
 (when (file-exists-p custom-file) (load custom-file))
 
-
-;;; ================================================================
-;;; macOS modifier keys
-;;; ================================================================
+;;; macos modifiers
 (when (eq system-type 'darwin)
   (setq ns-option-modifier 'none
         ns-command-modifier 'meta))
 
-
-;;; ================================================================
-;;; Persistence
-;;; ================================================================
+;;; persistence
 (save-place-mode 1)
 (savehist-mode 1)
 (recentf-mode 1)
 
-
-;;; ================================================================
-;;; Evil + extensions
-;;; ================================================================
+;;; evil
 (use-package evil
   :init
   (setq evil-want-C-u-scroll t
@@ -83,16 +68,10 @@
 (defun save-and-kill-this-buffer () (interactive) (save-buffer) (kill-current-buffer))
 (evil-ex-define-cmd "wq" #'save-and-kill-this-buffer)
 
-
-;;; ================================================================
-;;; Theme
-;;; ================================================================
+;;; theme
 (use-package gruber-darker-theme :config (load-theme 'gruber-darker t))
 
-
-;;; ================================================================
-;;; General keybindings
-;;; ================================================================
+;;; keybindings
 (global-set-key (kbd "M-=") #'text-scale-increase)
 (global-set-key (kbd "M--") #'text-scale-decrease)
 (global-set-key (kbd "M-0") (lambda () (interactive) (text-scale-set 0)))
@@ -100,10 +79,52 @@
 (global-set-key (kbd "M-'") #'vterm)
 (global-set-key (kbd "M-e") #'find-file)
 
+;;; compile default
+(setq compile-command "")
 
-;;; ================================================================
-;;; vterm, magit, dired
-;;; ================================================================
+;;; vundo
+(use-package vundo
+  :config
+  (setq vundo-glyph-alist vundo-unicode-symbols)
+  (global-set-key (kbd "M-u") #'vundo))
+
+;;; ibuffer
+(global-set-key (kbd "M-b") #'ibuffer)
+
+;;; compile shortcut
+(defun my/open-compile () (interactive) (call-interactively #'compile))
+(global-set-key (kbd "M-k") #'my/open-compile)
+
+;;; FUCK THE SHIT JUST GIVE ME THE FUCKING WORKING ESC JUST CLOSE THE FUCKING SHIT WHAT IS YOUR PROBLEM
+(defun my/escape-everything ()
+  (interactive)
+  ;; close lsp doc
+  (when (fboundp 'lsp-ui-doc-hide) (lsp-ui-doc-hide))
+  ;; close help
+  (when-let ((win (get-buffer-window "*Help*" t))) (quit-window t win))
+  ;; close compilation
+  (when-let ((win (get-buffer-window "*compilation*" t))) (quit-window t win))
+  ;; kill embark previews
+  (when (and (fboundp 'embark-quit) embark-last-prefix-map)
+    (embark-quit))
+  ;; minibuffer
+  (when (minibufferp) (abort-recursive-edit))
+  ;; fallback
+  (keyboard-escape-quit))
+
+(global-set-key (kbd "<escape>") #'my/escape-everything)
+
+(with-eval-after-load 'evil
+  (define-key evil-normal-state-map (kbd "<escape>") #'my/escape-everything)
+  (define-key evil-visual-state-map (kbd "<escape>") #'my/escape-everything)
+  ;; let evil handle insert ESC
+  ;; but also quit popups immediately *after* returning to normal mode
+  (define-key evil-insert-state-map (kbd "<escape>")
+    (lambda () (interactive)
+      (evil-normal-state)
+      (my/escape-everything))))
+
+;;; vterm magit dired
 (use-package vterm :commands vterm)
 (use-package magit :commands magit-status)
 
@@ -115,10 +136,7 @@
   (setq dired-omit-files "^\\(?:\\.?#\\|.*~$\\)")
   (add-hook 'dired-mode-hook #'dired-omit-mode))
 
-
-;;; ================================================================
-;;; Org
-;;; ================================================================
+;;; org
 (use-package org
   :ensure nil
   :config
@@ -136,10 +154,7 @@
   (setq org-modern-star '("●" "◉" "○" "◆" "◇" "▣" "□")
         org-modern-hide-stars nil))
 
-
-;;; ================================================================
-;;; LSP layer
-;;; ================================================================
+;;; lsp
 (use-package lsp-mode
   :init
   (setq lsp-keymap-prefix "C-c l"
@@ -148,7 +163,7 @@
         lsp-headerline-breadcrumb-enable nil
         lsp-prefer-flymake nil
         lsp-completion-provider :none)
-  :hook ((c-mode c++-mode python-mode js-mode go-mode rust-mode haskell-mode typescript-mode) . lsp-deferred)
+  :hook ((c-mode c++-mode python-mode js-mode rust-mode haskell-mode typescript-mode go-ts-mode) . lsp-deferred)
   :commands lsp lsp-deferred)
 
 (use-package lsp-ui
@@ -174,12 +189,12 @@
     (define-key evil-normal-state-map (kbd "K")  #'my/lsp-K-or-man)
     (define-key evil-normal-state-map (kbd "gK") #'lsp-describe-thing-at-point)))
 
-(use-package lsp-haskell :after lsp-mode)
+;;; treesit go mode
+(setq major-mode-remap-alist '((go-mode . go-ts-mode)))
+(add-to-list 'auto-mode-alist '("\\.go\\'" . go-ts-mode))
+(add-hook 'go-ts-mode-hook #'lsp-deferred)
 
-
-;;; ================================================================
-;;; Unified formatting (LSP-first, fallback indent)
-;;; ================================================================
+;;; formatting
 (defun my/lsp-format-if-supported ()
   (when (and (bound-and-true-p lsp-mode)
              (lsp-feature? "textDocument/formatting"))
@@ -200,10 +215,7 @@
 
 (add-hook 'prog-mode-hook #'my/enable-format-on-save)
 
-
-;;; ================================================================
-;;; Completion stack: Corfu + Cape + LSP
-;;; ================================================================
+;;; completion
 (setq tab-always-indent 'complete
       completion-cycle-threshold 3
       completion-ignore-case t
@@ -220,7 +232,6 @@
   :config (corfu-popupinfo-mode 1))
 
 (use-package cape)
-
 (add-hook 'lsp-completion-mode-hook
           (lambda ()
             (setq-local completion-at-point-functions
@@ -229,10 +240,7 @@
                                #'cape-dabbrev
                                #'cape-file)))))
 
-
-;;; ================================================================
-;;; Minibuffer stack: vertico + orderless + marginalia + consult + embark
-;;; ================================================================
+;;; minibuffer
 (use-package vertico :init (vertico-mode 1))
 
 (use-package orderless
@@ -260,3 +268,4 @@
 
 (use-package affe
   :after consult
+  :config (global-set-key (kbd "C-c s") #'affe-grep))
