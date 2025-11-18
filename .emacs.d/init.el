@@ -3,12 +3,10 @@
 ;;; fullscreen on startup
 (add-to-list 'default-frame-alist '(fullscreen . fullboth))
 
-
 ;;; package setup
 (require 'package)
 (setq package-archives '(("gnu"   . "https://elpa.gnu.org/packages/")
                          ("melpa" . "https://melpa.org/packages/")))
-
 
 ;; emacs 27+ calls package-initialize automatically
 (when (< emacs-major-version 27)
@@ -55,7 +53,6 @@
   (set-face-attribute 'default nil :font "Iosevka" :height 210))
 (setq-default cursor-type 'box)
 
-
 ;;; line number
 (setq display-line-numbers-type 'relative)
 (global-display-line-numbers-mode 1)
@@ -67,12 +64,10 @@
                 compilation-mode-hook))
   (add-hook hook (lambda () (display-line-numbers-mode 0))))
 
-
 ;;; persistence
 (save-place-mode 1)
 (savehist-mode 1)
 (recentf-mode 1)
-
 
 ;;; evil mode
 (use-package evil
@@ -106,11 +101,9 @@
 
 (evil-ex-define-cmd "wq" #'save-and-kill-this-buffer)
 
-
 ;;; theme
 (use-package gruber-darker-theme
   :config (load-theme 'gruber-darker t))
-
 
 ;;; zoom in out
 (global-set-key (kbd "M-=") #'text-scale-increase)
@@ -120,11 +113,9 @@
                   (interactive)
                   (text-scale-set 0)))
 
-
 ;;; vterm + magit
 (use-package vterm :commands vterm)
 (use-package magit :commands magit-status)
-
 
 ;;; dired + hide backup files
 (use-package dired
@@ -138,15 +129,13 @@
 ;;; personal keys
 (global-set-key (kbd "M-d") #'dired-jump)
 (global-set-key (kbd "M-'") #'vterm)
-
-
+dotfiles/.emacs.d/
 ;; like :e in vim
 (defun my/consult-find-project ()
   (interactive)
   (consult-find (project-root (project-current))))
 
 (global-set-key (kbd "M-e") #'find-file)
-
 
 ;;; org mode
 (use-package org
@@ -168,7 +157,6 @@
   (setq org-modern-star '("●" "◉" "○" "◆" "◇" "▣" "□")
         org-modern-hide-stars nil))
 
-
 ;;; LSP
 (use-package lsp-mode
   :init
@@ -183,7 +171,6 @@
   :hook ((c-mode c++-mode python-mode js-mode go-mode rust-mode haskell-mode
                  typescript-mode) . lsp-deferred)
   :commands (lsp lsp-deferred))
-
 
 ;;; lsp-ui: hover docs + "K" and "gK"
 (use-package lsp-ui
@@ -222,7 +209,6 @@
   :mode ("\\.ts\\'" . typescript-mode)
   :hook (typescript-mode . (lambda () (setq typescript-indent-level 2))))
 
-
 ;;; unified format on save
 (defun my/format-buffer ()
   "Smart, language-aware formatting."
@@ -242,7 +228,6 @@
   (add-hook 'before-save-hook #'my/format-buffer nil t))
 
 (add-hook 'prog-mode-hook #'my/enable-format-on-save)
-
 
 ;;; minibuffer completion stack: vertico + orderless + marginalia + consult
 (use-package vertico
@@ -284,13 +269,11 @@
   :config
   (global-set-key (kbd "C-c s") #'affe-grep))
 
-
 ;;; complition ui: corfu + popupinfo
 (setq tab-always-indent 'complete
       completion-cycle-threshold 3
       completion-ignore-case t
       read-file-name-completion-ignore-case t)
-
 
 (use-package corfu
   :init
