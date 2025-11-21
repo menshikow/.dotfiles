@@ -1,5 +1,5 @@
 set $mod Mod4
-font Iosevka 12px
+font pango:Iosevka 12px
 
 # border settings 
 default_border pixel 2
@@ -9,13 +9,37 @@ default_floating_border pixel 1
 bindsym Print exec flameshot gui
 bindsym $mod+Print exec flameshot full -p ~/Pictures
 
-# bar
+# # bar
+# bar {
+#     font pango:Iosevka 10
+#     position bottom
+#     height 23
+#     status_command while echo "$(xset -q | grep -A 0 'LED' | sed 's/.*LED mask: *//' | cut -c5 | sed 's/0/US/;s/1/DE/' | head -c2) $(date +'%H:%M:%S') | BAT:$(cat /sys/class/power_supply/BAT*/capacity 2>/dev/null || echo 'N/A')% | $(awk '{printf "NET: %.1fKB/s", $1/1024}' /sys/class/net/$(ip route | grep default | awk '{print $5}' | head -1)/statistics/rx_bytes 2>/dev/null || echo 'NET: N/A')"; do sleep 1; done
+# }
+
 bar {
+    status_command i3status
+
     font pango:Iosevka 10
-    position bottom
-    height 23
-    status_command while echo "$(xset -q | grep -A 0 'LED' | sed 's/.*LED mask: *//' | cut -c5 | sed 's/0/US/;s/1/DE/' | head -c2) $(date +'%H:%M:%S') | BAT:$(cat /sys/class/power_supply/BAT*/capacity 2>/dev/null || echo 'N/A')% | $(awk '{printf "NET: %.1fKB/s", $1/1024}' /sys/class/net/$(ip route | grep default | awk '{print $5}' | head -1)/statistics/rx_bytes 2>/dev/null || echo 'NET: N/A')"; do sleep 1; done
+
+    tray_output primary
+
+    strip_workspace_numbers yes
+
+    colors {
+        background #282A36
+        statusline #F8F8F2
+        separator  #44475A
+
+        focused_workspace  #44475A #44475A #F8F8F2
+        active_workspace   #282A36 #44475A #F8F8F2
+        inactive_workspace #282A36 #282A36 #BFBFBF
+        urgent_workspace   #FF5555 #FF5555 #F8F8F2
+    }
 }
+
+# Use Mouse+$mod to drag floating windows to their wanted position
+floating_modifier $mod
 
 # startup apps
 exec --no-startup-id picom -b
