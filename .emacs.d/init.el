@@ -5,7 +5,7 @@
 ;;; ------------------------------------------------------------
 
 (add-to-list 'default-frame-alist '(fullscreen . fullboth))
-;; (setq inhibit-startup-screen t)
+(setq inhibit-startup-screen t)
 (menu-bar-mode -1)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
@@ -24,7 +24,7 @@
 
 ;; line numbers in code, but not in terminals and compilation
 (setq display-line-numbers-type 'relative)
-(global-display-line-numbers-mode 1)
+(add-hook 'prog-mode-hook #'display-line-numbers-mode)
 
 (dolist (hook '(term-mode-hook vterm-mode-hook shell-mode-hook
 			       eshell-mode-hook compilation-mode-hook))
@@ -44,27 +44,36 @@
 (when (< emacs-major-version 27)
   (package-initialize))
 
-(unless package-archive-contents
-  (package-refresh-contents))
+;; faster startup
+;; (unless package-archive-contents
+;;   (package-refresh-contents))
 
 (unless (package-installed-p 'use-package)
+  (package-refresh-contents)
   (package-install 'use-package))
 
 (require 'use-package)
 (setq use-package-always-ensure t)
 
-;; Keep custom.el separate
+;; keep custom.el separate
 (setq custom-file (locate-user-emacs-file "custom.el"))
 (when (file-exists-p custom-file)
   (load custom-file))
 
 ;;; ------------------------------------------------------------
-;;; macOS modifier keys
+;;; macOS settings
 ;;; ------------------------------------------------------------
 
 (when (eq system-type 'darwin)
   (setq ns-option-modifier 'none
         ns-command-modifier 'meta))
+
+;;; disable all bells
+(setq visible-bell nil)
+(setq ring-bell-function 'ignore)
+
+(when (eq system-type 'darwin)
+  (defalias 'ring-bell-function 'ignore))
 
 ;;; ------------------------------------------------------------
 ;;; persistence
@@ -90,6 +99,9 @@
 (use-package evil-collection
   :after evil
   :config
+  ;; Only load for modes you actually use
+  (setq evil-collection-mode-list
+        '(magit dired vterm compile))
   (evil-collection-init))
 
 (use-package evil-commentary
@@ -104,7 +116,7 @@
 
 (evil-ex-define-cmd "wq" #'my/save-and-kill-this-buffer)
 
-;; escape quits prompts works not like shit  but doesn't mess with evil states
+;; escape quits prompts
 (global-set-key (kbd "<escape>") #'keyboard-escape-quit)
 (with-eval-after-load 'evil
   (define-key evil-normal-state-map (kbd "<escape>") #'keyboard-escape-quit)
@@ -134,22 +146,26 @@
 ;; shortcuts
 (global-set-key (kbd "M-u") #'undo)              ;; undo
 (global-set-key (kbd "M-b") #'consult-buffer)    ;; buffers
-(global-set-key (kbd "M-k") #'compile)           ;; compile
+(global-set-key (kbd "M-c") #'compile)           ;; compile
+(global-set-key (kbd "C-c s") #'shell-command)   ;; shell command
 
-(setq compile-command "") ;; no default shit "make -k"
+(setq compile-command "") ;; no default "make -k"
 
 ;;; ------------------------------------------------------------
 ;;; tools: vterm, magit, dired
 ;;; ------------------------------------------------------------
 
 (use-package vterm
+  :defer t
   :commands vterm)
 
 (use-package magit
+  :defer t
   :commands magit-status)
 
 (use-package dired
   :ensure nil
+  :defer t
   :commands (dired dired-jump)
   :config
   (require 'dired-x)
@@ -162,6 +178,7 @@
 
 (use-package org
   :ensure nil
+  :defer t
   :config
   (setq org-src-fontify-natively t
         org-src-tab-acts-natively t
@@ -171,6 +188,7 @@
   (add-hook 'org-mode-hook #'org-indent-mode))
 
 (use-package org-modern
+  :defer t
   :hook (org-mode . org-modern-mode)
   :config
   (setq org-modern-star '("●" "◉" "○" "◆" "◇" "▣" "□")
@@ -185,20 +203,22 @@
       completion-ignore-case t)
 
 (use-package corfu
+  :defer 0.1
   :init
   (global-corfu-mode 1)
   :custom
   (corfu-auto t)
   (corfu-auto-prefix 2)
-  (corfu-auto-delay 0)
+  (corfu-auto-delay 0.1)
   (corfu-preselect-first t)
   :config
   (corfu-popupinfo-mode 1))
 
-(use-package cape)
+(use-package cape
+  :defer t)
 
 ;;; ------------------------------------------------------------
-;;; minibuffer completion: Vertico, Orderless, Marginalia, Consult, Embark
+;;; minibuffer completion: vertico, orderless, marginalia, consult, embark
 ;;; ------------------------------------------------------------
 
 (use-package vertico
@@ -215,13 +235,16 @@
   :init
   (marginalia-mode 1))
 
-(use-package consult)
+(use-package consult
+  :defer t)
 
 (use-package embark
+  :defer t
   :bind (("C-." . embark-act)
          ("C-;" . embark-dwim)))
 
 (use-package embark-consult
+  :defer t
   :after (embark consult))
 
 ;;; ------------------------------------------------------------
@@ -229,30 +252,20 @@
 ;;; ------------------------------------------------------------
 
 (use-package eglot
-  :hook ((python-mode
-          c-mode
-          c++-mode
-          go-mode
-          rust-mode) . eglot-ensure)
+  :defer t
+  :hook ((python-mode c-mode c++-mode go-mode rust-mode haskell-mode) . eglot-ensure)
   :config
-  ;; clangd config
   (add-to-list 'eglot-server-programs
-               '((c-mode c++-mode)
-                 . ("clangd" "--header-insertion=never"))))
+               '(haskell-mode . ("haskell-language-server-wrapper" "--lsp"))))
 
+;;; formatting
 (defun my/format-buffer ()
-  "Format buffer using Eglot if available; fall back where needed."
-  (interactive)
-  (cond
-   ;; if this buffer is managed by Eglot, use LSP formatting
-   ((and (bound-and-true-p eglot-managed-p)
-         (eglot-managed-p))
-    (eglot-format))
-   ;; language-specific fallbacks
-   ((eq major-mode 'go-mode)
-    (gofmt))
-   ((memq major-mode '(emacs-lisp-mode lisp-mode))
-    (indent-region (point-min) (point-max)))))
+  (if (eglot-managed-p)
+      (ignore-errors (eglot-format))
+    (cond
+     ((eq major-mode 'go-mode) (gofmt))
+     ((memq major-mode '(emacs-lisp-mode lisp-mode))
+      (indent-region (point-min) (point-max))))))
 
 (defun my/enable-format-on-save ()
   (add-hook 'before-save-hook #'my/format-buffer nil t))
@@ -263,24 +276,24 @@
 ;;; language modes
 ;;; ------------------------------------------------------------
 
-;; Python
-(add-hook 'python-mode-hook #'eglot-ensure)
-
-;; C / C++
-(add-hook 'c-mode-hook #'eglot-ensure)
-(add-hook 'c++-mode-hook #'eglot-ensure)
-
-;; Go
+;; go
 (use-package go-mode
-  :mode "\\.go\\'"
-  :hook ((go-mode . eglot-ensure)))
+  :defer t
+  :mode "\\.go\\'")
 
-;; Rust
+;; rust
 (use-package rust-mode
-  :mode "\\.rs\\'"
-  :hook (rust-mode . eglot-ensure))
+  :defer t
+  :mode "\\.rs\\'")
 
-
+;; haskell
+(use-package haskell-mode
+  :defer t
+  :mode "\\.hs\\'"
+  :hook (haskell-mode . interactive-haskell-mode)
+  :config
+  (setq haskell-indentation-layout-offset 4
+	haskell-indentation-left-offset 4
+	haskell-indentation-starter-offset 4))
 
 (provide 'init)
-
