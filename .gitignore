@@ -1,0 +1,10 @@
+# Emacs backup files
+*~
+\#*\#
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# Emacs temp files
+.DS_Store
