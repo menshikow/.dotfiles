@@ -1,6 +1,13 @@
 ;;; -*- lexical-binding: t; -*-
 
 ;;; ------------------------------------------------------------
+;;; platform detection
+;;; ------------------------------------------------------------
+
+(defconst my/is-mac (eq system-type 'darwin))
+(defconst my/is-linux (eq system-type 'gnu/linux))
+
+;;; ------------------------------------------------------------
 ;;; ui
 ;;; ------------------------------------------------------------
 
@@ -16,7 +23,7 @@
       scroll-conservatively 101
       scroll-margin 3)
 
-;; font
+;; font - fallback if iosevka not available
 (when (member "Iosevka" (font-family-list))
   (set-face-attribute 'default nil :font "Iosevka" :height 220))
 
@@ -32,6 +39,10 @@
 
 (fset 'yes-or-no-p 'y-or-n-p)
 
+;; disable all bells
+(setq visible-bell nil
+      ring-bell-function 'ignore)
+
 ;;; ------------------------------------------------------------
 ;;; package system + use-package
 ;;; ------------------------------------------------------------
@@ -43,10 +54,6 @@
 
 (when (< emacs-major-version 27)
   (package-initialize))
-
-;; faster startup
-;; (unless package-archive-contents
-;;   (package-refresh-contents))
 
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
@@ -61,19 +68,29 @@
   (load custom-file))
 
 ;;; ------------------------------------------------------------
-;;; macOS settings
+;;; macOS-specific settings
 ;;; ------------------------------------------------------------
 
-(when (eq system-type 'darwin)
+(when my/is-mac
+  ;; modifier keys
   (setq ns-option-modifier 'none
-        ns-command-modifier 'meta))
+        ns-command-modifier 'meta)
+  
+  ;; fix PATH from shell
+  (use-package exec-path-from-shell
+    :config
+    (exec-path-from-shell-initialize)))
 
-;;; disable all bells
-(setq visible-bell nil)
-(setq ring-bell-function 'ignore)
+;;; ------------------------------------------------------------
+;;; linux-specific settings
+;;; ------------------------------------------------------------
 
-(when (eq system-type 'darwin)
-  (defalias 'ring-bell-function 'ignore))
+(when my/is-linux
+  ;; use super key as meta
+  (setq x-super-keysym 'meta)
+  
+  ;; better font rendering on some Linux systems
+  (setq-default line-spacing 0.1))
 
 ;;; ------------------------------------------------------------
 ;;; persistence
@@ -82,6 +99,14 @@
 (save-place-mode 1)
 (savehist-mode 1)
 (recentf-mode 1)
+
+;; backup settings
+(setq backup-directory-alist `(("." . ,(locate-user-emacs-file "backups")))
+      backup-by-copying t
+      delete-old-versions t
+      kept-new-versions 6
+      kept-old-versions 2
+      version-control t)
 
 ;;; ------------------------------------------------------------
 ;;; evil mode 
@@ -99,7 +124,6 @@
 (use-package evil-collection
   :after evil
   :config
-  ;; Only load for modes you actually use
   (setq evil-collection-mode-list
         '(magit dired vterm compile))
   (evil-collection-init))
@@ -123,12 +147,37 @@
   (define-key evil-visual-state-map (kbd "<escape>") #'keyboard-escape-quit))
 
 ;;; ------------------------------------------------------------
+;;; undo-tree (better undo system)
+;;; ------------------------------------------------------------
+
+(use-package undo-tree
+  :init
+  (global-undo-tree-mode 1)
+  :config
+  (setq undo-tree-auto-save-history nil
+        undo-tree-history-directory-alist `(("." . ,(locate-user-emacs-file "undo-tree-history"))))
+  (evil-set-undo-system 'undo-tree))
+
+;;; ------------------------------------------------------------
 ;;; theme
 ;;; ------------------------------------------------------------
 
 (use-package gruber-darker-theme
   :config
   (load-theme 'gruber-darker t))
+
+;;; ------------------------------------------------------------
+;;; projectile (project management)
+;;; ------------------------------------------------------------
+
+(use-package projectile
+  :init
+  (projectile-mode 1)
+  :bind-keymap
+  ("C-c p" . projectile-command-map)
+  :config
+  (setq projectile-project-search-path '("~/projects/" "~/work/")
+        projectile-completion-system 'default))
 
 ;;; ------------------------------------------------------------
 ;;; keybindings
@@ -144,10 +193,15 @@
 (global-set-key (kbd "M-e") #'find-file)
 
 ;; shortcuts
-(global-set-key (kbd "M-u") #'undo)              ;; undo
-(global-set-key (kbd "M-b") #'consult-buffer)    ;; buffers
-(global-set-key (kbd "M-c") #'compile)           ;; compile
-(global-set-key (kbd "C-c s") #'shell-command)   ;; shell command
+(global-set-key (kbd "M-u") #'undo-tree-undo)   ;; undo with undo-tree
+(global-set-key (kbd "M-U") #'undo-tree-redo)   ;; redo
+(global-set-key (kbd "M-b") #'consult-buffer)   ;; buffers
+(global-set-key (kbd "M-c") #'compile)          ;; compile
+(global-set-key (kbd "C-c s") #'shell-command)  ;; shell command
+
+;; buffer management
+(global-set-key (kbd "M-w") #'kill-current-buffer)       ;; quick kill buffer
+(global-set-key (kbd "M-W") #'kill-buffer-and-window)    ;; kill buffer and window
 
 (setq compile-command "") ;; no default "make -k"
 
@@ -156,8 +210,12 @@
 ;;; ------------------------------------------------------------
 
 (use-package vterm
+  :if (or my/is-mac my/is-linux)
   :defer t
-  :commands vterm)
+  :commands vterm
+  :config
+  ;; better scrollback
+  (setq vterm-max-scrollback 10000))
 
 (use-package magit
   :defer t
@@ -170,7 +228,13 @@
   :config
   (require 'dired-x)
   (setq dired-omit-files "^\\(?:\\.?#\\|.*~$\\)")
-  (add-hook 'dired-mode-hook #'dired-omit-mode))
+  (add-hook 'dired-mode-hook #'dired-omit-mode)
+  
+  ;; use GNU ls on macOS if available for better sorting
+  (when my/is-mac
+    (let ((gls (executable-find "gls")))
+      (when gls
+        (setq insert-directory-program gls)))))
 
 ;;; ------------------------------------------------------------
 ;;; org mode
@@ -215,7 +279,11 @@
   (corfu-popupinfo-mode 1))
 
 (use-package cape
-  :defer t)
+  :defer t
+  :config
+  ;; add useful completion sources
+  (add-to-list 'completion-at-point-functions #'cape-file)
+  (add-to-list 'completion-at-point-functions #'cape-dabbrev))
 
 ;;; ------------------------------------------------------------
 ;;; minibuffer completion: vertico, orderless, marginalia, consult, embark
@@ -236,16 +304,34 @@
   (marginalia-mode 1))
 
 (use-package consult
-  :defer t)
+  :defer t
+  :bind (("C-x b" . consult-buffer)
+         ("C-x 4 b" . consult-buffer-other-window)
+         ("M-g g" . consult-goto-line)
+         ("M-s l" . consult-line)
+         ("M-s g" . consult-ripgrep)  ;; project-wide search (requires ripgrep)
+         ("M-s f" . consult-find)))   ;; find files
 
 (use-package embark
   :defer t
   :bind (("C-." . embark-act)
-         ("C-;" . embark-dwim)))
+         ("C-," . embark-dwim)))  ;; changed from C-; to avoid conflict with iedit
 
 (use-package embark-consult
   :defer t
   :after (embark consult))
+
+;;; ------------------------------------------------------------
+;;; evil-multiedit (multiple cursors)
+;;; ------------------------------------------------------------
+
+(use-package iedit
+  :defer t)
+
+(use-package evil-multiedit
+  :after (evil iedit)
+  :config
+  (evil-multiedit-default-keybinds))
 
 ;;; ------------------------------------------------------------
 ;;; eglot + format-on-save
@@ -256,7 +342,14 @@
   :hook ((python-mode c-mode c++-mode go-mode rust-mode haskell-mode) . eglot-ensure)
   :config
   (add-to-list 'eglot-server-programs
-               '(haskell-mode . ("haskell-language-server-wrapper" "--lsp"))))
+               '(haskell-mode . ("haskell-language-server-wrapper" "--lsp")))
+  
+  ;; platform-specific server paths if needed
+  (when my/is-linux
+    ;; example: specific paths for Linux
+    ;; (add-to-list 'eglot-server-programs
+    ;;              '(python-mode . ("pylsp")))
+    ))
 
 ;;; formatting
 (defun my/format-buffer ()
@@ -279,7 +372,11 @@
 ;; go
 (use-package go-mode
   :defer t
-  :mode "\\.go\\'")
+  :mode "\\.go\\'"
+  :config
+  ;; set GOPATH if needed
+  (when my/is-linux
+    (setenv "GOPATH" (expand-file-name "~/go"))))
 
 ;; rust
 (use-package rust-mode
@@ -295,5 +392,15 @@
   (setq haskell-indentation-layout-offset 4
 	haskell-indentation-left-offset 4
 	haskell-indentation-starter-offset 4))
+
+;;; ------------------------------------------------------------
+;;; performance tweaks
+;;; ------------------------------------------------------------
+
+;; increase gc threshold for better performance
+(setq gc-cons-threshold (* 50 1000 1000))
+
+;; reduce startup time
+(setq package-enable-at-startup nil)
 
 (provide 'init)
