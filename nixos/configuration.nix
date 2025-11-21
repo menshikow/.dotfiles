@@ -68,6 +68,7 @@
     firefox
     ghostty
     nvim 
+    tmux
     
     # i3 utilities
     flameshot
