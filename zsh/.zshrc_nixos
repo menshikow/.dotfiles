@@ -1,0 +1,38 @@
+# Powerlevel10k instant prompt
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
+# Aliases
+alias vim='nvim'
+alias ll='ls -la'
+alias gs='git status'
+alias gd='git diff'
+alias ..='cd ..'
+
+# Enable auto-correction
+ENABLE_CORRECTION="true"
+CASE_SENSITIVE="false"
+HIST_IGNORE_DUPS="true"
+HIST_IGNORE_ALL_DUPS="true"
+
+# History config
+HISTSIZE=10000
+SAVEHIST=10000
+HISTFILE=~/.zsh_history
+setopt SHARE_HISTORY
+
+# Auto-completion
+autoload -Uz compinit
+compinit
+
+# Completion cache
+zstyle ':completion:*' use-cache on
+zstyle ':completion:*' cache-path ~/.zsh/cache
+
+# Load Powerlevel10k config
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+# Local bins
+export PATH="$HOME/.local/bin:$PATH"
+. "$HOME/.local/bin/env"

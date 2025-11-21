@@ -7,7 +7,7 @@ default_floating_border pixel 1
 
 # screenshot bindings
 bindsym Print exec flameshot gui
-bindsym $mod+Print exec flameshot full -p ~/Picture
+bindsym $mod+Print exec flameshot full -p ~/Pictures
 
 # bar
 bar {
@@ -25,7 +25,7 @@ exec_always --no-startup-id setxkbmap -layout de,ru,us -option grp:alt_shift_tog
 exec --no-startup-id xsetroot -cursor_name left_ptr
 
 # keybindings
-bindsym $mod+Return exec wezterm
+bindsym $mod+Return exec ghostty
 bindsym $mod+d exec --no-startup-id i3-dmenu-desktop
 bindsym $mod+Shift+q kill
 bindsym $mod+Shift+f fullscreen toggle 

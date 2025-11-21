@@ -34,7 +34,7 @@
 (add-hook 'prog-mode-hook #'display-line-numbers-mode)
 
 (dolist (hook '(term-mode-hook vterm-mode-hook shell-mode-hook
-			       eshell-mode-hook compilation-mode-hook))
+                eshell-mode-hook compilation-mode-hook))
   (add-hook hook (lambda () (display-line-numbers-mode 0))))
 
 (fset 'yes-or-no-p 'y-or-n-p)
@@ -49,7 +49,7 @@
 
 (require 'package)
 (setq package-archives
-      '(("gnu"   . "https://elpa.gnu.org/packages/")
+      '(("gnu" . "https://elpa.gnu.org/packages/")
         ("melpa" . "https://melpa.org/packages/")))
 
 (when (< emacs-major-version 27)
@@ -68,7 +68,7 @@
   (load custom-file))
 
 ;;; ------------------------------------------------------------
-;;; macOS-specific settings
+;;; macos settings
 ;;; ------------------------------------------------------------
 
 (when my/is-mac
@@ -82,7 +82,7 @@
     (exec-path-from-shell-initialize)))
 
 ;;; ------------------------------------------------------------
-;;; linux-specific settings
+;;; nixos settings
 ;;; ------------------------------------------------------------
 
 (when my/is-linux
@@ -90,7 +90,14 @@
   (setq x-super-keysym 'meta)
   
   ;; better font rendering on some Linux systems
-  (setq-default line-spacing 0.1))
+  (setq-default line-spacing 0.1)
+
+  ;; FIX for NixOS: Inherit PATH from the shell.
+  ;; Essential for finding executables (like language servers) 
+  ;; when using a declarative package manager like Nix.
+  (use-package exec-path-from-shell
+    :config
+    (exec-path-from-shell-initialize)))
 
 ;;; ------------------------------------------------------------
 ;;; persistence
@@ -100,13 +107,10 @@
 (savehist-mode 1)
 (recentf-mode 1)
 
-;; backup settings
-(setq backup-directory-alist `(("." . ,(locate-user-emacs-file "backups")))
-      backup-by-copying t
-      delete-old-versions t
-      kept-new-versions 6
-      kept-old-versions 2
-      version-control t)
+;; disable backup files
+(setq make-backup-files nil
+      auto-save-default nil
+      create-lockfiles nil)
 
 ;;; ------------------------------------------------------------
 ;;; evil mode 
@@ -147,7 +151,7 @@
   (define-key evil-visual-state-map (kbd "<escape>") #'keyboard-escape-quit))
 
 ;;; ------------------------------------------------------------
-;;; undo-tree (better undo system)
+;;; undo-tree
 ;;; ------------------------------------------------------------
 
 (use-package undo-tree
@@ -167,7 +171,7 @@
   (load-theme 'gruber-darker t))
 
 ;;; ------------------------------------------------------------
-;;; projectile (project management)
+;;; projectile
 ;;; ------------------------------------------------------------
 
 (use-package projectile
@@ -196,12 +200,12 @@
 (global-set-key (kbd "M-u") #'undo-tree-undo)   ;; undo with undo-tree
 (global-set-key (kbd "M-U") #'undo-tree-redo)   ;; redo
 (global-set-key (kbd "M-b") #'consult-buffer)   ;; buffers
-(global-set-key (kbd "M-c") #'compile)          ;; compile
-(global-set-key (kbd "C-c s") #'shell-command)  ;; shell command
+(global-set-key (kbd "M-c") #'compile)         ;; compile
+(global-set-key (kbd "C-c s") #'shell-command) ;; shell command
 
 ;; buffer management
-(global-set-key (kbd "M-w") #'kill-current-buffer)       ;; quick kill buffer
-(global-set-key (kbd "M-W") #'kill-buffer-and-window)    ;; kill buffer and window
+(global-set-key (kbd "M-w") #'kill-current-buffer)     ;; quick kill buffer
+(global-set-key (kbd "M-W") #'kill-buffer-and-window)  ;; kill buffer and window
 
 (setq compile-command "") ;; no default "make -k"
 
@@ -230,7 +234,7 @@
   (setq dired-omit-files "^\\(?:\\.?#\\|.*~$\\)")
   (add-hook 'dired-mode-hook #'dired-omit-mode)
   
-  ;; use GNU ls on macOS if available for better sorting
+  ;; use gnu ls on mac if available for better sorting
   (when my/is-mac
     (let ((gls (executable-find "gls")))
       (when gls
@@ -315,14 +319,14 @@
 (use-package embark
   :defer t
   :bind (("C-." . embark-act)
-         ("C-," . embark-dwim)))  ;; changed from C-; to avoid conflict with iedit
+         ("C-," . embark-dwim))) 
 
 (use-package embark-consult
   :defer t
   :after (embark consult))
 
 ;;; ------------------------------------------------------------
-;;; evil-multiedit (multiple cursors)
+;;; evil-multiedit
 ;;; ------------------------------------------------------------
 
 (use-package iedit
@@ -342,13 +346,14 @@
   :hook ((python-mode c-mode c++-mode go-mode rust-mode haskell-mode) . eglot-ensure)
   :config
   (add-to-list 'eglot-server-programs
-               '(haskell-mode . ("haskell-language-server-wrapper" "--lsp")))
+              '(haskell-mode . ("haskell-language-server-wrapper" "--lsp")))
   
   ;; platform-specific server paths if needed
+  ;; Note: The exec-path-from-shell fix above often makes manual paths unnecessary on NixOS.
   (when my/is-linux
     ;; example: specific paths for Linux
     ;; (add-to-list 'eglot-server-programs
-    ;;              '(python-mode . ("pylsp")))
+    ;;      '(python-mode . ("pylsp")))
     ))
 
 ;;; formatting
@@ -356,9 +361,9 @@
   (if (eglot-managed-p)
       (ignore-errors (eglot-format))
     (cond
-     ((eq major-mode 'go-mode) (gofmt))
-     ((memq major-mode '(emacs-lisp-mode lisp-mode))
-      (indent-region (point-min) (point-max))))))
+      ((eq major-mode 'go-mode) (gofmt))
+      ((memq major-mode '(emacs-lisp-mode lisp-mode))
+       (indent-region (point-min) (point-max))))))
 
 (defun my/enable-format-on-save ()
   (add-hook 'before-save-hook #'my/format-buffer nil t))
@@ -374,7 +379,7 @@
   :defer t
   :mode "\\.go\\'"
   :config
-  ;; set GOPATH if needed
+  ;; set GOPATH if needed (may be unnecessary with exec-path-from-shell)
   (when my/is-linux
     (setenv "GOPATH" (expand-file-name "~/go"))))
 
@@ -390,8 +395,8 @@
   :hook (haskell-mode . interactive-haskell-mode)
   :config
   (setq haskell-indentation-layout-offset 4
-	haskell-indentation-left-offset 4
-	haskell-indentation-starter-offset 4))
+    haskell-indentation-left-offset 4
+    haskell-indentation-starter-offset 4))
 
 ;;; ------------------------------------------------------------
 ;;; performance tweaks
