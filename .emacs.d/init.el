@@ -23,7 +23,7 @@
       scroll-conservatively 101
       scroll-margin 3)
 
-;; font - fallback if iosevka not available
+;; font - iosevka
 (when (member "Iosevka" (font-family-list))
   (set-face-attribute 'default nil :font "Iosevka" :height 220))
 
@@ -82,19 +82,18 @@
     (exec-path-from-shell-initialize)))
 
 ;;; ------------------------------------------------------------
-;;; nixos settings
+;;; debian settings
 ;;; ------------------------------------------------------------
 
 (when my/is-linux
-  ;; use super key as meta
-  (setq x-super-keysym 'meta)
+  ;; use alt as meta
+  (setq x-alt-keysym 'meta
+        x-super-keysym 'super)  ;; keep super as super
   
-  ;; better font rendering on some Linux systems
+  ;; better font rendering on Linux
   (setq-default line-spacing 0.1)
 
-  ;; FIX for NixOS: Inherit PATH from the shell.
-  ;; Essential for finding executables (like language servers) 
-  ;; when using a declarative package manager like Nix.
+  ;; inherit PATH from shell for GUI Emacs (useful on Debian)
   (use-package exec-path-from-shell
     :config
     (exec-path-from-shell-initialize)))
@@ -119,7 +118,8 @@
 (use-package evil
   :init
   (setq evil-want-C-u-scroll t
-        evil-want-keybinding nil)
+        evil-want-keybinding nil
+        evil-undo-system 'undo-redo)
   :config
   (evil-mode 1)
   (setq evil-normal-state-cursor 'box
@@ -151,16 +151,14 @@
   (define-key evil-visual-state-map (kbd "<escape>") #'keyboard-escape-quit))
 
 ;;; ------------------------------------------------------------
-;;; undo-tree
+;;; undo system
 ;;; ------------------------------------------------------------
 
-(use-package undo-tree
-  :init
-  (global-undo-tree-mode 1)
-  :config
-  (setq undo-tree-auto-save-history nil
-        undo-tree-history-directory-alist `(("." . ,(locate-user-emacs-file "undo-tree-history"))))
-  (evil-set-undo-system 'undo-tree))
+;; built-in undo-redo for Emacs 28+
+(when (>= emacs-major-version 28)
+  (global-set-key (kbd "C-?") #'undo-redo)
+  (with-eval-after-load 'evil
+    (evil-set-undo-system 'undo-redo)))
 
 ;;; ------------------------------------------------------------
 ;;; theme
@@ -197,8 +195,8 @@
 (global-set-key (kbd "M-e") #'find-file)
 
 ;; shortcuts
-(global-set-key (kbd "M-u") #'undo-tree-undo)   ;; undo with undo-tree
-(global-set-key (kbd "M-U") #'undo-tree-redo)   ;; redo
+(global-set-key (kbd "M-u") #'undo)         ;; undo
+(global-set-key (kbd "M-U") #'undo-redo)    ;; redo (Emacs 28+)
 (global-set-key (kbd "M-b") #'consult-buffer)   ;; buffers
 (global-set-key (kbd "M-c") #'compile)         ;; compile
 (global-set-key (kbd "C-c s") #'shell-command) ;; shell command
@@ -343,27 +341,28 @@
 
 (use-package eglot
   :defer t
-  :hook ((python-mode c-mode c++-mode go-mode rust-mode haskell-mode) . eglot-ensure)
+  :hook ((python-mode c-mode c++-mode go-mode rust-mode haskell-mode 
+          js-mode typescript-mode tsx-ts-mode elixir-mode zig-mode) . eglot-ensure)
   :config
+  ;; add language servers
   (add-to-list 'eglot-server-programs
-              '(haskell-mode . ("haskell-language-server-wrapper" "--lsp")))
+               '(haskell-mode . ("haskell-language-server-wrapper" "--lsp")))
+  (add-to-list 'eglot-server-programs
+               '((js-mode typescript-mode) . ("typescript-language-server" "--stdio")))
+  (add-to-list 'eglot-server-programs
+               '(elixir-mode . ("elixir-ls")))
+  (add-to-list 'eglot-server-programs
+               '(zig-mode . ("zls")))
+  (add-to-list 'eglot-server-programs
+               '((c-mode c++-mode) . ("clangd")))
   
-  ;; platform-specific server paths if needed
-  ;; Note: The exec-path-from-shell fix above often makes manual paths unnecessary on NixOS.
-  (when my/is-linux
-    ;; example: specific paths for Linux
-    ;; (add-to-list 'eglot-server-programs
-    ;;      '(python-mode . ("pylsp")))
-    ))
+  ;; increase timeout for large projects
+  (setq eglot-connect-timeout 30))
 
 ;;; formatting
 (defun my/format-buffer ()
-  (if (eglot-managed-p)
-      (ignore-errors (eglot-format))
-    (cond
-      ((eq major-mode 'go-mode) (gofmt))
-      ((memq major-mode '(emacs-lisp-mode lisp-mode))
-       (indent-region (point-min) (point-max))))))
+  (when (eglot-managed-p)
+    (ignore-errors (eglot-format-buffer))))
 
 (defun my/enable-format-on-save ()
   (add-hook 'before-save-hook #'my/format-buffer nil t))
@@ -371,15 +370,185 @@
 (add-hook 'prog-mode-hook #'my/enable-format-on-save)
 
 ;;; ------------------------------------------------------------
-;;; language modes
+;;; systems programming: c, c++, assembly, zig, cmake, make
 ;;; ------------------------------------------------------------
+
+;; c/c++ settings
+(setq c-default-style "linux"
+      c-basic-offset 4)
+
+;; cmake
+(use-package cmake-mode
+  :defer t
+  :mode ("CMakeLists\\.txt\\'" "\\.cmake\\'"))
+
+;; modern cmake font-lock
+(use-package cmake-font-lock
+  :defer t
+  :after cmake-mode
+  :hook (cmake-mode . cmake-font-lock-activate))
+
+;; makefile mode (built-in)
+(add-hook 'makefile-mode-hook
+          (lambda ()
+            (setq-local tab-width 8)
+            (setq-local indent-tabs-mode t)))
+
+;; nasm assembly
+(use-package nasm-mode
+  :defer t
+  :mode ("\\.asm\\'" "\\.s\\'" "\\.nasm\\'"))
+
+;; zig - modern systems language
+(use-package zig-mode
+  :defer t
+  :mode "\\.zig\\'")
+
+;; compilation buffer improvements
+(use-package ansi-color
+  :ensure nil
+  :config
+  (defun my/colorize-compilation-buffer ()
+    (let ((inhibit-read-only t))
+      (ansi-color-apply-on-region compilation-filter-start (point))))
+  (add-hook 'compilation-filter-hook #'my/colorize-compilation-buffer))
+
+;; gdb multi-window layout
+(setq gdb-many-windows t
+      gdb-show-main t)
+
+;;; ------------------------------------------------------------
+;;; frontend: javascript, typescript, jsx, tsx, json, css, html
+;;; ------------------------------------------------------------
+
+;; javascript
+(use-package js2-mode
+  :defer t
+  :mode "\\.js\\'"
+  :config
+  (setq js2-basic-offset 2
+        js-indent-level 2))
+
+;; typescript
+(use-package typescript-mode
+  :defer t
+  :mode "\\.ts\\'"
+  :config
+  (setq typescript-indent-level 2))
+
+;; tsx support with tree-sitter (Emacs 29+)
+(when (>= emacs-major-version 29)
+  (use-package tsx-ts-mode
+    :ensure nil
+    :mode "\\.tsx\\'"))
+
+;; web-mode for jsx, html, templates
+(use-package web-mode
+  :defer t
+  :mode ("\\.jsx\\'"
+         "\\.html\\'"
+         "\\.php\\'"
+         "\\.vue\\'"
+         "\\.svelte\\'")
+  :config
+  (setq web-mode-markup-indent-offset 2
+        web-mode-css-indent-offset 2
+        web-mode-code-indent-offset 2
+        web-mode-enable-auto-pairing t
+        web-mode-enable-auto-closing t))
+
+;; json
+(use-package json-mode
+  :defer t
+  :mode "\\.json\\'")
+
+;; css/scss
+(use-package css-mode
+  :ensure nil
+  :defer t
+  :mode ("\\.css\\'" "\\.scss\\'")
+  :config
+  (setq css-indent-offset 2))
+
+;; emmet for html/css expansion
+(use-package emmet-mode
+  :defer t
+  :hook ((web-mode . emmet-mode)
+         (html-mode . emmet-mode)
+         (css-mode . emmet-mode)))
+
+;; prettier for formatting (alternative to eglot formatting)
+(use-package prettier-js
+  :defer t
+  :hook ((js2-mode . prettier-js-mode)
+         (typescript-mode . prettier-js-mode)
+         (web-mode . prettier-js-mode)
+         (json-mode . prettier-js-mode)))
+
+;;; ------------------------------------------------------------
+;;; devops: yaml, toml, dockerfile, terraform, ansible
+;;; ------------------------------------------------------------
+
+;; yaml
+(use-package yaml-mode
+  :defer t
+  :mode "\\.ya?ml\\'")
+
+;; toml
+(use-package toml-mode
+  :defer t
+  :mode "\\.toml\\'")
+
+;; dockerfile
+(use-package dockerfile-mode
+  :defer t
+  :mode "Dockerfile\\'")
+
+;; terraform
+(use-package terraform-mode
+  :defer t
+  :mode "\\.tf\\'")
+
+;; markdown
+(use-package markdown-mode
+  :defer t
+  :mode ("\\.md\\'" "\\.markdown\\'")
+  :config
+  (setq markdown-command "multimarkdown"))
+
+;; ansible (yaml with specific patterns)
+(use-package ansible
+  :defer t
+  :hook ((yaml-mode . (lambda ()
+                        (when (and (buffer-file-name)
+                                   (string-match-p "ansible" (buffer-file-name)))
+                          (ansible-mode))))))
+
+;; docker-compose
+(use-package docker-compose-mode
+  :defer t
+  :mode "docker-compose.*\\.ya?ml\\'")
+
+;; systemd unit files
+(use-package systemd
+  :defer t
+  :mode ("\\.service\\'" "\\.timer\\'" "\\.target\\'" 
+         "\\.mount\\'" "\\.socket\\'" "\\.path\\'"))
+
+;;; ------------------------------------------------------------
+;;; backend: elixir, python, go, rust, haskell
+;;; ------------------------------------------------------------
+
+;; elixir
+(use-package elixir-mode
+  :defer t
+  :mode "\\.exs?\\'")
 
 ;; go
 (use-package go-mode
   :defer t
   :mode "\\.go\\'"
   :config
-  ;; set GOPATH if needed (may be unnecessary with exec-path-from-shell)
   (when my/is-linux
     (setenv "GOPATH" (expand-file-name "~/go"))))
 
@@ -395,8 +564,19 @@
   :hook (haskell-mode . interactive-haskell-mode)
   :config
   (setq haskell-indentation-layout-offset 4
-    haskell-indentation-left-offset 4
-    haskell-indentation-starter-offset 4))
+        haskell-indentation-left-offset 4
+        haskell-indentation-starter-offset 4))
+
+;;; ------------------------------------------------------------
+;;; additional utilities
+;;; ------------------------------------------------------------
+
+;; flycheck for additional linting
+(use-package flycheck
+  :defer t
+  :hook (prog-mode . flycheck-mode)
+  :config
+  (setq flycheck-check-syntax-automatically '(save mode-enabled)))
 
 ;;; ------------------------------------------------------------
 ;;; performance tweaks
@@ -407,5 +587,11 @@
 
 ;; reduce startup time
 (setq package-enable-at-startup nil)
+
+;; increase the amount of data emacs reads from processes
+(setq read-process-output-max (* 1024 1024)) ;; 1mb
+
+;; use a larger compilation buffer
+(setq compilation-scroll-output t)
 
 (provide 'init)
