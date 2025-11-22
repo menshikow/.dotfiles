@@ -82,18 +82,18 @@
     (exec-path-from-shell-initialize)))
 
 ;;; ------------------------------------------------------------
-;;; debian settings
+;;; ubuntu settings
 ;;; ------------------------------------------------------------
 
 (when my/is-linux
   ;; use alt as meta
   (setq x-alt-keysym 'meta
-        x-super-keysym 'super)  ;; keep super as super
+        x-super-keysym 'super)
   
-  ;; better font rendering on Linux
+  ;; better font rendering on Ubuntu
   (setq-default line-spacing 0.1)
 
-  ;; inherit PATH from shell for GUI Emacs (useful on Debian)
+  ;; inherit PATH from shell for GUI Emacs
   (use-package exec-path-from-shell
     :config
     (exec-path-from-shell-initialize)))
@@ -195,17 +195,17 @@
 (global-set-key (kbd "M-e") #'find-file)
 
 ;; shortcuts
-(global-set-key (kbd "M-u") #'undo)         ;; undo
-(global-set-key (kbd "M-U") #'undo-redo)    ;; redo (Emacs 28+)
-(global-set-key (kbd "M-b") #'consult-buffer)   ;; buffers
-(global-set-key (kbd "M-c") #'compile)         ;; compile
-(global-set-key (kbd "C-c s") #'shell-command) ;; shell command
+(global-set-key (kbd "M-u") #'undo)
+(global-set-key (kbd "M-U") #'undo-redo)
+(global-set-key (kbd "M-b") #'consult-buffer)
+(global-set-key (kbd "M-c") #'compile)
+(global-set-key (kbd "C-c s") #'shell-command)
 
 ;; buffer management
-(global-set-key (kbd "M-w") #'kill-current-buffer)     ;; quick kill buffer
-(global-set-key (kbd "M-W") #'kill-buffer-and-window)  ;; kill buffer and window
+(global-set-key (kbd "M-w") #'kill-current-buffer)
+(global-set-key (kbd "M-W") #'kill-buffer-and-window)
 
-(setq compile-command "") ;; no default "make -k"
+(setq compile-command "")
 
 ;;; ------------------------------------------------------------
 ;;; tools: vterm, magit, dired
@@ -216,7 +216,6 @@
   :defer t
   :commands vterm
   :config
-  ;; better scrollback
   (setq vterm-max-scrollback 10000))
 
 (use-package magit
@@ -232,7 +231,7 @@
   (setq dired-omit-files "^\\(?:\\.?#\\|.*~$\\)")
   (add-hook 'dired-mode-hook #'dired-omit-mode)
   
-  ;; use gnu ls on mac if available for better sorting
+  ;; use gnu ls on mac if available
   (when my/is-mac
     (let ((gls (executable-find "gls")))
       (when gls
@@ -283,7 +282,6 @@
 (use-package cape
   :defer t
   :config
-  ;; add useful completion sources
   (add-to-list 'completion-at-point-functions #'cape-file)
   (add-to-list 'completion-at-point-functions #'cape-dabbrev))
 
@@ -311,8 +309,8 @@
          ("C-x 4 b" . consult-buffer-other-window)
          ("M-g g" . consult-goto-line)
          ("M-s l" . consult-line)
-         ("M-s g" . consult-ripgrep)  ;; project-wide search (requires ripgrep)
-         ("M-s f" . consult-find)))   ;; find files
+         ("M-s g" . consult-ripgrep)
+         ("M-s f" . consult-find)))
 
 (use-package embark
   :defer t
@@ -336,15 +334,39 @@
   (evil-multiedit-default-keybinds))
 
 ;;; ------------------------------------------------------------
-;;; eglot + format-on-save
+;;; eglot + formatters
 ;;; ------------------------------------------------------------
 
 (use-package eglot
   :defer t
-  :hook ((python-mode c-mode c++-mode go-mode rust-mode haskell-mode 
-          js-mode typescript-mode tsx-ts-mode elixir-mode zig-mode) . eglot-ensure)
+  :hook ((python-mode . eglot-ensure)
+         (c-mode . eglot-ensure)
+         (c++-mode . eglot-ensure)
+         (go-mode . eglot-ensure)
+         (rust-mode . eglot-ensure)
+         (haskell-mode . eglot-ensure)
+         (js-mode . eglot-ensure)
+         (typescript-mode . eglot-ensure)
+         (elixir-mode . eglot-ensure)
+         (zig-mode . eglot-ensure))
   :config
-  ;; add language servers
+  ;; language server configurations
+  (setq-default eglot-workspace-configuration
+                '(:pylsp (:plugins (:pycodestyle (:enabled :json-false)
+                                    :mccabe (:enabled :json-false)
+                                    :pyflakes (:enabled :json-false)
+                                    :autopep8 (:enabled :json-false)
+                                    :yapf (:enabled :json-false)))))
+  
+  ;; server programs
+  (add-to-list 'eglot-server-programs
+               '(python-mode . ("pylsp" "-v")))
+  (add-to-list 'eglot-server-programs
+               '((c-mode c++-mode) . ("clangd")))
+  (add-to-list 'eglot-server-programs
+               '(go-mode . ("gopls")))
+  (add-to-list 'eglot-server-programs
+               '(rust-mode . ("rust-analyzer")))
   (add-to-list 'eglot-server-programs
                '(haskell-mode . ("haskell-language-server-wrapper" "--lsp")))
   (add-to-list 'eglot-server-programs
@@ -353,21 +375,18 @@
                '(elixir-mode . ("elixir-ls")))
   (add-to-list 'eglot-server-programs
                '(zig-mode . ("zls")))
-  (add-to-list 'eglot-server-programs
-               '((c-mode c++-mode) . ("clangd")))
   
-  ;; increase timeout for large projects
-  (setq eglot-connect-timeout 30))
+  (setq eglot-connect-timeout 30
+        eglot-events-buffer-size 0)) ;; disable events buffer for performance
 
-;;; formatting
+;; format on save
 (defun my/format-buffer ()
-  (when (eglot-managed-p)
-    (ignore-errors (eglot-format-buffer))))
+  "Format buffer using eglot if available."
+  (when (and (eglot-managed-p)
+             (eglot--server-capable :documentFormattingProvider))
+    (eglot-format-buffer)))
 
-(defun my/enable-format-on-save ()
-  (add-hook 'before-save-hook #'my/format-buffer nil t))
-
-(add-hook 'prog-mode-hook #'my/enable-format-on-save)
+(add-hook 'before-save-hook #'my/format-buffer)
 
 ;;; ------------------------------------------------------------
 ;;; systems programming: c, c++, assembly, zig, cmake, make
@@ -440,7 +459,8 @@
 (when (>= emacs-major-version 29)
   (use-package tsx-ts-mode
     :ensure nil
-    :mode "\\.tsx\\'"))
+    :mode "\\.tsx\\'"
+    :hook (tsx-ts-mode . eglot-ensure)))
 
 ;; web-mode for jsx, html, templates
 (use-package web-mode
@@ -477,13 +497,18 @@
          (html-mode . emmet-mode)
          (css-mode . emmet-mode)))
 
-;; prettier for formatting (alternative to eglot formatting)
-(use-package prettier-js
+;; prettier integration via apheleia (better than prettier-js)
+(use-package apheleia
   :defer t
-  :hook ((js2-mode . prettier-js-mode)
-         (typescript-mode . prettier-js-mode)
-         (web-mode . prettier-js-mode)
-         (json-mode . prettier-js-mode)))
+  :hook ((js2-mode . apheleia-mode)
+         (typescript-mode . apheleia-mode)
+         (tsx-ts-mode . apheleia-mode)
+         (web-mode . apheleia-mode)
+         (json-mode . apheleia-mode)
+         (css-mode . apheleia-mode))
+  :config
+  (setf (alist-get 'prettier-json apheleia-formatters)
+        '("prettier" "--stdin-filepath" filepath)))
 
 ;;; ------------------------------------------------------------
 ;;; devops: yaml, toml, dockerfile, terraform, ansible
@@ -539,6 +564,14 @@
 ;;; backend: elixir, python, go, rust, haskell
 ;;; ------------------------------------------------------------
 
+;; python
+(use-package python
+  :ensure nil
+  :defer t
+  :config
+  (setq python-indent-guess-indent-offset nil
+        python-indent-offset 4))
+
 ;; elixir
 (use-package elixir-mode
   :defer t
@@ -549,13 +582,16 @@
   :defer t
   :mode "\\.go\\'"
   :config
+  (setq gofmt-command "goimports")
   (when my/is-linux
     (setenv "GOPATH" (expand-file-name "~/go"))))
 
 ;; rust
 (use-package rust-mode
   :defer t
-  :mode "\\.rs\\'")
+  :mode "\\.rs\\'"
+  :config
+  (setq rust-format-on-save nil)) ;; let eglot handle it
 
 ;; haskell
 (use-package haskell-mode
@@ -571,12 +607,13 @@
 ;;; additional utilities
 ;;; ------------------------------------------------------------
 
-;; flycheck for additional linting
+;; flycheck for additional linting (works alongside eglot)
 (use-package flycheck
   :defer t
   :hook (prog-mode . flycheck-mode)
   :config
-  (setq flycheck-check-syntax-automatically '(save mode-enabled)))
+  (setq flycheck-check-syntax-automatically '(save mode-enabled)
+        flycheck-indication-mode 'left-fringe))
 
 ;;; ------------------------------------------------------------
 ;;; performance tweaks
