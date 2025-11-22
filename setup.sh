@@ -1,6 +1,5 @@
 #!/bin/bash
-# Development Environment Setup Script
-# Run with: bash setup.sh
+# run bash setup.sh
 
 set -e
 
@@ -11,15 +10,14 @@ echo "Setting up development environment..."
 echo "Platform: $PLATFORM"
 echo "======================================"
 
-# Detect package manager
 if [[ "$PLATFORM" == "Darwin" ]]; then
     PKG_MGR="brew"
-    echo "📦 Installing Homebrew packages..."
+    echo "installing homebrew packages..."
 elif [[ "$PLATFORM" == "Linux" ]]; then
     PKG_MGR="apt"
-    echo "📦 Installing apt packages..."
+    echo "installing apt packages..."
 else
-    echo "❌ Unsupported platform: $PLATFORM"
+    echo "Unsupported platform: $PLATFORM"
     exit 1
 fi
 
@@ -40,13 +38,13 @@ if [[ "$PKG_MGR" == "brew" ]]; then
         coreutils \
         multimarkdown
     
-    echo "Installing fonts..."
+    echo "installing fonts..."
     brew tap homebrew/cask-fonts
     brew install --cask font-iosevka
 
 elif [[ "$PKG_MGR" == "apt" ]]; then
     # Ubuntu
-    echo "Installing system tools..."
+    echo "installing system tools..."
     sudo apt update
     sudo apt install -y \
         emacs \
@@ -310,33 +308,4 @@ if [[ -f ~/.emacs.d/init.el ]]; then
     cp ~/.emacs.d/init.el ~/.emacs.d/init.el.backup
 fi
 
-# The init.el should be copied manually or symlinked
-echo ""
-echo "⚠️  Don't forget to copy your init.el to ~/.emacs.d/init.el"
-
-# ============================================================
-# Summary
-# ============================================================
-
-echo ""
-echo "======================================"
-echo "✅ Setup complete!"
-echo "======================================"
-echo ""
-echo "Installed language servers:"
-echo "  • Python: pylsp"
-echo "  • JavaScript/TypeScript: typescript-language-server"
-echo "  • Go: gopls"
-echo "  • Rust: rust-analyzer"
-echo "  • Haskell: haskell-language-server"
-echo "  • Zig: zls"
-echo "  • Elixir: elixir-ls"
-echo "  • C/C++: clangd"
-echo ""
-echo "Next steps:"
-echo "  1. Copy init.el to ~/.emacs.d/init.el"
-echo "  2. Restart your terminal (or run: source ~/.bashrc)"
-echo "  3. Start Emacs and let it install packages"
-echo "  4. On Ubuntu: Log out and back in for Docker group to take effect"
-echo ""
-echo "======================================"
+echo "idi nahui"
