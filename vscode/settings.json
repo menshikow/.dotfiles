@@ -1,42 +1,44 @@
 {
-  // --- Global Editor ---
+  // editor Core
+  "editor.fontSize": 16,
+  "editor.fontFamily": "JetBrainsMono Nerd Font Mono",
   "editor.tabSize": 4,
   "editor.insertSpaces": true,
   "editor.formatOnSave": true,
-  "editor.scrollbar.horizontal": "hidden",
   "editor.lineNumbers": "relative",
-  "editor.fontSize": 17,
-  "editor.fontFamily": "Menlo",
-  "editor.overtypeCursorStyle": "line",
+  "editor.cursorBlinking": "solid",
   "editor.minimap.enabled": false,
   "editor.stickyScroll.enabled": false,
   "editor.renderWhitespace": "none",
-  "breadcrumbs.enabled": false,
+  "editor.renderLineHighlight": "none",
+  "editor.scrollbar.horizontal": "hidden",
 
-  // --- Language Specific (2 spaces for C/C++) ---
+  // auto-completion (disabled)
+  "editor.autoClosingBrackets": "never",
+  "editor.autoClosingQuotes": "never",
+  "editor.autoSurround": "never",
+  "editor.autoClosingDelete": "never",
+  "editor.autoClosingOvertype": "never",
+
+  // javaScript/typeScript
   "[javascript][typescript][typescriptreact][json][jsonc]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.tabSize": 2,
-    "editor.insertSpaces": true,
-    "editor.formatOnSave": true
-  },
-  "[c]": {
-    "editor.defaultFormatter": "ms-vscode.cpptools",
-    "editor.tabSize": 2,
-    "editor.insertSpaces": true,
-    "editor.formatOnSave": true
-  },
-  "[cpp]": {
-    "editor.defaultFormatter": "ms-vscode.cpptools",
-    "editor.tabSize": 2,
-    "editor.insertSpaces": true,
-    "editor.formatOnSave": true
+    "editor.tabSize": 2
   },
 
-  // --- clang-format (C/C++) ---
-  "C_Cpp.clang_format_style": "{ BasedOnStyle: LLVM, IndentWidth: 2, UseTab: Never, TabWidth: 2, BreakBeforeBraces: Attach }",
+  // c/c++
+  "[c][cpp]": {
+    "editor.defaultFormatter": "ms-vscode.cpptools",
+    "editor.tabSize": 2
+  },
+  "C_Cpp.errorSquiggles": "enabled",
+  "C_Cpp.intelliSenseEngine": "default",
+  "C_Cpp.inlayHints.parameterNames.enabled": true,
+  "C_Cpp.inlayHints.referenceOperator.enabled": true,
+  "C_Cpp.dimInactiveRegions": true,
+  "C_Cpp.clang_format_style": "LLVM",
 
-  // --- Python ---
+  // python
   "python.formatting.provider": "black",
   "python.formatting.blackArgs": ["--line-length", "88"],
   "python.linting.enabled": true,
@@ -47,12 +49,10 @@
   "python.analysis.diagnosticMode": "workspace",
   "python.analysis.inlayHints.variableTypes": true,
   "python.analysis.inlayHints.functionReturnTypes": true,
-  "python.analysis.extraPaths": ["./src"],
 
-  // --- Go ---
+  // go
   "[go]": {
-    "editor.defaultFormatter": "golang.go",
-    "editor.formatOnSave": true
+    "editor.defaultFormatter": "golang.go"
   },
   "go.formatTool": "gofmt",
   "go.lintTool": "golangci-lint",
@@ -62,104 +62,53 @@
     "ui.semanticTokens": true
   },
 
-  // --- Rust ---
+  // rust
   "[rust]": {
-    "editor.defaultFormatter": "rust-lang.rust-analyzer",
-    "editor.formatOnSave": true
+    "editor.defaultFormatter": "rust-lang.rust-analyzer"
   },
   "rust-analyzer.checkOnSave.command": "clippy",
   "rust-analyzer.inlayHints.enable": true,
 
-  // --- SQL ---
+  // sql
   "[sql]": {
-    "editor.defaultFormatter": "adpyke.vscode-sql-formatter",
-    "editor.formatOnSave": true
+    "editor.defaultFormatter": "adpyke.vscode-sql-formatter"
   },
-  "database-client.autoSync": true,
 
-  // --- Git / GitHub ---
-  "git.openRepositoryInParentFolders": "never",
+  // git
   "git.autofetch": true,
-  "github.copilot.editor.enableCodeActions": false,
+  "git.confirmSync": false,
+  "git.enableSmartCommit": true,
+  "git.openRepositoryInParentFolders": "never",
 
-  // --- Vim Extension ---
+  // workbench
+  "workbench.startupEditor": "none",
+  "workbench.sideBar.location": "right",
+  "workbench.colorTheme": "Poimandres Alternate",
+  "workbench.editor.editorActionsLocation": "titleBar",
+  "breadcrumbs.enabled": false,
+
+  // extensions
+  "github.copilot.editor.enableCodeActions": false,
   "extensions.experimental.affinity": {
     "vscodevim.vim": 1
   },
-  "vim.easymotion": true,
-  "vim.incsearch": true,
-  "vim.useSystemClipboard": true,
-  "vim.useCtrlKeys": true,
-  "vim.hlsearch": true,
-  "vim.cursorStylePerMode": {
-    "normal": "block",
-    "insert": "line",
-    "visual": "block",
-    "replace": "underline"
-  },
 
-  // --- Workbench / UI ---
-  "workbench.editor.editorActionsLocation": "titleBar",
+  // theme 
   "workbench.colorCustomizations": {
     "[Vira*]": {
       "statusBar.debuggingBackground": "#80CBC433",
       "statusBar.debuggingForeground": "#80CBC4",
-      "toolbar.activeBackground": "#80CBC426",
       "button.background": "#80CBC4",
-      "button.hoverBackground": "#80CBC4cc",
-      "extensionButton.separator": "#80CBC433",
-      "extensionButton.background": "#80CBC414",
-      "extensionButton.foreground": "#80CBC4",
-      "extensionButton.hoverBackground": "#80CBC433",
-      "extensionButton.prominentForeground": "#80CBC4",
-      "extensionButton.prominentBackground": "#80CBC414",
-      "extensionButton.prominentHoverBackground": "#80CBC433",
-      "activityBarBadge.background": "#80CBC4",
-      "activityBar.activeBorder": "#80CBC4",
-      "activityBarTop.activeBorder": "#80CBC4",
-      "list.inactiveSelectionIconForeground": "#80CBC4",
-      "list.activeSelectionForeground": "#80CBC4",
-      "list.inactiveSelectionForeground": "#80CBC4",
-      "list.highlightForeground": "#80CBC4",
-      "sash.hoverBorder": "#80CBC480",
-      "list.activeSelectionIconForeground": "#80CBC4",
-      "scrollbarSlider.activeBackground": "#80CBC480",
-      "editorSuggestWidget.highlightForeground": "#80CBC4",
-      "textLink.foreground": "#80CBC4",
-      "progressBar.background": "#80CBC4",
-      "pickerGroup.foreground": "#80CBC4",
-      "tab.activeBorder": "#80CBC4",
-      "tab.activeBorderTop": "#80CBC400",
-      "tab.unfocusedActiveBorder": "#80CBC4",
-      "tab.unfocusedActiveBorderTop": "#80CBC400",
-      "tab.activeModifiedBorder": "#80CBC400",
-      "notificationLink.foreground": "#80CBC4",
-      "editorWidget.resizeBorder": "#80CBC4",
-      "editorWidget.border": "#80CBC4",
-      "settings.modifiedItemIndicator": "#80CBC4",
-      "panelTitle.activeBorder": "#80CBC4",
-      "breadcrumb.activeSelectionForeground": "#80CBC4",
-      "menu.selectionForeground": "#80CBC4",
-      "menubar.selectionForeground": "#80CBC4",
-      "editor.findMatchBorder": "#80CBC4",
-      "selection.background": "#80CBC440",
-      "statusBarItem.remoteBackground": "#80CBC414",
-      "statusBarItem.remoteHoverBackground": "#80CBC4",
-      "statusBarItem.remoteForeground": "#80CBC4",
-      "notebook.inactiveFocusedCellBorder": "#80CBC480",
-      "commandCenter.activeBorder": "#80CBC480",
-      "chat.slashCommandForeground": "#80CBC4",
-      "chat.avatarForeground": "#80CBC4",
-      "activityBarBadge.foreground": "#000000",
       "button.foreground": "#000000",
-      "statusBarItem.remoteHoverForeground": "#000000"
+      "activityBarBadge.background": "#80CBC4",
+      "activityBarBadge.foreground": "#000000",
+      "activityBar.activeBorder": "#80CBC4",
+      "list.highlightForeground": "#80CBC4",
+      "tab.activeBorder": "#80CBC4",
+      "progressBar.background": "#80CBC4",
+      "panelTitle.activeBorder": "#80CBC4",
+      "editor.findMatchBorder": "#80CBC4",
+      "selection.background": "#80CBC440"
     }
-  },
-  "makefile.configureOnOpen": true,
-  "workbench.startupEditor": "none",
-  "workbench.iconTheme": "symbols",
-  "workbench.colorTheme": "poimandres-noitalics",
-  "editor.cursorBlinking": "solid",
-  "git.confirmSync": false,
-  "git.enableSmartCommit": true
+  }
 }
