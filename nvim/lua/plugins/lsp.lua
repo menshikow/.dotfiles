@@ -48,6 +48,7 @@ return {
         })
 
         vim.diagnostic.config({
+            -- floating window settings
             float = {
                 border = "rounded",
                 source = "always",
@@ -117,7 +118,7 @@ return {
                     { name = "nvim_lsp" },
                 },
                 mapping = cmp.mapping.preset.insert({
-                    ["<CR>"] = cmp.mapping.confirm({ select = false }),
+                    ["<CR>"] = cmp.mapping.confirm({ select = false }), -- confirm
                     ["<C-Space>"] = cmp.mapping.complete(),
                     -- moving by suggestions
                     ["<Tab>"] = cmp.mapping.select_next_item(),

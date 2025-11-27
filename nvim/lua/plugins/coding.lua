@@ -1,8 +1,4 @@
 return {
-    {
-        "lewis6991/gitsigns.nvim",
-        opts = {},
-    },
     { "tpope/vim-surround" },
     {
         "windwp/nvim-ts-autotag",

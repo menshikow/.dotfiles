@@ -22,7 +22,7 @@ map("x", "<leader>p", [["_dP]], opts)
 -- delete without yanking
 map({ "n", "v" }, "<leader>d", [["_d]], opts)
 
--- clear search highlights
+-- Clear search highlights
 map("n", "<Esc>", "<cmd>nohlsearch<CR>", opts)
 
 -- presenter mode toggle (you could make this a toggle)
