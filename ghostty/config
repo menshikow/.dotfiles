@@ -2,5 +2,3 @@ theme = "Gruvbox Dark Hard"
 font-size = 16
 mouse-hide-while-typing = true
 cursor-style = block
-background = #111111
-
