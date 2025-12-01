@@ -1,4 +1,5 @@
-theme = "Gruvbox Dark Hard"
+font-family = "Geist Mono"
+theme = "Black Metal"
 font-size = 16
 mouse-hide-while-typing = true
 cursor-style = block
