@@ -87,3 +87,11 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 # GHCup
 [ -f "/Users/madonnaprayer/.ghcup/env" ] && . "/Users/madonnaprayer/.ghcup/env"
 . $HOME/.asdf/asdf.sh
+
+# pnpm
+export PNPM_HOME="/Users/madonnaprayer/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
