@@ -138,7 +138,7 @@ return {
 			formatters_by_ft = {
 				c = { "clang_format" },
 				cpp = { "clang_format" },
-				python = { "isort", "black" },
+				python = { "ruff_format" },
 				javascript = { "prettier" },
 				typescript = { "prettier" },
 				javascriptreact = { "prettier" },
