@@ -62,7 +62,7 @@ return {
 			local servers = {
 				basedpyright = {
 					settings = {
-						basedpyright = { typeCheckingMode = "standard" },
+						basedpyright = { typeCheckingMode = "basic" },
 					},
 				},
 				clangd = {
