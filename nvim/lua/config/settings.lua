@@ -1,9 +1,9 @@
--- curosr
-vim.opt.guicursor = {
-    "n-v:block",
-    "i:blinkwait300-blinkon500-blinkoff300-block",
-    "r-cr:hor20",
-}
+-- --curosr
+-- vim.opt.guicursor = {
+-- 	"n-v:block",
+-- 	"i:blinkwait300-blinkon500-blinkoff300-block",
+-- 	"r-cr:hor20",
+-- }
 
 -- clipboard
 vim.opt.clipboard = "unnamedplus"

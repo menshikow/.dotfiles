@@ -1,33 +1,37 @@
+-- return {
+-- 	{
+-- 		"mcchrish/zenbones.nvim",
+-- 		dependencies = "rktjmp/lush.nvim",
+-- 		lazy = false,
+-- 		priority = 1000,
+-- 		config = function()
+-- 			vim.opt.termguicolors = true
+--
+-- 			vim.g.zenbones_darken_comments = 45
+-- 			vim.g.zenbones_lighten_noncurrent_window = flase
+-- 			vim.g.zenbones_transparent_background = false
+--
+-- 			vim.cmd.colorscheme("zenbones")
+-- 		end,
+-- 	},
+-- }
+
 return {
-    "rose-pine/neovim",
-    name = "rose-pine",
-    lazy = false,
-    priority = 1000,
-    opts = {
-        variant = "main",
-        dark_variant = "main",
-        dim_inactive_windows = false,
-        extend_background_behind_borders = true,
-
-        styles = {
-            bold = false,
-            italic = false,
-            transparency = false,
-        },
-
-        palette = {
-            main = {
-                base = "#000000",
-            },
-        },
-
-        highlight_groups = {
-            Normal = { bg = "base", fg = "text" },
-            NormalFloat = { bg = "base" },
-        },
-    },
-    config = function(_, opts)
-        require("rose-pine").setup(opts)
-        vim.cmd("colorscheme rose-pine")
-    end,
+	"folke/tokyonight.nvim",
+	lazy = false,
+	priority = 1000,
+	opts = {
+		styles = {
+			comments = { italic = true },
+			keywords = { italic = false },
+			functions = { italic = false },
+			variables = { italic = false },
+			sidebars = "dark",
+			floats = "dark",
+		},
+	},
+	config = function(_, opts)
+		require("tokyonight").setup(opts)
+		vim.cmd([[colorscheme tokyonight-night]])
+	end,
 }
