@@ -1,5 +1,4 @@
 return {
-	-- 1. LAZYDEV
 	{
 		"folke/lazydev.nvim",
 		ft = "lua",
@@ -10,13 +9,12 @@ return {
 		},
 	},
 
-	-- 2. TREESITTER
 	{
 		"nvim-treesitter/nvim-treesitter",
 		build = ":TSUpdate",
 		lazy = false,
 		config = function()
-			-- Force clang für macOS
+			-- force clang for macos
 			require("nvim-treesitter.install").compilers = { "clang" }
 
 			require("nvim-treesitter.configs").setup({
@@ -37,7 +35,7 @@ return {
 		dependencies = { "nvim-treesitter/nvim-treesitter" },
 	},
 
-	-- 3. VIMTEX
+	-- vimtex
 	{
 		"lervag/vimtex",
 		lazy = false,
@@ -49,7 +47,7 @@ return {
 		end,
 	},
 
-	-- 4. LSP (Language Servers)
+	-- lsp
 	{
 		"neovim/nvim-lspconfig",
 		dependencies = {
@@ -86,7 +84,7 @@ return {
 				},
 			})
 
-			-- DIAGNOSTICS UI
+			-- diagnostic ui
 			vim.diagnostic.config({
 				virtual_text = false,
 				float = { border = "rounded", source = true },
@@ -115,7 +113,7 @@ return {
 		end,
 	},
 
-	-- 5. CONFORM (Formatting)
+	-- formatting
 	{
 		"stevearc/conform.nvim",
 		event = { "BufWritePre" },
@@ -154,7 +152,7 @@ return {
 		},
 	},
 
-	-- 6. COMPLETION (CMP)
+	-- completion
 	{
 		"hrsh7th/nvim-cmp",
 		dependencies = { "L3MON4D3/LuaSnip" },
