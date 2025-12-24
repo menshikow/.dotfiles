@@ -1,5 +1,4 @@
 {
-  "current_line_highlight": "none",
   "icon_theme": "Symbols Icon Theme",
   "buffer_font_features": {
     "calt": false
@@ -32,7 +31,7 @@
   "scrollbar": {
     "show": "never"
   },
-  "relative_line_numbers": "enabled",
+  "relative_line_numbers": true,
   // "use_auto_surround": false,
   // "use_autoclose": false
 }
