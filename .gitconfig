@@ -1,0 +1,23 @@
+[core]
+    editor = nvim
+    autocrlf = input
+
+[push]
+    default = simple
+
+[color]
+    ui = auto
+
+[init]
+    defaultBranch = main
+
+[alias]
+    s = status
+    c = commit
+    co = checkout
+    br = branch
+    l = log --graph --oneline --all
+    last = log -1 HEAD
+
+[include]
+    path = ~/.gitconfig.local
