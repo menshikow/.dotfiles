@@ -1,42 +1,42 @@
-return {
-	"metalelf0/black-metal-theme-neovim",
-	lazy = false,
-	priority = 1000,
-	config = function()
-		require("black-metal").setup({
-			theme = "khold",
-			code_style = {
-				comments = "italic",
-				conditionals = "none",
-				functions = "none",
-				keywords = "none",
-				headings = "bold", -- markdown headings
-				operators = "none",
-				keyword_return = "none",
-				strings = "none",
-				variables = "none",
-			},
-		})
-		require("black-metal").load()
-	end,
-}
-
 -- return {
--- 	"folke/tokyonight.nvim",
+-- 	"metalelf0/black-metal-theme-neovim",
 -- 	lazy = false,
 -- 	priority = 1000,
 -- 	config = function()
--- 		require("tokyonight").setup({
--- 			styles = {
--- 				comments = { italic = true },
--- 				keywords = { italic = false },
--- 				functions = { italic = false },
--- 				variables = { italic = false },
+-- 		require("black-metal").setup({
+-- 			theme = "khold",
+-- 			code_style = {
+-- 				comments = "italic",
+-- 				conditionals = "none",
+-- 				functions = "none",
+-- 				keywords = "none",
+-- 				headings = "bold", -- markdown headings
+-- 				operators = "none",
+-- 				keyword_return = "none",
+-- 				strings = "none",
+-- 				variables = "none",
 -- 			},
 -- 		})
--- 		vim.cmd([[colorscheme tokyonight-night]])
+-- 		require("black-metal").load()
 -- 	end,
 -- }
+
+return {
+	"folke/tokyonight.nvim",
+	lazy = false,
+	priority = 1000,
+	config = function()
+		require("tokyonight").setup({
+			styles = {
+				comments = { italic = true },
+				keywords = { italic = false },
+				functions = { italic = false },
+				variables = { italic = false },
+			},
+		})
+		vim.cmd([[colorscheme tokyonight-night]])
+	end,
+}
 
 -- return {
 -- 	"rose-pine/neovim",
