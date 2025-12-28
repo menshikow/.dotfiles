@@ -38,49 +38,23 @@
 -- 	end,
 -- }
 
--- return {
--- 	"rose-pine/neovim",
--- 	priority = 1000,
--- 	name = "rose-pine",
--- 	config = function()
--- 		require("rose-pine").setup({
--- 			styles = {
--- 				bold = false,
--- 				italic = false,
--- 				transparency = false,
--- 			},
--- 			highlight_groups = {
--- 				Normal = { bg = "#000000" },
--- 				NormalNC = { bg = "#000000" },
--- 				NormalFloat = { bg = "#000000" },
--- 			},
--- 		})
--- 		vim.cmd("colorscheme rose-pine")
--- 	end,
--- }
-
 return {
-	"blazkowolf/gruber-darker.nvim",
-	lazy = false,
+	"rose-pine/neovim",
 	priority = 1000,
-	name = "gruber-darker",
+	name = "rose-pine",
 	config = function()
-		require("gruber-darker").setup({
-			bold = true,
-			invert = {
-				signs = false,
-				tabline = false,
-				visual = false,
+		require("rose-pine").setup({
+			styles = {
+				bold = false,
+				italic = false,
+				transparency = false,
 			},
-			italic = {
-				strings = false,
-				comments = false,
-				operators = false,
-				folds = false,
+			highlight_groups = {
+				Normal = { bg = "#000000" },
+				NormalNC = { bg = "#000000" },
+				NormalFloat = { bg = "#000000" },
 			},
-			undercurl = true,
-			underline = true,
 		})
-		vim.cmd.colorscheme("gruber-darker")
+		vim.cmd("colorscheme rose-pine")
 	end,
 }
