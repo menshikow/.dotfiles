@@ -1,139 +1,281 @@
-;;; -*- lexical-binding: t; -*-
+;;; init.el --- Final Config -*- lexical-binding: t -*-
 
-;; --- Basic Settings ---
-(setq inhibit-startup-screen t
-      visible-bell nil
-      ring-bell-function 'ignore
-      auto-save-default nil
-      create-lockfiles nil
-      gc-cons-threshold (* 50 1000 1000)
-      read-process-output-max (* 1024 1024)
-      scroll-conservatively 101
-      scroll-margin 3
-      mouse-wheel-scroll-amount '(2 ((shift) . 1))
-      mouse-wheel-progressive-speed nil)
+;; -----------------------------------------------------------------------------
+;; 1. CORE & PERFORMANCE
+;; -----------------------------------------------------------------------------
 
-(menu-bar-mode -1)
-(tool-bar-mode -1)
-(scroll-bar-mode -1)
-(add-to-list 'default-frame-alist '(fullscreen . maximized))
+;; Make startup faster by reducing garbage collection frequency
+(setq gc-cons-threshold (* 50 1000 1000))
 
-(fset 'yes-or-no-p 'y-or-n-p)
-(save-place-mode 1)
-(savehist-mode 1)
-(recentf-mode 1)
-(global-hl-line-mode 1)
+;; Keep custom settings in a separate file
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+(when (file-exists-p custom-file)
+  (load custom-file))
 
-;; --- Line Numbers (global with exceptions) ---
-(setq display-line-numbers-type 'relative)
-(global-display-line-numbers-mode 1)
-(dolist (mode '(term-mode vterm-mode shell-mode compilation-mode))
-  (add-hook (intern (concat (symbol-name mode) "-hook"))
-            (lambda () (display-line-numbers-mode 0))))
+;; -----------------------------------------------------------------------------
+;; 2. PACKAGE MANAGEMENT
+;; -----------------------------------------------------------------------------
 
-;; --- Font ---
-(when (member "JetBrainsMono Nerd Font Mono" (font-family-list))
-  (set-face-attribute 'default nil :font "JetBrainsMono Nerd Font Mono" :height 150))
-(setq-default cursor-type 'box)
-
-;; --- Package Management ---
 (require 'package)
-(setq package-archives
-      '(("gnu" . "https://elpa.gnu.org/packages/")
-        ("melpa" . "https://melpa.org/packages/")))
+(setq package-archives '(("melpa" . "https://melpa.org/packages/")
+                         ("org"   . "https://orgmode.org/elpa/")
+                         ("elpa"  . "https://elpa.gnu.org/packages/")))
+
 (package-initialize)
 
+;; Automatically refresh package list if it's empty (fixes first-run errors)
+(unless package-archive-contents
+  (package-refresh-contents))
+
+;; Install use-package
 (unless (package-installed-p 'use-package)
-  (package-refresh-contents)
   (package-install 'use-package))
+
 (require 'use-package)
 (setq use-package-always-ensure t)
 
-;; --- Mac-specific tweaks ---
-(defconst my/is-mac (eq system-type 'darwin))
-(when my/is-mac
-  (setq ns-option-modifier 'none
-        ns-command-modifier 'meta)
-  (use-package exec-path-from-shell
-    :config (exec-path-from-shell-initialize)))
+;; Fix PATH on macOS (so Emacs sees things like node, go, cargo)
+(use-package exec-path-from-shell
+  :config
+  (exec-path-from-shell-initialize))
 
-;; --- Evil ---
-(setq evil-want-keybinding nil
-      evil-want-C-u-scroll t
-      evil-undo-system 'undo-redo)
+;; -----------------------------------------------------------------------------
+;; 3. UI & VISUALS
+;; -----------------------------------------------------------------------------
+
+;; Clean UI (no bars)
+(tool-bar-mode -1)
+(menu-bar-mode -1)
+(scroll-bar-mode -1)
+(setq inhibit-startup-message t
+      visible-bell nil
+      ring-bell-function 'ignore)
+
+;; Font & Line Numbers
+(set-face-attribute 'default nil :font "Geist Mono" :height 160)
+(column-number-mode)
+(global-display-line-numbers-mode t)
+
+;; Cursor: Force it to be a BOX in all cases
+(setq-default cursor-type 'box)
+
+;; Scrolling
+(setq mouse-wheel-scroll-amount '(2 ((shift) . 1))
+      mouse-wheel-progressive-speed nil
+      scroll-conservatively 101
+      scroll-margin 3)
+
+;; MacOS Keys: Command = Meta, Option = Normal
+(setq mac-command-modifier 'meta)
+(setq mac-option-modifier nil)
+
+;; Start Maximized
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
+
+;; Theme
+(use-package gruber-darker-theme
+  :config
+  (load-theme 'gruber-darker t))
+
+(use-package rainbow-delimiters
+  :hook (prog-mode . rainbow-delimiters-mode))
+
+;; -----------------------------------------------------------------------------
+;; 4. EVIL MODE (VIM)
+;; -----------------------------------------------------------------------------
+
+(use-package undo-fu)
+
 (use-package evil
+  :init
+  (setq evil-want-integration t)
+  (setq evil-want-keybinding nil)
+  (setq evil-undo-system 'undo-fu)
   :config
   (evil-mode 1)
-  ;; box cursor in all modes
-  (setq evil-normal-state-cursor 'box
-        evil-insert-state-cursor 'box
-        evil-visual-state-cursor 'box
-        evil-replace-state-cursor 'box))
+  ;; Force Box Cursor in ALL states (Insert, Normal, Visual)
+  (setq evil-insert-state-cursor 'box)
+  (setq evil-normal-state-cursor 'box)
+  (setq evil-visual-state-cursor 'box))
 
 (use-package evil-collection
   :after evil
-  :config (evil-collection-init))
+  :config
+  (evil-collection-init))
 
-(global-set-key (kbd "<escape>") #'keyboard-escape-quit)
+;; Keybindings (Leader = SPACE)
+(use-package general
+  :config
+  (general-create-definer my-leader-def
+    :keymaps '(normal visual emacs)
+    :prefix "SPC"
+    :global-prefix "C-SPC")
 
-;; --- Theme ---
-(use-package badger-theme
-  :config (load-theme 'badger t))
+  (my-leader-def
+    "f"  '(:ignore t :which-key "files")
+    "ff" '(find-file :which-key "find file")
+    "fs" '(save-buffer :which-key "save file")
 
-;; --- Keybindings ---
+    "b"  '(:ignore t :which-key "buffers")
+    "bb" '(consult-buffer :which-key "switch buffer")
+    "bk" '(kill-current-buffer :which-key "kill buffer")
+
+    "w"  '(:ignore t :which-key "window")
+    "wl" '(evil-window-right :which-key "right")
+    "wh" '(evil-window-left :which-key "left")
+    "wk" '(evil-window-up :which-key "up")
+    "wj" '(evil-window-down :which-key "down")
+    "w/" '(split-window-right :which-key "v-split")
+    "w-" '(split-window-below :which-key "h-split")
+    "wd" '(delete-window :which-key "delete")
+
+    "g"  '(:ignore t :which-key "git")
+    "gs" '(magit-status :which-key "status")
+
+    "e"  '(:ignore t :which-key "errors")
+    "el" '(flymake-show-buffer-diagnostics :which-key "list")
+    "en" '(flymake-goto-next-error :which-key "next")
+    "ep" '(flymake-goto-prev-error :which-key "prev")))
+
+;; Global Keys
 (global-set-key (kbd "M-=") #'text-scale-increase)
 (global-set-key (kbd "M--") #'text-scale-decrease)
 (global-set-key (kbd "M-0") (lambda () (interactive) (text-scale-set 0)))
-(global-set-key (kbd "M-w") #'kill-current-buffer)
-(global-set-key (kbd "M-W") #'kill-buffer-and-window)
-(global-set-key (kbd "C-c s") #'shell-command)
-(global-set-key (kbd "M-e") #'find-file)
-(global-set-key (kbd "M-b") #'switch-to-buffer)
-(global-set-key (kbd "M-c") #'compile)
-(global-set-key (kbd "C-c r") #'recompile)
-(global-set-key (kbd "M-.") #'xref-find-definitions)
-(global-set-key (kbd "M-,") #'xref-pop-marker-stack)
-(global-set-key (kbd "M-/") #'comment-line)
 (global-set-key (kbd "M-d") #'dired-jump)
+(global-set-key (kbd "M-e") #'find-file)
+(global-set-key (kbd "C-c s") #'shell-command)
 
-;; --- Eglot & C/C++ ---
+;; -----------------------------------------------------------------------------
+;; 5. NAVIGATION & SEARCH
+;; -----------------------------------------------------------------------------
+
+(use-package vertico
+  :init (vertico-mode))
+
+(use-package savehist
+  :init (savehist-mode))
+
+(use-package consult
+  :bind (("C-s" . consult-line)
+         ("C-x b" . consult-buffer)))
+
+(use-package marginalia
+  :init (marginalia-mode))
+
+(use-package orderless
+  :custom
+  (completion-styles '(orderless basic))
+  (completion-category-overrides '((file (styles basic partial-completion)))))
+
+;; -----------------------------------------------------------------------------
+;; 6. DEVELOPMENT
+;; -----------------------------------------------------------------------------
+
+(use-package magit)
+
+(use-package corfu
+  :init
+  (global-corfu-mode)
+  :custom
+  (corfu-auto t)
+  (corfu-quit-no-match 'separator))
+
 (use-package eglot
-  :hook ((c-mode . eglot-ensure)
-         (c++-mode . eglot-ensure))
+  :hook ((python-mode . eglot-ensure)
+         (rust-mode . eglot-ensure)
+         (c-mode . eglot-ensure)
+         (c++-mode . eglot-ensure)
+         (go-mode . eglot-ensure)
+         (js-mode . eglot-ensure)
+         (typescript-mode . eglot-ensure)
+         (web-mode . eglot-ensure))
   :config
-  (add-to-list 'eglot-server-programs
-               '((c-mode c++-mode) . ("clangd")))
-  (setq eglot-connect-timeout 30))
+  (setq eglot-events-buffer-size 0))
 
-(defun my/format-buffer ()
-  (when (and (eglot-managed-p)
-             (eglot--server-capable :documentFormattingProvider))
+;; Format on Save
+(defun my/eglot-format-on-save ()
+  (when (eglot-managed-p)
     (eglot-format-buffer)))
-(add-hook 'before-save-hook #'my/format-buffer)
 
-;; --- Compilation Improvements ---
-(use-package ansi-color
-  :ensure nil
+(add-hook 'before-save-hook #'my/eglot-format-on-save)
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+
+;; -----------------------------------------------------------------------------
+;; 7. LANGUAGES
+;; -----------------------------------------------------------------------------
+
+;; Web (JS/TS/HTML/CSS)
+(use-package web-mode
+  :mode ("\\.html\\'" "\\.css\\'" "\\.jsx\\'" "\\.tsx\\'" "\\.ts\\'")
   :config
-  (defun my/colorize-compilation-buffer ()
-    (let ((inhibit-read-only t))
-      (ansi-color-apply-on-region compilation-filter-start (point))))
-  (add-hook 'compilation-filter-hook #'my/colorize-compilation-buffer))
+  (setq web-mode-code-indent-offset 2)
+  (setq web-mode-css-indent-offset 2)
+  (setq web-mode-markup-indent-offset 2))
 
-;; --- C/C++ Style ---
-(setq c-default-style "linux"
-      c-basic-offset 4)
+(use-package typescript-mode)
 
-;; --- Mode Line ---
-(setq-default mode-line-format
-              '("%e" mode-line-buffer-identification "   " mode-line-position))
+;; Rust
+(use-package rust-mode
+  :config (setq rust-format-on-save t))
 
-;; --- Vim-style :wq ---
-(defun my/evil-wq ()
-  "Save buffer and kill it, like :wq in Vim."
-  (interactive)
-  (save-buffer)
-  (kill-buffer))
+;; Go
+(use-package go-mode
+  :config
+  (setq gofmt-command "goimports")
+  (add-hook 'before-save-hook 'gofmt-before-save))
 
-(with-eval-after-load 'evil
-  (evil-ex-define-cmd "wq" 'my/evil-wq))
+;; C / C++
+(setq-default c-basic-offset 4)
+
+;; Assembly
+(add-to-list 'auto-mode-alist '("\\.fasm\\'" . asm-mode))
+
+;; Config Files
+(use-package yaml-mode :mode "\\.ya?ml\\'")
+(use-package toml-mode :mode "\\.toml\\'")
+(use-package dockerfile-mode :mode "Dockerfile\\'")
+(use-package terraform-mode :mode "\\.tf\\'")
+(use-package markdown-mode
+  :mode ("\\.md\\'" "\\.markdown\\'")
+  :config (setq markdown-command "multimarkdown"))
+
+(use-package docker-compose-mode
+  :mode "docker-compose.*\\.ya?ml\\'")
+
+(use-package cmake-font-lock
+  :after cmake-mode
+  :hook (cmake-mode . cmake-font-lock-activate))
+
+;; -----------------------------------------------------------------------------
+;; 8. MATH & SCIENCE
+;; -----------------------------------------------------------------------------
+
+;; LaTeX
+(use-package tex
+  :ensure auctex
+  :config
+  (setq TeX-auto-save t)
+  (setq TeX-parse-self t)
+  (setq TeX-PDF-mode t)
+  (setq TeX-view-program-selection '((output-pdf "Open")))
+  (setq TeX-view-program-list '(("Open" "open %o")))
+  (add-hook 'LaTeX-mode-hook 'visual-line-mode)
+  (add-hook 'LaTeX-mode-hook 'LaTeX-math-mode))
+
+;; Rocq / Coq
+(use-package proof-general
+  :init
+  (setq proof-splash-enable nil))
+
+(use-package company-coq
+  :hook (coq-mode . company-coq-mode))
+
+;; -----------------------------------------------------------------------------
+;; 9. MISC
+;; -----------------------------------------------------------------------------
+
+(show-paren-mode 1)
+(electric-pair-mode 1)
+(setq compile-command "")
+
+(provide 'init)
