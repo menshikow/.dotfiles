@@ -41,7 +41,7 @@
   (exec-path-from-shell-initialize))
 
 ;; -----------------------------------------------------------------------------
-;; status bar (minimal & no icons)
+;; status bar
 ;; -----------------------------------------------------------------------------
 
 (use-package doom-modeline
@@ -74,10 +74,11 @@
 (setq visible-bell nil
       ring-bell-function 'ignore)
 
-;; font & line numbers
-;; ensure you have "source code pro" installed
+;; font & relative line numbers
 (set-face-attribute 'default nil :font "Source Code Pro" :height 160)
 (column-number-mode)
+
+(setq display-line-numbers-type 'relative)
 (global-display-line-numbers-mode t)
 
 ;; scrolling (modern & smooth)
@@ -119,8 +120,8 @@
   :ensure t
   :config
 
- (setq calendar-latitude 48.14)
- (setq calendar-longitude 11.58)
+  (setq calendar-latitude 48.14)
+  (setq calendar-longitude 11.58)
 
   ;; disable old themes before switching to avoid clashes
   (mapc #'disable-theme custom-enabled-themes)
@@ -143,7 +144,7 @@
   (evil-mode 1)
   (setq evil-normal-state-cursor 'box)
   (setq evil-visual-state-cursor 'box)
-  (setq evil-insert-state-cursor '(bar . 2)))
+  (setq evil-insert-state-cursor 'box))
 
 (use-package evil-collection
   :after evil
@@ -316,23 +317,38 @@
 ;; math & science
 ;; -----------------------------------------------------------------------------
 
+;; -----------------------------------------------------------------------------
+;; math
+;; -----------------------------------------------------------------------------
+
 (use-package tex
   :ensure auctex
   :config
+
+  ;; -- compiler & viewer --
   (setq TeX-auto-save t)
   (setq TeX-parse-self t)
   (setq TeX-PDF-mode t)
+
+  ;; SyncTeX: C-c C-v jumps to the PDF.
+  (setq TeX-source-correlate-mode t)
+  (setq TeX-source-correlate-method 'synctex)
+
+  ;; Use "open" on Mac
   (setq TeX-view-program-selection '((output-pdf "Open")))
   (setq TeX-view-program-list '(("Open" "open %o")))
-  (add-hook 'LaTeX-mode-hook 'visual-line-mode)
-  (add-hook 'LaTeX-mode-hook 'LaTeX-math-mode))
 
-(use-package proof-general
-  :init
-  (setq proof-splash-enable nil))
+  ;; hooks
+  (add-hook 'LaTeX-mode-hook 'visual-line-mode)  ;; Word wrap
+  (add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)   ;; Math keys
+  (add-hook 'LaTeX-mode-hook 'turn-on-reftex)    ;; Enable RefTeX
+  (add-hook 'LaTeX-mode-hook 'flyspell-mode))    ;; Spell check
 
-(use-package company-coq
-  :hook (coq-mode . company-coq-mode))
+;; RefTeX
+(use-package reftex
+  :ensure t
+  :config
+  (setq reftex-plug-into-AUCTeX t))
 
 ;; -----------------------------------------------------------------------------
 ;; misc
