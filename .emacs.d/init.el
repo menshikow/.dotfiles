@@ -1,4 +1,4 @@
-;;; init.el --- .. -*- lexical-binding: t -*-
+;;; init.el --- final config -*- lexical-binding: t -*-
 
 ;; -----------------------------------------------------------------------------
 ;; core & performance
@@ -12,8 +12,9 @@
 (when (file-exists-p custom-file)
   (load custom-file))
 
-;; disable swap files
+;; disable backup files (file~) and auto-save files (#file#)
 (setq make-backup-files nil)
+(setq auto-save-default nil)
 
 ;; -----------------------------------------------------------------------------
 ;; package management
@@ -40,7 +41,7 @@
   (exec-path-from-shell-initialize))
 
 ;; -----------------------------------------------------------------------------
-;; staus-bar
+;; status bar (minimal & no icons)
 ;; -----------------------------------------------------------------------------
 
 (use-package doom-modeline
@@ -50,8 +51,10 @@
   (setq doom-modeline-height 30)
   (setq doom-modeline-bar-width 4)
 
+  ;; kill all icons
   (setq doom-modeline-icon nil)
 
+  ;; hide clutter
   (setq doom-modeline-minor-modes nil)
   (setq doom-modeline-buffer-encoding nil)
   (setq doom-modeline-indent-info nil)
@@ -72,18 +75,23 @@
       ring-bell-function 'ignore)
 
 ;; font & line numbers
+;; ensure you have "source code pro" installed
 (set-face-attribute 'default nil :font "Source Code Pro" :height 160)
 (column-number-mode)
 (global-display-line-numbers-mode t)
 
-;; cursor (general default)
-(setq-default cursor-type 'box)
+;; scrolling (modern & smooth)
+(setq mouse-wheel-scroll-amount '(1 ((shift) . 1)) ;; scroll one line at a time
+      mouse-wheel-progressive-speed nil            ;; don't accelerate scrolling
+      mouse-wheel-follow-mouse 't                  ;; scroll window under mouse
+      scroll-step 1
+      scroll-conservatively 101                    ;; value > 100 prevents recentering
+      scroll-preserve-screen-position t
+      scroll-margin 0)                             ;; margin > 0 causes jumps
 
-;; scrolling
-(setq mouse-wheel-scroll-amount '(2 ((shift) . 1))
-      mouse-wheel-progressive-speed nil
-      scroll-conservatively 101
-      scroll-margin 3)
+;; pixel precision scrolling (Emacs 29+)
+(when (fboundp 'pixel-scroll-precision-mode)
+  (pixel-scroll-precision-mode 1))
 
 ;; macos keys
 (setq mac-command-modifier 'meta)
@@ -95,20 +103,30 @@
 ;; type y/n instead of yes/no
 (setq use-short-answers t)
 
-;; theme
+;; -----------------------------------------------------------------------------
+;; themes (auto switching)
+;; -----------------------------------------------------------------------------
+
 (use-package doom-themes
   :ensure t
   :config
-
   (setq doom-themes-enable-bold nil
         doom-themes-enable-italic nil)
+  ;; ensure org headers look good
+  (doom-themes-org-config))
 
+(use-package theme-changer
+  :ensure t
+  :config
+
+ (setq calendar-latitude 48.14)
+ (setq calendar-longitude 11.58)
+
+  ;; disable old themes before switching to avoid clashes
   (mapc #'disable-theme custom-enabled-themes)
 
-  (load-theme 'doom-wilmersdorf t)
-
-  ;; org mode specific tweaks
-  (doom-themes-org-config))
+  ;; (change-theme 'day_theme 'night_theme)
+  (change-theme 'doom-homage-white 'doom-homage-black))
 
 ;; -----------------------------------------------------------------------------
 ;; evil mode
@@ -123,10 +141,9 @@
   (setq evil-undo-system 'undo-fu)
   :config
   (evil-mode 1)
-  ;; cursor configuration
-  (setq evil-normal-state-cursor 'box)    ; box in normal mode
-  (setq evil-visual-state-cursor 'box)    ; box in visual mode
-  (setq evil-insert-state-cursor '(bar . 2))) ; line in insert mode (width 2)
+  (setq evil-normal-state-cursor 'box)
+  (setq evil-visual-state-cursor 'box)
+  (setq evil-insert-state-cursor '(bar . 2)))
 
 (use-package evil-collection
   :after evil
@@ -151,6 +168,9 @@
     "ff" '(find-file :which-key "find file")
     "fs" '(save-buffer :which-key "save file")
 
+    "c"  '(compile :which-key "compile")        ;; direct compile
+    "r"  '(recompile :which-key "re-compile")   ;; quick re-run
+
     "d"  '(dired-jump :which-key "dired")
 
     "b"  '(:ignore t :which-key "buffers")
@@ -174,7 +194,6 @@
     "el" '(flymake-show-buffer-diagnostics :which-key "list all")
     "en" '(flymake-goto-next-error :which-key "next")
     "ep" '(flymake-goto-prev-error :which-key "prev")
-    ;; new: show details for the error under the cursor
     "ed" '(flymake-show-diagnostic :which-key "show detail")))
 
 ;; global keys
@@ -232,9 +251,10 @@
   :config
   (setq eglot-events-buffer-size 0))
 
+;; silence errors if formatting fails on save
 (defun my/eglot-format-on-save ()
   (when (eglot-managed-p)
-    (eglot-format-buffer)))
+    (ignore-errors (eglot-format-buffer))))
 
 (add-hook 'before-save-hook #'my/eglot-format-on-save)
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
@@ -243,6 +263,19 @@
 ;; languages
 ;; -----------------------------------------------------------------------------
 
+;; --- Elisp Formatting ---
+(defun my/indent-buffer ()
+  "Indent the currently visited buffer."
+  (interactive)
+  (indent-region (point-min) (point-max)))
+
+(defun my/elisp-mode-hook ()
+  ;; Auto-indent elisp files on save
+  (add-hook 'before-save-hook #'my/indent-buffer nil t))
+
+(add-hook 'emacs-lisp-mode-hook #'my/elisp-mode-hook)
+
+;; --- Web ---
 (use-package web-mode
   :mode ("\\.html\\'" "\\.css\\'" "\\.jsx\\'" "\\.tsx\\'" "\\.ts\\'")
   :config
