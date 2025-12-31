@@ -1,22 +1,20 @@
-# Enable Powerlevel10k instant prompt. Should stay close to the top.
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
-
 # Homebrew
 if [[ -f /opt/homebrew/bin/brew ]]; then
-    eval "$(/opt/homebrew/bin/brew shellenv)"
+  eval "$(/opt/homebrew/bin/brew shellenv)"
 fi
 
-# Treesitter
+# Local bins & Custom Paths
+export PATH="$HOME/.local/bin:$PATH"
 export PATH="/opt/homebrew/opt/tree-sitter@0.25/libexec/bin:$PATH"
+export PATH="/Library/TeX/texbin:$PATH"
+export PATH="/Users/madonnaprayer/.opencode/bin:$PATH"
 
-# Path to your oh-my-zsh installation.
+# 2. OH MY ZSH CONFIG
 export ZSH="$HOME/.oh-my-zsh"
-ZSH_THEME="robbyrussell"
 
-# Enable plugins
-# (Hinweis: Wenn du sie hier auflistest, kümmert sich OMZ meistens um das Sourcing)
+ZSH_THEME="edvardm"
+
+# Plugins
 plugins=(
   git
   zsh-autosuggestions
@@ -26,80 +24,29 @@ plugins=(
 # Source Oh My Zsh
 source $ZSH/oh-my-zsh.sh
 
-# Manuelles Sourcing (falls nötig, lasse ich es drin, aber eigentlich macht das OMZ oben schon)
-[ -f "$ZSH/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ] && source "$ZSH/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
-[ -f "$ZSH/custom/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh" ] && source "$ZSH/custom/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh"
-
-# Aliases
-alias u='cursor'
-alias c='code --reuse-window'
-alias vim='nvim'
-alias vi='nvim'
-alias ll='ls -la'
-alias gs='git status'
-alias gd='git diff'
-alias ..='cd ..'
-alias reload='source ~/.zshrc' # Hilfreich zum Neuladen der Config
-
-# Enable auto-correction of mistyped commands
-ENABLE_CORRECTION="true"
-
-# Case-insensitive globbing and completion
-CASE_SENSITIVE="false"
-HIST_IGNORE_DUPS="true"
-HIST_IGNORE_ALL_DUPS="true"
-
-# History config
-HISTSIZE=10000
-SAVEHIST=10000
-HISTFILE=~/.zsh_history
-setopt SHARE_HISTORY
-
-# Enable command auto-completion
-autoload -Uz compinit
-compinit
-
-# Prompt speed optimization
-zstyle ':completion:*' use-cache on
-zstyle ':completion:*' cache-path ~/.zsh/cache
-
-# Load Powerlevel10k config
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
-# ==============================================
-# LANGUAGE ENVIRONMENTS
-# ==============================================
-
 # NVM (Node)
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
 
-# GVM (Go) - Korrigiert für macOS, falls installiert
+# GVM (Go)
 [[ -s "$HOME/.gvm/scripts/gvm" ]] && source "$HOME/.gvm/scripts/gvm"
-
-# TeX (MacTeX)
-export PATH="/Library/TeX/texbin:$PATH"
-
-# Local bins
-[ -f "$HOME/.local/bin/env" ] && . "$HOME/.local/bin/env"
-export PATH="$HOME/.local/bin:$PATH" # Sicherheitshalber
 
 # Pyenv (Python)
 export PYENV_ROOT="$HOME/.pyenv"
 command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
 
+# ASDF
+[ -f "$HOME/.asdf/asdf.sh" ] && . "$HOME/.asdf/asdf.sh"
+
 # Bun
-[ -s "/Users/madonnaprayer/.bun/_bun" ] && source "/Users/madonnaprayer/.bun/_bun"
+[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 
 # GHCup (Haskell)
-[ -f "/Users/madonnaprayer/.ghcup/env" ] && . "/Users/madonnaprayer/.ghcup/env"
-
-# ASDF
-[ -f "$HOME/.asdf/asdf.sh" ] && . "$HOME/.asdf/asdf.sh"
+[ -f "$HOME/.ghcup/env" ] && . "$HOME/.ghcup/env"
 
 # pnpm
 export PNPM_HOME="/Users/madonnaprayer/Library/pnpm"
@@ -120,3 +67,28 @@ else
     fi
 fi
 unset __conda_setup
+
+alias u='cursor'
+alias c='code --reuse-window'
+alias vim='nvim'
+alias vi='nvim'
+alias ll='ls -la'
+alias gs='git status'
+alias gd='git diff'
+alias ..='cd ..'
+alias reload='source ~/.zshrc'
+
+ENABLE_CORRECTION="true"
+CASE_SENSITIVE="false"
+
+# History
+HISTSIZE=10000
+SAVEHIST=10000
+HISTFILE=~/.zsh_history
+setopt SHARE_HISTORY
+setopt HIST_IGNORE_DUPS
+setopt HIST_IGNORE_ALL_DUPS
+
+# Completion Caching
+zstyle ':completion:*' use-cache on
+zstyle ':completion:*' cache-path ~/.zsh/cache
