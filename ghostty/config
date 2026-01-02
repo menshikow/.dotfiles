@@ -1,5 +1,6 @@
-font-family = "Source Code Pro"
-font-size = 16
+fullscreen = true
+font-family = "Geist Mono"
+font-size = 15
 font-feature = -liga
 theme = "Black Metal"
 mouse-hide-while-typing = true
