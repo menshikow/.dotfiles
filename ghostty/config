@@ -1,6 +1,6 @@
 fullscreen = true
-font-family = "Geist Mono"
-font-size = 15
+font-family = "CaskaydiaMono Nerd Font"
+font-size = 16
 font-feature = -liga
 theme = "Black Metal"
 mouse-hide-while-typing = true

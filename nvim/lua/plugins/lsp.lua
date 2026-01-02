@@ -147,7 +147,6 @@ return {
 				lua = { "stylua" },
 				rust = { "rustfmt" },
 				zig = { "zigfmt" },
-				tex = { "latexindent" }, -- LaTeX Formatter
 			},
 		},
 	},

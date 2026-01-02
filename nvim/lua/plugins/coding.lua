@@ -1,9 +1,9 @@
 return {
 	{ "tpope/vim-surround" },
-	-- {
-	--     "windwp/nvim-ts-autotag",
-	--     opts = {}
-	-- },
+	{
+		"windwp/nvim-ts-autotag",
+		opts = {},
+	},
 	{
 		"echasnovski/mini.ai",
 		version = false,
