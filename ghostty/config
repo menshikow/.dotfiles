@@ -1,6 +1,6 @@
-font-family = "Geist Mono"
-theme = "Black Metal"
-font-size = 14
+font-family = "CaskaydiaMono Nerd Font Mono"
+theme = "Rose Pine"
+font-size = 19
 font-feature = -liga
 mouse-hide-while-typing = true
 cursor-style = block
