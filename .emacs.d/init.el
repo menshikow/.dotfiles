@@ -1,4 +1,5 @@
-;;; init.el --- final config -*- lexical-binding: t -*-
+
+;;; init.el --- emacs config *- lexical-binding: t -*-
 
 ;; -----------------------------------------------------------------------------
 ;; core & performance
@@ -40,25 +41,9 @@
   :config
   (exec-path-from-shell-initialize))
 
-;; -----------------------------------------------------------------------------
-;; status bar
-;; -----------------------------------------------------------------------------
-
-(use-package doom-modeline
-  :ensure t
-  :init (doom-modeline-mode 1)
-  :config
-  (setq doom-modeline-height 30)
-  (setq doom-modeline-bar-width 4)
-
-  ;; kill all icons
-  (setq doom-modeline-icon nil)
-
-  ;; hide clutter
-  (setq doom-modeline-minor-modes nil)
-  (setq doom-modeline-buffer-encoding nil)
-  (setq doom-modeline-indent-info nil)
-  (setq doom-modeline-total-line-number nil))
+(use-package treemacs-projectile
+  :after (treemacs projectile)
+  :ensure t)
 
 ;; -----------------------------------------------------------------------------
 ;; ui & visuals
@@ -75,7 +60,7 @@
       ring-bell-function 'ignore)
 
 ;; font & relative line numbers
-(set-face-attribute 'default nil :font "Source Code Pro" :height 160)
+(set-face-attribute 'default nil :font "Iosevka Nerd Font Mono" :height 170)
 (column-number-mode)
 
 (setq display-line-numbers-type 'relative)
@@ -90,7 +75,7 @@
       scroll-preserve-screen-position t
       scroll-margin 0)                             ;; margin > 0 causes jumps
 
-;; pixel precision scrolling (Emacs 29+)
+;; pixel precision scrolling (emacs 29+)
 (when (fboundp 'pixel-scroll-precision-mode)
   (pixel-scroll-precision-mode 1))
 
@@ -105,29 +90,49 @@
 (setq use-short-answers t)
 
 ;; -----------------------------------------------------------------------------
-;; themes (auto switching)
+;; file tree
+;; -----------------------------------------------------------------------------
+
+(use-package treemacs
+  :ensure t
+  :defer t
+  :config
+  (setq treemacs-width 30
+        ;; disable icons: force text-based rendering
+        treemacs-no-png-images t)
+
+  ;; follow the cursor in the file tree
+  (treemacs-follow-mode t)
+  ;; update the tree when files change on disk
+  (treemacs-filewatch-mode t)
+  ;; show git status colors in the tree
+  (treemacs-git-mode 'deferred)
+
+  ;; bind ret to visit-and-close
+  (with-eval-after-load 'treemacs
+    (define-key treemacs-mode-map (kbd "RET") #'treemacs-visit-node-close-treemacs)))
+
+(use-package treemacs-evil
+  :after (treemacs evil)
+  :ensure t)
+
+(use-package treemacs-magit
+  :after (treemacs magit)
+  :ensure t)
+
+;; -----------------------------------------------------------------------------
+;; theme
 ;; -----------------------------------------------------------------------------
 
 (use-package doom-themes
-  :ensure t
   :config
   (setq doom-themes-enable-bold nil
         doom-themes-enable-italic nil)
-  ;; ensure org headers look good
+
+  (load-theme 'doom-opera t)
+
+  ;; corrects (and improves) org-mode's native fontification.
   (doom-themes-org-config))
-
-(use-package theme-changer
-  :ensure t
-  :config
-
-  (setq calendar-latitude 48.14)
-  (setq calendar-longitude 11.58)
-
-  ;; disable old themes before switching to avoid clashes
-  (mapc #'disable-theme custom-enabled-themes)
-
-  ;; (change-theme 'day_theme 'night_theme)
-  (change-theme 'doom-homage-white 'doom-homage-black))
 
 ;; -----------------------------------------------------------------------------
 ;; evil mode
@@ -159,8 +164,10 @@
 ;; keybindings (leader = space)
 (use-package general
   :config
+
   (general-create-definer my-leader-def
-    :keymaps '(normal visual emacs)
+    :states '(normal visual emacs)
+    :keymaps 'override
     :prefix "SPC"
     :global-prefix "C-SPC")
 
@@ -168,9 +175,10 @@
     "f"  '(:ignore t :which-key "files")
     "ff" '(find-file :which-key "find file")
     "fs" '(save-buffer :which-key "save file")
+    "ft" '(treemacs :which-key "toggle tree")
 
-    "c"  '(compile :which-key "compile")        ;; direct compile
-    "r"  '(recompile :which-key "re-compile")   ;; quick re-run
+    "c"  '(compile :which-key "compile")
+    "r"  '(recompile :which-key "re-compile")
 
     "d"  '(dired-jump :which-key "dired")
 
@@ -195,10 +203,13 @@
     "el" '(flymake-show-buffer-diagnostics :which-key "list all")
     "en" '(flymake-goto-next-error :which-key "next")
     "ep" '(flymake-goto-prev-error :which-key "prev")
-    "ed" '(flymake-show-diagnostic :which-key "show detail")))
+    "ed" '(flymake-show-diagnostic :which-key "show detail")
+
+    "a" '(org-agenda :which-key "agenda")))
 
 ;; global keys
-(global-set-key (kbd "M-=") #'text-scale-increase)
+(global-set-key (kbd "M-=") #'text-scale-adjust)
+(global-set-key (kbd "M-+") #'text-scale-increase)
 (global-set-key (kbd "M--") #'text-scale-decrease)
 (global-set-key (kbd "M-0") (lambda () (interactive) (text-scale-set 0)))
 (global-set-key (kbd "M-j") #'dired-jump)
@@ -228,10 +239,52 @@
   (completion-category-overrides '((file (styles basic partial-completion)))))
 
 ;; -----------------------------------------------------------------------------
-;; development
+;; org mode (modernized)
 ;; -----------------------------------------------------------------------------
 
-(use-package magit)
+(use-package org
+  :hook ((org-mode . visual-line-mode)  ;; wrap lines at screen edge
+         (org-mode . org-indent-mode))  ;; indent text according to outline
+  :config
+  (setq org-ellipsis " ▾"
+        org-hide-emphasis-markers t))   ;; hide *bold* markers
+
+;; modern look for org (bullets, tables, etc.)
+(use-package org-modern
+  :hook ((org-mode . org-modern-mode)
+         (org-agenda-mode . org-modern-agenda))
+  :config
+  (set-face-attribute 'org-modern-symbol nil :family "Iosevka Nerd Font Mono"))
+
+;; -----------------------------------------------------------------------------
+;; org agenda
+;; -----------------------------------------------------------------------------
+
+;; 1. set the location of your notes
+;;    (make sure you create this folder: mkdir ~/org)
+(setq org-directory "~/org/")
+
+;; 2. tell agenda to look at every .org file in that directory
+(setq org-agenda-files (list "~/org/"))
+
+;; 3. better defaults
+(setq org-agenda-start-on-weekday 1)    ;; start agenda on monday
+(setq org-agenda-span 10)               ;; show next 10 days
+(setq org-agenda-start-day "-0d")       ;; start from today
+
+;; -----------------------------------------------------------------------------
+;; development (git & lsp)
+;; -----------------------------------------------------------------------------
+
+(use-package magit
+  :commands magit-status
+  :custom
+  (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
+
+;; makes git diffs in magit look like github/gitlab with syntax highlighting
+(use-package magit-delta
+  :after magit
+  :hook (magit-mode . magit-delta-mode))
 
 (use-package corfu
   :init
@@ -252,6 +305,17 @@
   :config
   (setq eglot-events-buffer-size 0))
 
+;; configure flymake ui (force bottom window for errors)
+(use-package flymake
+  :ensure nil
+  :config
+  (add-to-list 'display-buffer-alist
+               '("\\*Flymake diagnostics.*"
+                 (display-buffer-reuse-window display-buffer-in-side-window)
+                 (side . bottom)
+                 (slot . 0)
+                 (window-height . 0.2))))
+
 ;; silence errors if formatting fails on save
 (defun my/eglot-format-on-save ()
   (when (eglot-managed-p)
@@ -264,19 +328,19 @@
 ;; languages
 ;; -----------------------------------------------------------------------------
 
-;; --- Elisp Formatting ---
+;; --- elisp formatting ---
 (defun my/indent-buffer ()
-  "Indent the currently visited buffer."
+  "indent the currently visited buffer."
   (interactive)
   (indent-region (point-min) (point-max)))
 
 (defun my/elisp-mode-hook ()
-  ;; Auto-indent elisp files on save
+  ;; auto-indent elisp files on save
   (add-hook 'before-save-hook #'my/indent-buffer nil t))
 
 (add-hook 'emacs-lisp-mode-hook #'my/elisp-mode-hook)
 
-;; --- Web ---
+;; --- web ---
 (use-package web-mode
   :mode ("\\.html\\'" "\\.css\\'" "\\.jsx\\'" "\\.tsx\\'" "\\.ts\\'")
   :config
@@ -314,37 +378,39 @@
   :hook (cmake-mode . cmake-font-lock-activate))
 
 ;; -----------------------------------------------------------------------------
-;; math
+;; math & pdfs
 ;; -----------------------------------------------------------------------------
+
+;; best pdf viewer for emacs (requires running m-x pdf-tools-install once)
+(use-package pdf-tools
+  :defer t
+  :mode ("\\.pdf\\'" . pdf-view-mode)
+  :config
+  (pdf-loader-install)
+  (setq-default pdf-view-display-size 'fit-page)
+
+  ;; 1. disable line numbers in pdf mode to fix the warning
+  (add-hook 'pdf-view-mode-hook (lambda () (display-line-numbers-mode -1)))
+
+  ;; 2. enable midnight mode (dark mode for pdfs) automatically
+  (add-hook 'pdf-view-mode-hook (lambda () (pdf-view-midnight-minor-mode))))
 
 (use-package tex
   :ensure auctex
+  :defer t
+  :hook ((LaTeX-mode . turn-on-reftex)
+         (LaTeX-mode . TeX-source-correlate-mode)
+         (LaTeX-mode . LaTeX-math-mode)) ;; fixed: was 'math-minor-mode'
   :config
-
-  ;; -- compiler & viewer --
   (setq TeX-auto-save t)
   (setq TeX-parse-self t)
   (setq TeX-PDF-mode t)
+  (setq TeX-master nil)
 
-  ;; SyncTeX: C-c C-v jumps to the PDF.
-  (setq TeX-source-correlate-mode t)
-  (setq TeX-source-correlate-method 'synctex)
-
-  ;; Use "open" on Mac
-  (setq TeX-view-program-selection '((output-pdf "Open")))
-  (setq TeX-view-program-list '(("Open" "open %o")))
-
-  ;; hooks
-  (add-hook 'LaTeX-mode-hook 'visual-line-mode)  ;; Word wrap
-  (add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)   ;; Math keys
-  (add-hook 'LaTeX-mode-hook 'turn-on-reftex)    ;; Enable RefTeX
-  (add-hook 'LaTeX-mode-hook 'flyspell-mode))    ;; Spell check
-
-;; RefTeX
-(use-package reftex
-  :ensure t
-  :config
-  (setq reftex-plug-into-AUCTeX t))
+  ;; use pdf-tools to open compiled pdfs
+  (setq TeX-view-program-selection '((output-pdf "PDF Tools"))
+        TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view))
+        TeX-source-correlate-start-server t))
 
 ;; -----------------------------------------------------------------------------
 ;; misc
@@ -353,3 +419,15 @@
 (electric-pair-mode -1)
 (show-paren-mode 1)
 (setq compile-command "")
+
+;; hide the title bar and borders completely
+(add-to-list 'default-frame-alist '(undecorated . t))
+
+;; wq like in vim
+(defun evil-wq-to-dired ()
+  (interactive)
+  (save-buffer)
+  (kill-this-buffer)
+  (dired default-directory))
+
+(evil-ex-define-cmd "wq" #'evil-wq-to-dired)
