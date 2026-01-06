@@ -1,4 +1,4 @@
-# Homebrew
+# homebrew
 if [[ -f /opt/homebrew/bin/brew ]]; then
   eval "$(/opt/homebrew/bin/brew shellenv)"
 fi
@@ -92,3 +92,13 @@ setopt HIST_IGNORE_ALL_DUPS
 # Completion Caching
 zstyle ':completion:*' use-cache on
 zstyle ':completion:*' cache-path ~/.zsh/cache
+
+
+# BEGIN opam configuration
+# This is useful if you're using opam as it adds:
+#   - the correct directories to the PATH
+#   - auto-completion for the opam binary
+# This section can be safely removed at any time if needed.
+# homebrew
+[[ ! -r '/Users/madonnaprayer/.opam/opam-init/init.zsh' ]] || source '/Users/madonnaprayer/.opam/opam-init/init.zsh' > /dev/null 2> /dev/null
+# END opam configuration
