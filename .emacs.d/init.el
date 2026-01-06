@@ -28,13 +28,27 @@
 (use-package exec-path-from-shell
   :config (exec-path-from-shell-initialize))
 
+;;; mac-settings
+
+;; modifier keys
+(setq ns-option-modifier 'none
+      ns-command-modifier 'meta)
+
+;; fix PATH from shell
+(use-package exec-path-from-shell
+  :config
+  (exec-path-from-shell-initialize))
+
 ;;; ui
 (tool-bar-mode -1)
 (menu-bar-mode -1)
 (scroll-bar-mode -1)
 (column-number-mode)
 
-(set-face-attribute 'default nil :font "Iosevka Nerd Font" :height 170)
+(set-face-attribute 'default nil
+                    :font "Iosevka Nerd Font"
+                    :height 170
+                    :weight 'light) ;; or 'extra-light or 'thin
 
 (setq display-line-numbers-type 'relative)
 (global-display-line-numbers-mode t)
