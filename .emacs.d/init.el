@@ -1,25 +1,20 @@
+;;; init.el --- config *- lexical-binding: t -*-
 
-;;; init.el --- emacs config *- lexical-binding: t -*-
+;;; core
 
-;; -----------------------------------------------------------------------------
-;; core & performance
-;; -----------------------------------------------------------------------------
-
-;; make startup faster by reducing garbage collection frequency
+;; gc threshold
 (setq gc-cons-threshold (* 50 1000 1000))
 
-;; keep custom settings in a separate file
+;; custom file
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (when (file-exists-p custom-file)
   (load custom-file))
 
-;; disable backup files (file~) and auto-save files (#file#)
+;; no backups
 (setq make-backup-files nil)
 (setq auto-save-default nil)
 
-;; -----------------------------------------------------------------------------
-;; package management
-;; -----------------------------------------------------------------------------
+;;; packages
 
 (require 'package)
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
@@ -45,37 +40,36 @@
   :after (treemacs projectile)
   :ensure t)
 
-;; -----------------------------------------------------------------------------
-;; ui & visuals
-;; -----------------------------------------------------------------------------
+;;; ui
 
-;; clean ui
+;; cleanup
 (tool-bar-mode -1)
 (menu-bar-mode -1)
 (scroll-bar-mode -1)
 (setq inhibit-startup-message t)
 
-;; silence bell
+;; silence
 (setq visible-bell nil
       ring-bell-function 'ignore)
 
-;; font & relative line numbers
+;; font
 (set-face-attribute 'default nil :font "Iosevka Nerd Font Mono" :height 170)
 (column-number-mode)
 
+;; line numbers
 (setq display-line-numbers-type 'relative)
 (global-display-line-numbers-mode t)
 
-;; scrolling (modern & smooth)
-(setq mouse-wheel-scroll-amount '(1 ((shift) . 1)) ;; scroll one line at a time
-      mouse-wheel-progressive-speed nil            ;; don't accelerate scrolling
-      mouse-wheel-follow-mouse 't                  ;; scroll window under mouse
+;; scrolling
+(setq mouse-wheel-scroll-amount '(1 ((shift) . 1))
+      mouse-wheel-progressive-speed nil
+      mouse-wheel-follow-mouse 't
       scroll-step 1
-      scroll-conservatively 101                    ;; value > 100 prevents recentering
+      scroll-conservatively 101
       scroll-preserve-screen-position t
-      scroll-margin 0)                             ;; margin > 0 causes jumps
+      scroll-margin 0)
 
-;; pixel precision scrolling (emacs 29+)
+;; pixel scrolling
 (when (fboundp 'pixel-scroll-precision-mode)
   (pixel-scroll-precision-mode 1))
 
@@ -83,32 +77,27 @@
 (setq mac-command-modifier 'meta)
 (setq mac-option-modifier nil)
 
-;; start maximized
+;; fullscreen
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
-;; type y/n instead of yes/no
+;; short answers
 (setq use-short-answers t)
 
-;; -----------------------------------------------------------------------------
-;; file tree
-;; -----------------------------------------------------------------------------
+;;; tree
 
 (use-package treemacs
   :ensure t
   :defer t
   :config
   (setq treemacs-width 30
-        ;; disable icons: force text-based rendering
         treemacs-no-png-images t)
 
-  ;; follow the cursor in the file tree
+  ;; behaviors
   (treemacs-follow-mode t)
-  ;; update the tree when files change on disk
   (treemacs-filewatch-mode t)
-  ;; show git status colors in the tree
   (treemacs-git-mode 'deferred)
 
-  ;; bind ret to visit-and-close
+  ;; bind ret
   (with-eval-after-load 'treemacs
     (define-key treemacs-mode-map (kbd "RET") #'treemacs-visit-node-close-treemacs)))
 
@@ -120,9 +109,7 @@
   :after (treemacs magit)
   :ensure t)
 
-;; -----------------------------------------------------------------------------
-;; theme
-;; -----------------------------------------------------------------------------
+;;; theme
 
 (use-package doom-themes
   :config
@@ -130,13 +117,9 @@
         doom-themes-enable-italic nil)
 
   (load-theme 'doom-opera t)
-
-  ;; corrects (and improves) org-mode's native fontification.
   (doom-themes-org-config))
 
-;; -----------------------------------------------------------------------------
-;; evil mode
-;; -----------------------------------------------------------------------------
+;;; evil
 
 (use-package undo-fu)
 
@@ -161,10 +144,9 @@
   :config
   (evil-multiedit-default-keybinds))
 
-;; keybindings (leader = space)
+;; keys
 (use-package general
   :config
-
   (general-create-definer my-leader-def
     :states '(normal visual emacs)
     :keymaps 'override
@@ -173,19 +155,19 @@
 
   (my-leader-def
     "f"  '(:ignore t :which-key "files")
-    "ff" '(find-file :which-key "find file")
-    "fs" '(save-buffer :which-key "save file")
-    "ft" '(treemacs :which-key "toggle tree")
+    "ff" '(find-file :which-key "find")
+    "fs" '(save-buffer :which-key "save")
+    "ft" '(treemacs :which-key "tree")
 
     "c"  '(compile :which-key "compile")
-    "r"  '(recompile :which-key "re-compile")
+    "r"  '(recompile :which-key "recompile")
 
     "d"  '(dired-jump :which-key "dired")
 
     "b"  '(:ignore t :which-key "buffers")
-    "bb" '(consult-buffer :which-key "switch buffer")
-    "bk" '(kill-current-buffer :which-key "kill buffer")
-    "bm" '(view-echo-area-messages :which-key "log messages")
+    "bb" '(consult-buffer :which-key "switch")
+    "bk" '(kill-current-buffer :which-key "kill")
+    "bm" '(view-echo-area-messages :which-key "log")
 
     "w"  '(:ignore t :which-key "window")
     "wl" '(evil-window-right :which-key "right")
@@ -200,14 +182,14 @@
     "gs" '(magit-status :which-key "status")
 
     "e"  '(:ignore t :which-key "errors")
-    "el" '(flymake-show-buffer-diagnostics :which-key "list all")
+    "el" '(flymake-show-buffer-diagnostics :which-key "list")
     "en" '(flymake-goto-next-error :which-key "next")
     "ep" '(flymake-goto-prev-error :which-key "prev")
-    "ed" '(flymake-show-diagnostic :which-key "show detail")
+    "ed" '(flymake-show-diagnostic :which-key "detail")
 
     "a" '(org-agenda :which-key "agenda")))
 
-;; global keys
+;; globals
 (global-set-key (kbd "M-=") #'text-scale-adjust)
 (global-set-key (kbd "M-+") #'text-scale-increase)
 (global-set-key (kbd "M--") #'text-scale-decrease)
@@ -216,9 +198,7 @@
 (global-set-key (kbd "M-e") #'find-file)
 (global-set-key (kbd "C-c s") #'shell-command)
 
-;; -----------------------------------------------------------------------------
-;; navigation & search
-;; -----------------------------------------------------------------------------
+;;; search
 
 (use-package vertico
   :init (vertico-mode))
@@ -238,50 +218,64 @@
   (completion-styles '(orderless basic))
   (completion-category-overrides '((file (styles basic partial-completion)))))
 
-;; -----------------------------------------------------------------------------
-;; org mode (modernized)
-;; -----------------------------------------------------------------------------
+;;; org
 
 (use-package org
-  :hook ((org-mode . visual-line-mode)  ;; wrap lines at screen edge
-         (org-mode . org-indent-mode))  ;; indent text according to outline
+  :hook ((org-mode . visual-line-mode)
+         (org-mode . org-indent-mode))
   :config
   (setq org-ellipsis " ▾"
-        org-hide-emphasis-markers t))   ;; hide *bold* markers
+        org-hide-emphasis-markers t))
 
-;; modern look for org (bullets, tables, etc.)
+;; styling
 (use-package org-modern
   :hook ((org-mode . org-modern-mode)
          (org-agenda-mode . org-modern-agenda))
   :config
   (set-face-attribute 'org-modern-symbol nil :family "Iosevka Nerd Font Mono"))
 
-;; -----------------------------------------------------------------------------
-;; org agenda
-;; -----------------------------------------------------------------------------
-
-;; 1. set the location of your notes
-;;    (make sure you create this folder: mkdir ~/org)
+;; agenda
 (setq org-directory "~/org/")
-
-;; 2. tell agenda to look at every .org file in that directory
 (setq org-agenda-files (list "~/org/"))
 
-;; 3. better defaults
-(setq org-agenda-start-on-weekday 1)    ;; start agenda on monday
-(setq org-agenda-span 10)               ;; show next 10 days
-(setq org-agenda-start-day "-0d")       ;; start from today
+(setq org-agenda-start-on-weekday 1)
+(setq org-agenda-span 10)
+(setq org-agenda-start-day "-0d")
 
-;; -----------------------------------------------------------------------------
-;; development (git & lsp)
-;; -----------------------------------------------------------------------------
+;;; windows
+
+;; bottom placement
+(setq display-buffer-alist
+      '(
+        ;; specific sizes
+        ("\\*compilation\\*"
+         (display-buffer-reuse-window display-buffer-in-side-window)
+         (side . bottom)
+         (slot . 0)
+         (window-height . 0.35))
+
+        ("\\*Flymake.*"
+         (display-buffer-reuse-window display-buffer-in-side-window)
+         (side . bottom)
+         (slot . 0)
+         (window-height . 0.25))
+
+        ;; catch-all
+        ("\\*.*\\*"
+         (display-buffer-reuse-window display-buffer-in-side-window)
+         (side . bottom)
+         (slot . 0)
+         (window-height . 0.35))
+        ))
+
+;;; dev
 
 (use-package magit
   :commands magit-status
   :custom
   (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
 
-;; makes git diffs in magit look like github/gitlab with syntax highlighting
+;; syntax highlighting
 (use-package magit-delta
   :after magit
   :hook (magit-mode . magit-delta-mode))
@@ -305,18 +299,10 @@
   :config
   (setq eglot-events-buffer-size 0))
 
-;; configure flymake ui (force bottom window for errors)
 (use-package flymake
-  :ensure nil
-  :config
-  (add-to-list 'display-buffer-alist
-               '("\\*Flymake diagnostics.*"
-                 (display-buffer-reuse-window display-buffer-in-side-window)
-                 (side . bottom)
-                 (slot . 0)
-                 (window-height . 0.2))))
+  :ensure nil)
 
-;; silence errors if formatting fails on save
+;; quiet format
 (defun my/eglot-format-on-save ()
   (when (eglot-managed-p)
     (ignore-errors (eglot-format-buffer))))
@@ -324,23 +310,20 @@
 (add-hook 'before-save-hook #'my/eglot-format-on-save)
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
-;; -----------------------------------------------------------------------------
-;; languages
-;; -----------------------------------------------------------------------------
+;;; languages
 
-;; --- elisp formatting ---
+;; elisp
 (defun my/indent-buffer ()
   "indent the currently visited buffer."
   (interactive)
   (indent-region (point-min) (point-max)))
 
 (defun my/elisp-mode-hook ()
-  ;; auto-indent elisp files on save
   (add-hook 'before-save-hook #'my/indent-buffer nil t))
 
 (add-hook 'emacs-lisp-mode-hook #'my/elisp-mode-hook)
 
-;; --- web ---
+;; web
 (use-package web-mode
   :mode ("\\.html\\'" "\\.css\\'" "\\.jsx\\'" "\\.tsx\\'" "\\.ts\\'")
   :config
@@ -377,22 +360,16 @@
   :after cmake-mode
   :hook (cmake-mode . cmake-font-lock-activate))
 
-;; -----------------------------------------------------------------------------
-;; math & pdfs
-;; -----------------------------------------------------------------------------
+;;; pdf & math
 
-;; best pdf viewer for emacs (requires running m-x pdf-tools-install once)
+;; pdf-tools
 (use-package pdf-tools
   :defer t
   :mode ("\\.pdf\\'" . pdf-view-mode)
   :config
   (pdf-loader-install)
   (setq-default pdf-view-display-size 'fit-page)
-
-  ;; 1. disable line numbers in pdf mode to fix the warning
   (add-hook 'pdf-view-mode-hook (lambda () (display-line-numbers-mode -1)))
-
-  ;; 2. enable midnight mode (dark mode for pdfs) automatically
   (add-hook 'pdf-view-mode-hook (lambda () (pdf-view-midnight-minor-mode))))
 
 (use-package tex
@@ -400,30 +377,28 @@
   :defer t
   :hook ((LaTeX-mode . turn-on-reftex)
          (LaTeX-mode . TeX-source-correlate-mode)
-         (LaTeX-mode . LaTeX-math-mode)) ;; fixed: was 'math-minor-mode'
+         (LaTeX-mode . LaTeX-math-mode))
   :config
   (setq TeX-auto-save t)
   (setq TeX-parse-self t)
   (setq TeX-PDF-mode t)
   (setq TeX-master nil)
 
-  ;; use pdf-tools to open compiled pdfs
+  ;; sync view
   (setq TeX-view-program-selection '((output-pdf "PDF Tools"))
         TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view))
         TeX-source-correlate-start-server t))
 
-;; -----------------------------------------------------------------------------
-;; misc
-;; -----------------------------------------------------------------------------
+;;; misc
 
 (electric-pair-mode -1)
 (show-paren-mode 1)
 (setq compile-command "")
 
-;; hide the title bar and borders completely
+;; no title bar
 (add-to-list 'default-frame-alist '(undecorated . t))
 
-;; wq like in vim
+;; vim-style wq
 (defun evil-wq-to-dired ()
   (interactive)
   (save-buffer)
