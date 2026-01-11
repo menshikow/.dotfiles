@@ -1,38 +1,24 @@
-# homebrew
-if [[ -f /opt/homebrew/bin/brew ]]; then
-  eval "$(/opt/homebrew/bin/brew shellenv)"
-fi
+# Homebrew
+[[ -f /opt/homebrew/bin/brew ]] && eval "$(/opt/homebrew/bin/brew shellenv)"
 
-# Local bins & Custom Paths
-export PATH="$HOME/.local/bin:$PATH"
-export PATH="/opt/homebrew/opt/tree-sitter@0.25/libexec/bin:$PATH"
-export PATH="/Library/TeX/texbin:$PATH"
-export PATH="/Users/madonnaprayer/.opencode/bin:$PATH"
+# PATHs
+export PATH="$HOME/.local/bin:$HOME/.opencode/bin:$BUN_INSTALL/bin:$PATH"
+export PATH="/opt/homebrew/opt/tree-sitter@0.25/libexec/bin:/Library/TeX/texbin:$PATH"
 
-# 2. OH MY ZSH CONFIG
+# Oh My Zsh
 export ZSH="$HOME/.oh-my-zsh"
-
 ZSH_THEME="edvardm"
-
-# Plugins
-plugins=(
-  git
-  zsh-autosuggestions
-  zsh-syntax-highlighting
-)
-
-# Source Oh My Zsh
+plugins=(git zsh-autosuggestions zsh-syntax-highlighting)
 source $ZSH/oh-my-zsh.sh
 
-# NVM (Node)
+# Node (NVM)
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
 
-# GVM (Go)
+# Go (GVM)
 [[ -s "$HOME/.gvm/scripts/gvm" ]] && source "$HOME/.gvm/scripts/gvm"
 
-# Pyenv (Python)
+# Python (Pyenv)
 export PYENV_ROOT="$HOME/.pyenv"
 command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
@@ -41,33 +27,30 @@ eval "$(pyenv init -)"
 [ -f "$HOME/.asdf/asdf.sh" ] && . "$HOME/.asdf/asdf.sh"
 
 # Bun
-[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
 export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
+[ -s "$BUN_INSTALL/_bun" ] && source "$BUN_INSTALL/_bun"
 
-# GHCup (Haskell)
+# Haskell (GHCup)
 [ -f "$HOME/.ghcup/env" ] && . "$HOME/.ghcup/env"
 
 # pnpm
-export PNPM_HOME="/Users/madonnaprayer/Library/pnpm"
-case ":$PATH:" in
-  *":$PNPM_HOME:"*) ;;
-  *) export PATH="$PNPM_HOME:$PATH" ;;
-esac
+export PNPM_HOME="$HOME/Library/pnpm"
+export PATH="$PNPM_HOME:$PATH"
 
 # Conda
 __conda_setup="$('/opt/miniconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
 if [ $? -eq 0 ]; then
     eval "$__conda_setup"
 else
-    if [ -f "/opt/miniconda3/etc/profile.d/conda.sh" ]; then
-        . "/opt/miniconda3/etc/profile.d/conda.sh"
-    else
-        export PATH="/opt/miniconda3/bin:$PATH"
-    fi
+    [ -f "/opt/miniconda3/etc/profile.d/conda.sh" ] && . "/opt/miniconda3/etc/profile.d/conda.sh"
+    export PATH="/opt/miniconda3/bin:$PATH"
 fi
 unset __conda_setup
 
+# Opam
+[[ -r "$HOME/.opam/opam-init/init.zsh" ]] && source "$HOME/.opam/opam-init/init.zsh" > /dev/null 2>&1
+
+# Aliases
 alias u='cursor'
 alias c='code --reuse-window'
 alias vim='nvim'
@@ -78,27 +61,16 @@ alias gd='git diff'
 alias ..='cd ..'
 alias reload='source ~/.zshrc'
 
-ENABLE_CORRECTION="true"
-CASE_SENSITIVE="false"
-
 # History
 HISTSIZE=10000
 SAVEHIST=10000
 HISTFILE=~/.zsh_history
-setopt SHARE_HISTORY
-setopt HIST_IGNORE_DUPS
-setopt HIST_IGNORE_ALL_DUPS
+setopt SHARE_HISTORY HIST_IGNORE_DUPS HIST_IGNORE_ALL_DUPS
 
 # Completion Caching
 zstyle ':completion:*' use-cache on
 zstyle ':completion:*' cache-path ~/.zsh/cache
 
-
-# BEGIN opam configuration
-# This is useful if you're using opam as it adds:
-#   - the correct directories to the PATH
-#   - auto-completion for the opam binary
-# This section can be safely removed at any time if needed.
-# homebrew
-[[ ! -r '/Users/madonnaprayer/.opam/opam-init/init.zsh' ]] || source '/Users/madonnaprayer/.opam/opam-init/init.zsh' > /dev/null 2> /dev/null
-# END opam configuration
+# Zsh corrections
+ENABLE_CORRECTION="true"
+CASE_SENSITIVE="false"

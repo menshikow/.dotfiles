@@ -89,8 +89,9 @@
 ;; (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/gruber-darker-theme/")
 ;; (load-theme 'gruber-darker t)
 
-;;; evil
-(use-package undo-fu)
+;;; evil & related
+(use-package undo-fu
+  :ensure t)
 
 (use-package evil
   :init
@@ -101,23 +102,27 @@
   (evil-mode 1)
   (setq evil-normal-state-cursor 'box
         evil-visual-state-cursor 'box
-        evil-insert-state-cursor 'box))
+        evil-insert-state-cursor 'bar))
 
 (use-package evil-collection
   :after evil
   :config (evil-collection-init))
 
 (use-package evil-multiedit
+  :after evil
   :config (evil-multiedit-default-keybinds))
 
 (use-package evil-nerd-commenter
   :after evil
-  :bind
-  (:map evil-normal-state-map
-        ("gcc" . evilnc-comment-or-uncomment-line)
-        ("gc"  . evilnc-comment-operator)
-        :map evil-visual-state-map
-        ("gc"  . evilnc-comment-operator)))
+  :config
+  (with-eval-after-load 'evil
+    ;; Normal mode
+    (evil-define-key 'normal 'global
+      "gcc" 'evilnc-comment-or-uncomment-line
+      "gc"  'evilnc-comment-operator)
+    ;; Visual mode
+    (evil-define-key 'visual 'global
+      "gc"  'evilnc-comment-operator)))
 
 ;;; keys
 (use-package general
