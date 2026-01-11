@@ -7,7 +7,7 @@
 
 (setq make-backup-files nil
       auto-save-default nil
-      inhibit-startup-message t
+      inhibit-startup-message nil
       use-short-answers t
       visible-bell nil
       ring-bell-function 'ignore)
@@ -46,8 +46,8 @@
 (column-number-mode)
 
 (set-face-attribute 'default nil
-                    :font "Iosevka Nerd Font"
-                    :height 170
+                    :font "Iosevka Nerd Font Mono"
+                    :height 169
                     :weight 'light) ;; or 'extra-light or 'thin
 
 (setq display-line-numbers-type 'relative)
