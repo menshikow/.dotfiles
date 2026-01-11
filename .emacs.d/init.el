@@ -83,8 +83,11 @@
   (diminish 'flymake-mode))
 
 ;;; theme
-(add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
+(add-to-list 'custom-theme-load-path "~/.emacs.d/themes/less-theme/")
 (load-theme 'less t)
+
+;; (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/gruber-darker-theme/")
+;; (load-theme 'gruber-darker t)
 
 ;;; evil
 (use-package undo-fu)
@@ -106,6 +109,15 @@
 
 (use-package evil-multiedit
   :config (evil-multiedit-default-keybinds))
+
+(use-package evil-nerd-commenter
+  :after evil
+  :bind
+  (:map evil-normal-state-map
+        ("gcc" . evilnc-comment-or-uncomment-line)
+        ("gc"  . evilnc-comment-operator)
+        :map evil-visual-state-map
+        ("gc"  . evilnc-comment-operator)))
 
 ;;; keys
 (use-package general
