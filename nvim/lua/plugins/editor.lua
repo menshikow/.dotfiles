@@ -8,7 +8,7 @@ return {
 		name = "kanagawa",
 		priority = 1000,
 		config = function()
-			require('kanagawa').setup({
+			require("kanagawa").setup({
 				theme = "wave",
 				transparent = false,
 			})
