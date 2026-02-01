@@ -5,3 +5,4 @@ font-feature = -liga
 mouse-hide-while-typing = true
 cursor-style = block
 background-blur = true
+command = /opt/homebrew/bin/tmux 
