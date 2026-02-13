@@ -1,8 +1,9 @@
---curosr
+-- cursor
 vim.opt.guicursor = {
-	"n-v:block",
-	"i:blinkwait300-blinkon500-blinkoff300-block",
-	"r-cr:hor20",
+	"n-v-c:block-Cursor",
+	"i-ci-ve:block-Cursor",
+	"r-cr:hor20-Cursor",
+	"i:blinkwait300-blinkon500-blinkoff300-Cursor",
 }
 
 -- clipboard
