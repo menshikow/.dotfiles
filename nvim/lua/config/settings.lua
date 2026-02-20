@@ -6,6 +6,9 @@ vim.opt.guicursor = {
 	"i:blinkwait300-blinkon500-blinkoff300-Cursor",
 }
 
+-- vim.opt.list = true
+-- vim.opt.listchars = { tab = "» ", trail = "·", nbsp = "␣", extends = "›", precedes = "‹" }
+
 -- clipboard
 vim.opt.clipboard = "unnamedplus"
 
