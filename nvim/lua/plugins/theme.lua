@@ -10,23 +10,27 @@
 -- 	end,
 -- }
 
+-- return {
+-- 	"tjdevries/colorbuddy.nvim",
+-- 	lazy = false,
+-- 	priority = 1000,
+-- 	config = function()
+-- 		vim.cmd.colorscheme("gruvbuddy")
+--
+-- 		local colorbuddy = require("colorbuddy")
+-- 		local Color = colorbuddy.Color
+-- 		local colors = colorbuddy.colors
+-- 		local Group = colorbuddy.Group
+-- 		local groups = colorbuddy.groups
+-- 		local styles = colorbuddy.styles
+--
+-- 		Group.new("Normal", colors.fg, colors.bg)
+-- 		Group.new("Comment", colors.grey, nil, styles.italic)
+-- 		Group.new("Function", colors.bright_yellow)
+-- 		Group.new("String", colors.bright_aqua)
+-- 	end,
+-- }
+
 return {
 	"tjdevries/colorbuddy.nvim",
-	lazy = false,
-	priority = 1000,
-	config = function()
-		vim.cmd.colorscheme("gruvbuddy")
-
-		local colorbuddy = require("colorbuddy")
-		local Color = colorbuddy.Color
-		local colors = colorbuddy.colors
-		local Group = colorbuddy.Group
-		local groups = colorbuddy.groups
-		local styles = colorbuddy.styles
-
-		Group.new("Normal", colors.fg, colors.bg)
-		Group.new("Comment", colors.grey, nil, styles.italic)
-		Group.new("Function", colors.bright_yellow)
-		Group.new("String", colors.bright_aqua)
-	end,
 }

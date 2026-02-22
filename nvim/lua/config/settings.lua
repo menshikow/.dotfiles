@@ -9,6 +9,8 @@
 -- vim.opt.list = true
 -- vim.opt.listchars = { tab = "» ", trail = "·", nbsp = "␣", extends = "›", precedes = "‹" }
 
+vim.cmd.colorscheme("gruvbuddy")
+
 -- clipboard
 vim.opt.clipboard = "unnamedplus"
 
