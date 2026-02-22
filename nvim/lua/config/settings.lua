@@ -1,10 +1,10 @@
 -- cursor
-vim.opt.guicursor = {
-	"n-v-c:block-Cursor",
-	"i-ci-ve:block-Cursor",
-	"r-cr:hor20-Cursor",
-	"i:blinkwait300-blinkon500-blinkoff300-Cursor",
-}
+-- vim.opt.guicursor = {
+-- 	"n-v-c:block-Cursor",
+-- 	"i-ci-ve:block-Cursor",
+-- 	"r-cr:hor20-Cursor",
+-- 	"i:blinkwait300-blinkon500-blinkoff300-Cursor",
+-- }
 
 -- vim.opt.list = true
 -- vim.opt.listchars = { tab = "» ", trail = "·", nbsp = "␣", extends = "›", precedes = "‹" }
