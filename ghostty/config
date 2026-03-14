@@ -5,4 +5,8 @@ mouse-hide-while-typing = true
 cursor-style = block
 background-blur = true
 command = /opt/homebrew/bin/tmux 
+
 font-size = 16
+
+cursor-color = #52ae6f
+cursor-text = #1e1e1e
