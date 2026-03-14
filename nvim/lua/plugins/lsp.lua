@@ -47,6 +47,30 @@ return {
 		end,
 	},
 
+	-- lean
+	{
+		"Julian/lean.nvim",
+		ft = { "lean" },
+		dependencies = {
+			"neovim/nvim-lspconfig",
+			"nvim-lua/plenary.nvim",
+		},
+		init = function()
+			local capabilities = vim.lsp.protocol.make_client_capabilities()
+			local ok, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
+			if ok then
+				capabilities = cmp_nvim_lsp.default_capabilities(capabilities)
+			end
+
+			vim.lsp.config("leanls", {
+				capabilities = capabilities,
+			})
+		end,
+		opts = {
+			mappings = true,
+		},
+	},
+
 	-- lsp
 	{
 		"neovim/nvim-lspconfig",
