@@ -1,4 +1,4 @@
-font-family = "CaskaydiaMono Nerd Font Mono"
+font-family = "JetBrains Mono"
 theme = "Black Metal (Gorgoroth)"
 font-feature = -liga
 mouse-hide-while-typing = true
@@ -8,6 +8,5 @@ command = /opt/homebrew/bin/tmux
 
 font-size = 16
 
-cursor-color = cell-foreground
-cursor-text = cell-background
-cursor-opacity = 0.8
+cursor-color = #52ae6f
+cursor-text = #1e1e1e
