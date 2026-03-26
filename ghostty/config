@@ -1,1 +1,22 @@
-theme = "Matte Black"
+background = #101010
+foreground = #b9b9b9
+cursor-color = #f7f7f7
+selection-background = #252525
+selection-foreground = #f7f7f7
+
+palette = 0=#101010
+palette = 1=#ce5252
+palette = 2=#8c9440
+palette = 3=#f0c674
+palette = 4=#5f819d
+palette = 5=#8e8e8e
+palette = 6=#b9b9b9
+palette = 7=#e3e3e3
+palette = 8=#252525
+palette = 9=#ce5252
+palette = 10=#8c9440
+palette = 11=#f0c674
+palette = 12=#5f819d
+palette = 13=#8e8e8e
+palette = 14=#b9b9b9
+palette = 15=#f7f7f7
