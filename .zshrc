@@ -25,6 +25,7 @@ source $ZSH/custom/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 
 # aliases
 alias c='code --reuse-window'
+alias v='nvim'
 alias vim='nvim'
 alias ll='ls -la'
 alias gs='git status'
