@@ -14,7 +14,7 @@ return {
 		build = ":TSUpdate",
 		lazy = false,
 		config = function()
-			-- force clang for macos
+			-- clang
 			require("nvim-treesitter.install").compilers = { "clang" }
 
 			require("nvim-treesitter.configs").setup({

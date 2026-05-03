@@ -1,7 +1,3 @@
--- vim.cmd.colorscheme("austere_nvim")
--- vim.opt.termguicolors = true
--- return {}
-
 return {
 	{
 		"tjdevries/colorbuddy.nvim",
