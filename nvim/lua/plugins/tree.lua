@@ -16,6 +16,13 @@ return {
 			end,
 			desc = "Focus NvimTree",
 		},
+		{
+			"<leader>tt",
+			function()
+				vim.cmd("wincmd p")
+			end,
+			desc = "Focus previous window",
+		},
 	},
 
 	config = function()

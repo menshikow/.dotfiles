@@ -1,6 +1,10 @@
 # Hide pointer while typing and make text cursor invisible
 mouse-hide-while-typing = true
 
+font-feature = -dlig
+font-feature = -liga
+font-feature = -calt
+
 # # Monochrome theme (black, white, grayscale)
 background = #000000
 foreground = #E6E6E6
