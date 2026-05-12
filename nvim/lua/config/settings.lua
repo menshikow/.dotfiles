@@ -18,7 +18,7 @@ vim.opt.relativenumber = true
 vim.opt.signcolumn = "yes"
 
 -- cursorline
-vim.opt.cursorline = false
+vim.opt.cursorline = true
 
 -- line wrap
 vim.opt.wrap = false

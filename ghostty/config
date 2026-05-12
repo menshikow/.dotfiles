@@ -5,9 +5,12 @@ font-feature = -dlig
 font-feature = -liga
 font-feature = -calt
 
-# # Monochrome theme (black, white, grayscale)
-background = #000000
-foreground = #E6E6E6
-cursor-color = #F2F0EF
-selection-background = #404040
-selection-foreground = #F2F2F2
+# monochrome theme 
+
+# background = #000000
+# foreground = #E6E6E6
+# cursor-color = #F2F0EF
+# selection-background = #404040
+# selection-foreground = #F2F2F2
+
+theme = TokyoNight Night
