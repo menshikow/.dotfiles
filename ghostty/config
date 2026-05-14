@@ -14,3 +14,16 @@ font-feature = -calt
 # selection-foreground = #F2F2F2
 
 theme = TokyoNight Night
+
+# Split panes (macOS)
+keybind = super+d=new_split:right
+keybind = super+shift+d=new_split:down
+
+# Vim-style pane navigation
+keybind = super+h=goto_split:left
+keybind = super+j=goto_split:down
+keybind = super+k=goto_split:up
+keybind = super+l=goto_split:right
+
+# Close focused pane
+keybind = super+w=close_surface
