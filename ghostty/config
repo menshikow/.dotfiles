@@ -13,7 +13,7 @@ font-feature = -calt
 # selection-background = #404040
 # selection-foreground = #F2F2F2
 
-theme = TokyoNight Night
+theme = Black Metal (Mayhem)
 
 # Split panes (macOS)
 keybind = super+d=new_split:right
@@ -27,3 +27,6 @@ keybind = super+l=goto_split:right
 
 # Close focused pane
 keybind = super+w=close_surface
+
+cursor-color = #52ae6f
+cursor-text = #1e1e1e

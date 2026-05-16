@@ -1,18 +1,3 @@
--- colorbuddy theme
-
--- return {
--- 	{
--- 		"tjdevries/colorbuddy.nvim",
--- 		lazy = false,
--- 		priority = 1000,
--- 		config = function()
--- 			vim.cmd.colorscheme("gruvbuddy")
--- 		end,
--- 	},
--- }
-
--- tokyonight setup
-
 return {
 	{
 		"nvim-lualine/lualine.nvim",
@@ -23,37 +8,13 @@ return {
 		},
 	},
 	{
-		"folke/tokyonight.nvim",
+		"tjdevries/gruvbuddy.nvim",
 		priority = 1000,
+		dependencies = {
+			"tjdevries/colorbuddy.nvim",
+		},
 		config = function()
-			require("tokyonight").setup({
-				style = "night",
-				styles = {
-					keywords = { italic = false },
-				},
-				on_colors = function(colors)
-					colors.git = {
-						-- add = "#82c13e",
-						-- change = "#d4902b",
-						-- delete = "#f10e38",
-						add = colors.green,
-						change = colors.yellow,
-						delete = colors.red,
-					}
-				end,
-				on_highlights = function(highlights, colors)
-					highlights.MatchParen = {
-						bg = colors.blue0,
-						bold = true,
-					}
-				end,
-			})
-			vim.cmd.colorscheme("tokyonight")
+			vim.cmd.colorscheme("gruvbuddy")
 		end,
-	},
-	{
-		"lukas-reineke/indent-blankline.nvim",
-		main = "ibl",
-		opts = {},
 	},
 }
