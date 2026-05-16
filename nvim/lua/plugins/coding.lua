@@ -5,6 +5,12 @@ return {
 		opts = {},
 	},
 	{
+		"windwp/nvim-autopairs",
+		event = "InsertEnter",
+		config = true,
+		opts = {},
+	},
+	{
 		"echasnovski/mini.ai",
 		version = false,
 		config = function()
