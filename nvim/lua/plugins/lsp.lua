@@ -114,26 +114,23 @@ return {
 				float = { border = "rounded", source = true },
 				signs = {
 					text = {
-						[vim.diagnostic.severity.ERROR] = "",
-						[vim.diagnostic.severity.WARN] = "",
-						[vim.diagnostic.severity.HINT] = "",
-						[vim.diagnostic.severity.INFO] = "",
+						[vim.diagnostic.severity.ERROR] = "E",
+						[vim.diagnostic.severity.WARN] = "W",
+						[vim.diagnostic.severity.HINT] = "H",
+						[vim.diagnostic.severity.INFO] = "I",
+					},
+					numhl = {
+						[vim.diagnostic.severity.ERROR] = "DiagnosticSignError",
+						[vim.diagnostic.severity.WARN] = "DiagnosticSignWarn",
+						[vim.diagnostic.severity.HINT] = "DiagnosticSignHint",
+						[vim.diagnostic.severity.INFO] = "DiagnosticSignInfo",
 					},
 				},
-				underline = { severity = { min = vim.diagnostic.severity.HINT } },
+				underline = false,
 				update_in_insert = false,
 				severity_sort = true,
 			})
 
-			-- Underlines for diagnostics
-			for _, group in ipairs({
-				"DiagnosticUnderlineError",
-				"DiagnosticUnderlineWarn",
-				"DiagnosticUnderlineInfo",
-				"DiagnosticUnderlineHint",
-			}) do
-				vim.api.nvim_set_hl(0, group, { underline = true, undercurl = false })
-			end
 		end,
 	},
 
