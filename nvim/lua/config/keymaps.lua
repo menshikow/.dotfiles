@@ -25,12 +25,6 @@ map({ "n", "v" }, "<leader>d", [["_d]], opts)
 -- Clear search highlights
 map("n", "<Esc>", "<cmd>nohlsearch<CR>", opts)
 
--- presenter mode toggle (you could make this a toggle)
-map("n", "<leader>;;", function()
-	vim.o.background = "light"
-	vim.cmd.colorscheme("austere_nvim")
-end, opts)
-
 -- diagnostic
 map("n", "gl", vim.diagnostic.open_float, opts)
 map("n", "[d", vim.diagnostic.goto_prev, opts)
