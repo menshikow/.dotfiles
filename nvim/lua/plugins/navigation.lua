@@ -26,6 +26,7 @@ return {
 			vim.keymap.set("n", "<leader>fk", builtin.keymaps, {})
 
 			vim.keymap.set("n", "gd", builtin.lsp_definitions, {})
+			vim.keymap.set("n", "gb", "<C-o>", { desc = "Go back" })
 
 			-- idk how this is
 			vim.keymap.set("n", "<leader>sn", function()

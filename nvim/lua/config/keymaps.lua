@@ -16,8 +16,6 @@ map("n", "N", "Nzzzv", opts)
 map({ "n", "v" }, "<leader>y", '"+y', opts)
 map("n", "<leader>Y", '"+Y', opts)
 
-map("n", "<leader>e", "<cmd>Ex<CR>", opts)
-
 -- paste without overwriting the unnamed register
 map("x", "<leader>p", [["_dP]], opts)
 
