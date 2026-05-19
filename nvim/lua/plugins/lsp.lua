@@ -18,7 +18,7 @@ return {
 			require("nvim-treesitter.install").compilers = { "clang" }
 
 			require("nvim-treesitter.configs").setup({
-				ensure_installed = { "c", "lua", "vim", "vimdoc", "query", "markdown", "cpp", "python" },
+				ensure_installed = { "c", "lua", "vim", "vimdoc", "query", "markdown", "cpp", "python", "ocaml", "ocaml_interface" },
 				modules = {},
 				ignore_install = {},
 				sync_install = false,
@@ -91,6 +91,7 @@ return {
 					init_options = { fallbackFlags = { "-std=c++23" } },
 				},
 				lua_ls = {},
+				ocamllsp = {},
 				rust_analyzer = {},
 				zls = {},
 				texlab = {},
@@ -166,6 +167,7 @@ return {
 				html = { "prettier" },
 				json = { "prettier" },
 				lua = { "stylua" },
+				ocaml = { "ocamlformat" },
 				rust = { "rustfmt" },
 				zig = { "zigfmt" },
 			},
