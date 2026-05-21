@@ -9,7 +9,7 @@ return {
 			local notify = require("notify")
 
 			notify.setup({
-				stages = "fade",
+				stages = "static",
 				timeout = 2000,
 				render = "minimal",
 				background_colour = "#000000",
