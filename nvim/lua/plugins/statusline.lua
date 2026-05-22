@@ -12,12 +12,20 @@ return {
 			return string.format("[%s]", display)
 		end
 
+		-- remove the background color of the statusline
+		vim.api.nvim_set_hl(0, "StatusLine", { bg = "NONE", reverse = false })
+
+		-- do the same for splits
+		vim.api.nvim_set_hl(0, "StatusLineNC", { bg = "NONE", reverse = false })
+
 		el.setup({
 			generator = function()
 				return {
 					plain_mode,
-					" ",
+					sections.split,
+					sections.split,
 					builtin.file_relative,
+					sections.split,
 					" ",
 					sections.split,
 					"[",
