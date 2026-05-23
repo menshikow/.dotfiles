@@ -8,6 +8,10 @@
 
 vim.opt.list = false
 
+-- smart search
+vim.opt.ignorecase = true
+vim.opt.smartcase = true
+
 -- clipboard
 vim.opt.clipboard = "unnamedplus"
 
