@@ -3,6 +3,7 @@ return {
 		"lewis6991/gitsigns.nvim",
 		opts = {},
 	},
+
 	{
 		"rcarriga/nvim-notify",
 		config = function()
