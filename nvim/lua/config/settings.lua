@@ -1,4 +1,5 @@
 -- cursor
+
 -- vim.opt.guicursor = {
 -- 	"n-v-c:block-Cursor",
 -- 	"i-ci-ve:block-Cursor",
