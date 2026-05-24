@@ -33,9 +33,7 @@ return {
 					" : ",
 					builtin.column,
 					"]",
-					"[",
 					builtin.filetype,
-					"]",
 				}
 			end,
 		})
