@@ -18,7 +18,18 @@ return {
 			require("nvim-treesitter.install").compilers = { "clang" }
 
 			require("nvim-treesitter.configs").setup({
-				ensure_installed = { "c", "lua", "vim", "vimdoc", "query", "markdown", "cpp", "python", "ocaml", "ocaml_interface" },
+				ensure_installed = {
+					"c",
+					"lua",
+					"vim",
+					"vimdoc",
+					"query",
+					"markdown",
+					"cpp",
+					"python",
+					"ocaml",
+					"ocaml_interface",
+				},
 				modules = {},
 				ignore_install = {},
 				sync_install = false,
@@ -35,43 +46,7 @@ return {
 		dependencies = { "nvim-treesitter/nvim-treesitter" },
 	},
 
-	-- vimtex
-	{
-		"lervag/vimtex",
-		lazy = false,
-		init = function()
-			-- Use Skim on macOS
-			vim.g.vimtex_view_method = "skim"
-			-- Optional: Disable concealing (hiding) of syntax
-			vim.g.vimtex_syntax_conceal = { math_bounds = 0 }
-		end,
-	},
-
-	-- lean
-	{
-		"Julian/lean.nvim",
-		ft = { "lean" },
-		dependencies = {
-			"neovim/nvim-lspconfig",
-			"nvim-lua/plenary.nvim",
-		},
-		init = function()
-			local capabilities = vim.lsp.protocol.make_client_capabilities()
-			local ok, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
-			if ok then
-				capabilities = cmp_nvim_lsp.default_capabilities(capabilities)
-			end
-
-			vim.lsp.config("leanls", {
-				capabilities = capabilities,
-			})
-		end,
-		opts = {
-			mappings = true,
-		},
-	},
-
-	-- lsp
+	-- LSP
 	{
 		"neovim/nvim-lspconfig",
 		dependencies = {
@@ -131,7 +106,6 @@ return {
 				update_in_insert = false,
 				severity_sort = true,
 			})
-
 		end,
 	},
 
