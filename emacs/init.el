@@ -420,3 +420,21 @@
   (dired default-directory))
 
 (evil-ex-define-cmd "wq" #'evil-wq-to-dired)
+
+;; --- 4. LSP (Eglot) ---
+;; Automatically start Eglot for the languages you use
+(add-hook 'python-mode-hook 'eglot-ensure)
+(add-hook 'rust-mode-hook 'eglot-ensure)
+(add-hook 'js-mode-hook 'eglot-ensure)
+
+;; Optional: Make Eglot format your code on save
+(add-hook 'eglot-managed-mode-hook
+          (lambda ()
+            (add-hook 'before-save-hook 'eglot-format-buffer -1 t)))
+
+(use-package tao-theme
+  :ensure t
+  :config
+
+  (load-theme 'tao-yin t)  ;; Dark
+  )
