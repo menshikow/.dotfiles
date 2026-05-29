@@ -11,20 +11,19 @@ return {
 					return vim.fn.executable("make") == 1
 				end,
 			},
+
 			{
 				"nvim-tree/nvim-web-devicons",
 			},
 		},
+
 		config = function()
 			local telescope = require("telescope")
 			local builtin = require("telescope.builtin")
 
 			telescope.setup({
 				defaults = {
-					-- prevent express_line from showing duplicate statusline in telescope windows
-					statusline = function()
-						return ""
-					end,
+
 					layout_config = {
 						horizontal = {
 							preview_width = 0.5,
@@ -41,11 +40,18 @@ return {
 			local quick_layout = { layout_strategy = "horizontal", previewer = false, layout_config = { width = 0.5 } }
 
 			vim.keymap.set("n", "<leader>ff", function()
-				builtin.find_files(quick_layout)
+				local opts = vim.tbl_deep_extend("force", quick_layout or {}, {
+					hidden = true,
+					no_ignore = true,
+				})
+
+				require("telescope.builtin").find_files(opts)
 			end, { desc = "[F]ind [F]iles" })
+
 			vim.keymap.set("n", "<leader>fg", function()
 				builtin.live_grep(grep_layout)
 			end, { desc = "[F]ind by [G]rep (live)" })
+
 			vim.keymap.set("n", "<leader>fw", function()
 				builtin.grep_string(grep_layout)
 			end, { desc = "[F]ind [W]ord under cursor" })

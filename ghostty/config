@@ -8,21 +8,10 @@ font-feature = -calt
 font-size = 17
 
 font-family = "IoskeleyMonoTerm Nerd Font"
-
 # font-family = "JetBrains Mono"
 
-# monochrome theme 
-
-# background = #000000
-# foreground = #E6E6E6
-# cursor-color = #F2F0EF
-# selection-background = #404040
-# selection-foreground = #F2F2F2
-
-# theme = Black Metal (Mayhem)
-theme = Atom
-
-# theme = monoglow_z
+# theme = Atom
+theme = Nvim Dark
 
 # Disable pane dimming
 unfocused-split-opacity = 1.0

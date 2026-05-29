@@ -1,3 +1,6 @@
+https://github.com/nvim-lua/kickstart.nvim - kickstart.nvim
+https://github.com/nvim-neorg/neorg - neoorg
+
 #+TITLE: Learn Neovim — Path to Mastery
 #+DATE: 2026-05-29
 
