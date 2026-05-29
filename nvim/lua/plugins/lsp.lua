@@ -22,7 +22,7 @@ return {
 			parser_config.org = {
 				install_info = {
 					url = "https://github.com/nvim-orgmode/tree-sitter-org",
-					files = { "src/parser.c" },
+					files = { "src/parser.c", "src/scanner.c" },
 					branch = "main",
 				},
 			}
