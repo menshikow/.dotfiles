@@ -12,8 +12,10 @@ return {
 			return string.format("[%s]", display)
 		end
 
-		vim.api.nvim_set_hl(0, "StatusLine", { fg = "#d0b892", bg = "#0d0d0d", reverse = false })
-		vim.api.nvim_set_hl(0, "StatusLineNC", { fg = "#3a8c8e", bg = "#080808", reverse = false })
+		vim.api.nvim_set_hl(0, "StatusLine", { bg = "NONE", reverse = false })
+
+		-- do the same for splits
+		vim.api.nvim_set_hl(0, "StatusLineNC", { bg = "NONE", reverse = false })
 
 		el.setup({
 			generator = function(_, buffer)
