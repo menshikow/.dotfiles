@@ -12,13 +12,13 @@ return {
 			return string.format("[%s]", display)
 		end
 
-		vim.api.nvim_set_hl(0, "StatusLine", { fg = "#A6E22E", bg = "#0a0a0a", reverse = false })
-		vim.api.nvim_set_hl(0, "StatusLineNC", { fg = "#126367", bg = "#050505", reverse = false })
+		vim.api.nvim_set_hl(0, "StatusLine", { fg = "#d0b892", bg = "#0d0d0d", reverse = false })
+		vim.api.nvim_set_hl(0, "StatusLineNC", { fg = "#3a8c8e", bg = "#080808", reverse = false })
 
 		el.setup({
 			generator = function(_, buffer)
 				if vim.api.nvim_buf_get_option(buffer.bufnr, "buftype") == "prompt" then
-					return {}
+					return { sections.split }
 				end
 				return {
 					plain_mode,
