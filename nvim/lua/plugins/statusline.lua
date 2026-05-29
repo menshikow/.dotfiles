@@ -16,10 +16,12 @@ return {
 		vim.api.nvim_set_hl(0, "StatusLineNC", { fg = "#126367", bg = "#050505", reverse = false })
 
 		el.setup({
-			generator = function()
+			generator = function(_, buffer)
+				if vim.api.nvim_buf_get_option(buffer.bufnr, "buftype") == "prompt" then
+					return {}
+				end
 				return {
 					plain_mode,
-					sections.split,
 					sections.split,
 					builtin.file_relative,
 					sections.split,
@@ -30,6 +32,7 @@ return {
 					" : ",
 					builtin.column,
 					"]",
+					sections.split,
 					builtin.filetype,
 				}
 			end,
