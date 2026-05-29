@@ -61,18 +61,19 @@ return {
 		dependencies = { "nvim-treesitter/nvim-treesitter" },
 		opts = {},
 		config = function()
-			local ok, _ = pcall(function()
-				return vim.treesitter.get_range
-			end)
-			if ok and get_range then
-				local orig = vim.treesitter.get_range
-				vim.treesitter.get_range = function(node, source, metadata)
-					if not node then
-						return { 0, 0, 0, 0, 0, 0 }
-					end
-					return orig(node, source, metadata)
-				end
+	local ok, get_range = pcall(function()
+		return vim.treesitter.get_range
+	end)
+	if ok and get_range then
+		local orig = vim.treesitter.get_range
+		vim.treesitter.get_range = function(node, source, metadata)
+			local ok2, result = pcall(orig, node, source, metadata)
+			if ok2 then
+				return result
 			end
+			return { 0, 0, 0, 0, 0, 0 }
+		end
+	end
 		end,
 	},
 
