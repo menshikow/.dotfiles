@@ -85,6 +85,16 @@ return {
 			vim.keymap.set("n", "<leader>sn", function()
 				builtin.find_files(vim.tbl_deep_extend("force", quick_layout, { cwd = vim.fn.stdpath("config") }))
 			end, { desc = "[S]earch [N]eovim Config" })
+			vim.keymap.set("n", "<leader>gC", function()
+				builtin.git_commits(quick_layout)
+			end, { desc = "[G]it [C]ommits" })
+			vim.keymap.set("n", "<leader>gS", function()
+				builtin.git_status(quick_layout)
+			end, { desc = "[G]it [S]tatus (telescope)" })
+			vim.keymap.set("n", "<leader>gb", function()
+				builtin.git_branches(quick_layout)
+			end, { desc = "[G]it [B]ranches" })
+
 			pcall(telescope.load_extension, "fzf")
 		end,
 	},

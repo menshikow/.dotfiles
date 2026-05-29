@@ -25,10 +25,8 @@ return {
 			})
 
 			vim.keymap.set("n", "<leader>gs", "<CMD>Neogit kind=tab<CR>", { desc = "[G]it [S]tatus" })
-			vim.keymap.set("n", "<leader>gc", "<CMD>Neogit kind=tab commit<CR>", { desc = "[G]it [C]ommit" })
 			vim.keymap.set("n", "<leader>gl", "<CMD>Neogit kind=tab log<CR>", { desc = "[G]it [L]og" })
 			vim.keymap.set("n", "<leader>gd", "<CMD>DiffviewOpen<CR>", { desc = "[G]it [D]iffview" })
-			vim.keymap.set("n", "<leader>gb", "<CMD>Telescope git_branches<CR>", { desc = "[G]it [B]ranches" })
 		end,
 	},
 }
