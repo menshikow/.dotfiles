@@ -71,6 +71,7 @@ return {
 				zls = {},
 				texlab = {},
 			}
+
 			local ensure_installed = vim.tbl_keys(servers or {})
 			require("mason-lspconfig").setup({
 				ensure_installed = ensure_installed,
