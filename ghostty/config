@@ -21,6 +21,11 @@ font-family = "IoskeleyMonoTerm Nerd Font"
 
 theme = Black Metal (Mayhem)
 
+# Disable pane dimming
+unfocused-split-opacity = 1.0
+
+split-divider-color = #52ae6f
+
 # Split panes (macOS)
 keybind = super+d=new_split:right
 keybind = super+shift+d=new_split:down
