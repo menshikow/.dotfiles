@@ -19,7 +19,9 @@ font-family = "IoskeleyMonoTerm Nerd Font"
 # selection-background = #404040
 # selection-foreground = #F2F2F2
 
-theme = Black Metal (Mayhem)
+# theme = Black Metal (Mayhem)
+
+theme = monoglow_z
 
 # Disable pane dimming
 unfocused-split-opacity = 1.0
