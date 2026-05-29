@@ -23,6 +23,8 @@ return {
 				return {
 					plain_mode,
 					sections.split,
+					sections.split,
+					" ",
 					builtin.file_relative,
 					sections.split,
 					" ",
@@ -32,7 +34,6 @@ return {
 					" : ",
 					builtin.column,
 					"]",
-					sections.split,
 					builtin.filetype,
 				}
 			end,
