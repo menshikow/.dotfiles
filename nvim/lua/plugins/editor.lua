@@ -21,4 +21,18 @@ return {
 			vim.notify = notify
 		end,
 	},
+	{
+		"mg979/vim-visual-multi",
+		branch = "master",
+		init = function()
+			-- clear default <C-n> mappings to avoid conflicts with VM
+			pcall(vim.keymap.del, "n", "<C-n>")
+			pcall(vim.keymap.del, "x", "<C-n>")
+
+			vim.g.VM_maps = {
+				["Find Under"] = "<C-n>",
+				["Find Subword Under"] = "<C-n>",
+			}
+		end,
+	},
 }

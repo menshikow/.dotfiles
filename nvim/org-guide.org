@@ -1,0 +1,59 @@
+#+TITLE: Org Mode Guide for Neovim
+#+DATE: 2026-05-29
+
+* Getting Started
+
+Open or create a =.org= file and orgmode will load automatically.
+
+* Keybindings
+
+** TODO Management
+
+- =<leader>tt= :: Toggle TODO state for heading
+- =<leader>tn= :: Change TODO to next state
+- =<leader>tp= :: Change TODO to previous state
+- =<leader>ts= :: Insert new TODO heading
+
+** Heading Navigation
+
+- =<Tab>= :: Cycle visibility of current subtree
+- =<S-Tab>= :: Cycle global visibility
+- =[[= :: Previous heading
+- =]]= :: Next heading
+- =*<Space>= :: Insert new heading at same level
+- =**<Space>= :: Insert new subheading
+
+** Calendar / Dates
+
+- =<leader>da= :: Add date to heading
+- =<leader>ds= :: Add schedule (active) date
+- =<leader>dd= :: Add deadline date
+
+** Org Files
+
+- =<leader>oa= :: Open agenda view
+- =<leader>ot= :: Open TODO list
+- =<leader>oc= :: Open calendar
+- =<leader>os= :: Search through org files
+
+* Agenda
+
+Set up your agenda files in =~/org/=. The plugin watches:
+=~/org/**/*.org=
+
+To open agenda: =<leader>oa=
+
+* TODO States
+
+Standard workflow:
+#+SEQ_TODO: TODO(t) NEXT(n) | DONE(d) CANCELLED(c)
+
+Press =<leader>tt= or =<leader>tn= to cycle through states.
+
+* Useful Tips
+
+- Create a =~/org/= directory for your org files
+- Use =#+FILETAGS: := to set file-level tags
+- Tag headings with =:tag:= syntax
+- Schedule tasks with =SCHEDULED:= keyword
+- Set deadlines with =DEADLINE:= keyword

@@ -13,21 +13,11 @@
 -- 	},
 -- }
 
--- return {
--- 	"menshikow/vim-mono.nvim",
--- 	lazy = false,
--- 	priority = 1000,
--- 	config = function()
--- 		vim.cmd.colorscheme("vim-mono")
--- 	end,
--- }
-
 return {
-	"wnkz/monoglow.nvim",
+	"menshikow/vim-mono.nvim",
 	lazy = false,
 	priority = 1000,
-	opts = {},
 	config = function()
-		vim.cmd.colorscheme("monoglow-z")
+		vim.cmd.colorscheme("vim-mono")
 	end,
 }

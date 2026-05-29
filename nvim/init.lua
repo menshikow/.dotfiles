@@ -3,6 +3,7 @@ require("config.settings")
 require("config.keymaps")
 
 vim.env.PATH = vim.env.PATH .. ":/opt/homebrew/bin"
+vim.deprecate = function() end
 
 -- node fixes
 vim.g.node_host_prog = "/Users/madonnaprayer/.nvm/versions/node/v22.20.0/bin/node"

@@ -19,14 +19,14 @@ font-family = "IoskeleyMonoTerm Nerd Font"
 # selection-background = #404040
 # selection-foreground = #F2F2F2
 
-# theme = Black Metal (Mayhem)
+theme = Black Metal (Mayhem)
 
-theme = monoglow_z
+# theme = monoglow_z
 
 # Disable pane dimming
 unfocused-split-opacity = 1.0
 
-split-divider-color = #52ae6f
+split-divider-color = #708090
 
 # Split panes (macOS)
 keybind = super+d=new_split:right

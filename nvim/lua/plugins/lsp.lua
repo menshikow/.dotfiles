@@ -17,6 +17,16 @@ return {
 			-- clang
 			require("nvim-treesitter.install").compilers = { "clang" }
 
+			-- register the org-mode parser (not in the default parser list)
+			local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
+			parser_config.org = {
+				install_info = {
+					url = "https://github.com/nvim-orgmode/tree-sitter-org",
+					files = { "src/parser.c" },
+					branch = "main",
+				},
+			}
+
 			require("nvim-treesitter.configs").setup({
 				ensure_installed = {
 					"c",
@@ -29,6 +39,7 @@ return {
 					"python",
 					"ocaml",
 					"ocaml_interface",
+					"org",
 				},
 				modules = {},
 				ignore_install = {},
