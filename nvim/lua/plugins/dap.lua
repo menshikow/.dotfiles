@@ -26,6 +26,11 @@ return {
 				return vim.split(last_args, " ")
 			end
 
+			dap.adapters.codelldb = {
+				type = "executable",
+				command = "codelldb",
+			}
+
 			dap.configurations.cpp = {
 				{
 					name = "Launch program",
@@ -53,9 +58,58 @@ return {
 			dap.configurations.c = dap.configurations.cpp
 			dap.configurations.rust = dap.configurations.cpp
 
-			require("dap").adapters.codelldb = {
+			dap.adapters.python = {
 				type = "executable",
-				command = "codelldb",
+				command = "python3",
+				args = { "-m", "debugpy.adapter" },
+			}
+
+			dap.configurations.python = {
+				{
+					type = "python",
+					request = "launch",
+					name = "Launch current file",
+					program = "${file}",
+					-- Don't let debugpy hijack stdin/stdout
+					console = "integratedTerminal",
+				},
+				{
+					type = "python",
+					request = "launch",
+					name = "Launch with args",
+					program = function()
+						return vim.fn.input("Program: ", "${file}", "file")
+					end,
+					args = function()
+						return vim.fn.split(vim.fn.input("Args: "), " ")
+					end,
+					console = "integratedTerminal",
+				},
+			}
+
+			dap.adapters.ocaml = {
+				type = "executable",
+				command = "ocamlearlybird",
+			}
+
+			dap.configurations.ocaml = {
+				{
+					type = "ocaml",
+					request = "launch",
+					name = "Launch current file",
+					program = "${file}",
+				},
+				{
+					type = "ocaml",
+					request = "launch",
+					name = "Launch with args",
+					program = function()
+						return vim.fn.input("Program: ", "${file}", "file")
+					end,
+					args = function()
+						return vim.fn.split(vim.fn.input("Args: "), " ")
+					end,
+				},
 			}
 
 			vim.keymap.set("n", "<leader>db", dap.toggle_breakpoint)
