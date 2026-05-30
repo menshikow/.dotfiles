@@ -1,5 +1,6 @@
 return {
 	"tjdevries/express_line.nvim",
+
 	config = function()
 		local el = require("el")
 		local builtin = require("el.builtin")
@@ -12,16 +13,20 @@ return {
 			return string.format("[%s]", display)
 		end
 
-		vim.api.nvim_set_hl(0, "StatusLine", { bg = "NONE", reverse = false })
+		vim.opt.laststatus = 2
 
-		-- do the same for splits
-		vim.api.nvim_set_hl(0, "StatusLineNC", { bg = "NONE", reverse = false })
+		vim.api.nvim_set_hl(0, "StatusLine", {
+			bg = "NONE",
+			reverse = false,
+		})
+
+		vim.api.nvim_set_hl(0, "StatusLineNC", {
+			bg = "NONE",
+			reverse = false,
+		})
 
 		el.setup({
-			generator = function(_, buffer)
-				if vim.api.nvim_buf_get_option(buffer.bufnr, "buftype") == "prompt" then
-					return { sections.split }
-				end
+			generator = function()
 				return {
 					plain_mode,
 					sections.split,
@@ -38,6 +43,13 @@ return {
 					"]",
 					builtin.filetype,
 				}
+			end,
+		})
+
+		vim.api.nvim_create_autocmd("FileType", {
+			pattern = "TelescopePrompt",
+			callback = function()
+				vim.opt_local.statusline = ""
 			end,
 		})
 	end,
