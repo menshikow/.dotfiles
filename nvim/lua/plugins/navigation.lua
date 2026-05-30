@@ -33,6 +33,11 @@ return {
 					},
 					path_display = { "smart" },
 					selection_caret = "❯ ",
+					borderchars = {
+						prompt = { "─", "│", "─", "│", "╭", "╮", "╰", "╯" },
+						results = { "─", "│", "─", "│", "╭", "╮", "╰", "╯" },
+						preview = { "─", "│", "─", "│", "╭", "╮", "╰", "╯" },
+					},
 				},
 			})
 
@@ -41,8 +46,8 @@ return {
 
 			vim.keymap.set("n", "<leader>ff", function()
 				local opts = vim.tbl_deep_extend("force", quick_layout or {}, {
-					hidden = true,
-					no_ignore = true,
+					hidden = false,
+					no_ignore = false,
 				})
 
 				require("telescope.builtin").find_files(opts)
@@ -104,6 +109,7 @@ return {
 			pcall(telescope.load_extension, "fzf")
 		end,
 	},
+
 	{
 		"ThePrimeagen/harpoon",
 		branch = "harpoon2",

@@ -6,7 +6,9 @@
 
 vim.g.colors_name = "gruvbuddy-static"
 
-local hi = function(name, opts) vim.api.nvim_set_hl(0, name, opts) end
+local hi = function(name, opts)
+	vim.api.nvim_set_hl(0, name, opts)
+end
 
 hi("@boolean", { fg = "#de935f" })
 hi("@character.special", { fg = "#cc6666" })
@@ -159,3 +161,19 @@ hi("user3", { fg = "#ffffff", bg = "#99cc99" })
 hi("variable", { fg = "#e0e0e0" })
 hi("visuallinemode", { bg = "#5f89ad" })
 hi("visualmode", { bg = "#5f89ad" })
+-- Telescope highlight groups to remove backgrounds that cause blocks
+hi("TelescopePromptNormal", { bg = "none" })
+hi("TelescopePromptBorder", { bg = "none" })
+hi("TelescopePromptTitle", { bg = "none" })
+hi("TelescopePromptPrefix", { bg = "none" })
+hi("TelescopePromptCounter", { bg = "none" })
+hi("TelescopeResultsNormal", { bg = "none" })
+hi("TelescopeResultsBorder", { bg = "none" })
+hi("TelescopeResultsTitle", { bg = "none" })
+hi("TelescopePreviewNormal", { bg = "none" })
+hi("TelescopePreviewBorder", { bg = "none" })
+hi("TelescopePreviewTitle", { bg = "none" })
+hi("TelescopeSelection", { bg = "none" })
+hi("TelescopeSelectionCaret", { bg = "none" })
+hi("TelescopeMultiSelection", { bg = "none" })
+hi("TelescopeMultiIcon", { bg = "none" })

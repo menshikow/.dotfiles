@@ -2,8 +2,6 @@ require("config.lazy")
 require("config.settings")
 require("config.keymaps")
 
--- Static colorscheme: hardcoded hex values, no programmatic generation
--- (replaces colorbuddy/gruvbuddy which was slow due to runtime color computation)
 vim.cmd.colorscheme("gruvbuddy-static")
 
 vim.env.PATH = vim.env.PATH .. ":/opt/homebrew/bin"
