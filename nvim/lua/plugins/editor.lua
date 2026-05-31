@@ -4,28 +4,27 @@ return {
 		opts = {},
 	},
 
-	{
-		"rcarriga/nvim-notify",
-		config = function()
-			local notify = require("notify")
-
-			notify.setup({
-				stages = "static",
-				timeout = 2000,
-				render = "minimal",
-				background_colour = "#000000",
-				fps = 60,
-				top_down = false,
-			})
-
-			vim.notify = notify
-		end,
-	},
+	-- {
+	-- 	"rcarriga/nvim-notify",
+	-- 	config = function()
+	-- 		local notify = require("notify")
+	--
+	-- 		notify.setup({
+	-- 			stages = "static",
+	-- 			timeout = 2000,
+	-- 			render = "minimal",
+	-- 			background_colour = "#000000",
+	-- 			fps = 60,
+	-- 			top_down = false,
+	-- 		})
+	--
+	-- 		vim.notify = notify
+	-- 	end,
+	-- },
 	{
 		"mg979/vim-visual-multi",
 		branch = "master",
 		init = function()
-			-- clear default <C-n> mappings to avoid conflicts with VM
 			pcall(vim.keymap.del, "n", "<C-n>")
 			pcall(vim.keymap.del, "x", "<C-n>")
 

@@ -1,11 +1,6 @@
--- cursor
-
--- vim.opt.guicursor = {
--- 	"n-v-c:block-Cursor",
--- 	"i-ci-ve:block-Cursor",
--- 	"r-cr:hor20-Cursor",
--- 	"i:blinkwait300-blinkon500-blinkoff300-Cursor",
--- }
+-- splits
+vim.opt.splitbelow = true
+vim.opt.splitright = true
 
 vim.opt.list = false
 
@@ -22,7 +17,7 @@ vim.opt.relativenumber = true
 vim.opt.signcolumn = "yes"
 
 -- cursorline
-vim.opt.cursorline = true
+vim.opt.cursorline = false
 
 -- line wrap
 vim.opt.wrap = false
