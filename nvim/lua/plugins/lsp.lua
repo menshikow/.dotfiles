@@ -14,67 +14,56 @@ return {
 		build = ":TSUpdate",
 		lazy = false,
 		config = function()
-			-- clang
-			require("nvim-treesitter.install").compilers = { "clang" }
-
-			-- register the org-mode parser (not in the default parser list)
-			local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
-			parser_config.org = {
-				install_info = {
-					url = "https://github.com/nvim-orgmode/tree-sitter-org",
-					files = { "src/parser.c", "src/scanner.c" },
-					branch = "main",
-				},
+			local parsers = {
+				"c",
+				"cpp",
+				"haskell",
+				"lua",
+				"vim",
+				"vimdoc",
+				"query",
+				"markdown",
+				"python",
+				"ocaml",
+				"ocaml_interface",
 			}
 
-			require("nvim-treesitter.configs").setup({
-				ensure_installed = {
-					"c",
-					"lua",
-					"vim",
-					"vimdoc",
-					"query",
-					"markdown",
-					"cpp",
-					"python",
-					"ocaml",
-					"ocaml_interface",
-					"org",
-				},
-				modules = {},
-				ignore_install = {},
-				sync_install = false,
-				auto_install = true,
-				highlight = {
-					enable = true,
-					additional_vim_regex_highlighting = false,
-				},
+			local installed = {} --- @type table<string, boolean>
+			for _, p in ipairs(vim.api.nvim_get_runtime_file("parser/*", false)) do
+				installed[vim.fn.fnamemodify(p, ":t")] = true
+			end
+
+			local missing = {} --- @type string[]
+			for _, lang in ipairs(parsers) do
+				if not installed[lang .. ".so"] then
+					table.insert(missing, lang)
+				end
+			end
+
+			if #missing > 0 then
+				require("nvim-treesitter").install(missing)
+			end
+
+			vim.api.nvim_create_autocmd("FileType", {
+				callback = function(args)
+					local ok = pcall(vim.treesitter.start, args.buf)
+					if not ok then
+						vim.bo[args.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+					end
+				end,
 			})
 		end,
 	},
+
 	{
 		"nvim-treesitter/nvim-treesitter-textobjects",
 		dependencies = { "nvim-treesitter/nvim-treesitter" },
 	},
+
 	{
 		"nvim-treesitter/nvim-treesitter-context",
 		dependencies = { "nvim-treesitter/nvim-treesitter" },
 		opts = {},
-		config = function()
-			local ok, get_range = pcall(function()
-				return vim.treesitter.get_range
-			end)
-			if ok and get_range then
-				local orig = vim.treesitter.get_range
-				vim.treesitter.get_range = function(node, source, metadata)
-					local ok2, result = pcall(orig, node, source, metadata)
-					if ok2 then
-						return result
-					end
-					return { 0, 0, 0, 0, 0, 0 }
-				end
-			end
-		end,
 	},
 
 	-- LSP
@@ -87,36 +76,41 @@ return {
 		},
 		config = function()
 			local capabilities = require("cmp_nvim_lsp").default_capabilities()
+
 			local servers = {
 				basedpyright = {
 					settings = {
-						basedpyright = { typeCheckingMode = "off" },
+						basedpyright = {
+							analysis = { -- FIXED: Nested typeCheckingMode under analysis
+								typeCheckingMode = "off",
+							},
+						},
 					},
 				},
 				clangd = {
 					init_options = { fallbackFlags = { "-std=c++23" } },
 				},
+				hls = {},
 				lua_ls = {},
 				ocamllsp = {},
 				rust_analyzer = {},
 				zls = {},
-				texlab = {},
 			}
 
-			local ensure_installed = vim.tbl_keys(servers or {})
 			require("mason-lspconfig").setup({
-				ensure_installed = ensure_installed,
+				ensure_installed = vim.tbl_keys(servers),
 				automatic_installation = false,
 				handlers = {
 					function(server_name)
 						local server = servers[server_name] or {}
+
 						server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
+
 						require("lspconfig")[server_name].setup(server)
 					end,
 				},
 			})
 
-			-- diagnostic ui
 			vim.diagnostic.config({
 				virtual_text = false,
 				float = { border = "rounded", source = true },
@@ -127,12 +121,6 @@ return {
 						[vim.diagnostic.severity.HINT] = "H",
 						[vim.diagnostic.severity.INFO] = "I",
 					},
-					numhl = {
-						[vim.diagnostic.severity.ERROR] = "DiagnosticSignError",
-						[vim.diagnostic.severity.WARN] = "DiagnosticSignWarn",
-						[vim.diagnostic.severity.HINT] = "DiagnosticSignHint",
-						[vim.diagnostic.severity.INFO] = "DiagnosticSignInfo",
-					},
 				},
 				underline = false,
 				update_in_insert = false,
@@ -141,7 +129,7 @@ return {
 		end,
 	},
 
-	-- formatting
+	-- Formatting
 	{
 		"stevearc/conform.nvim",
 		event = { "BufWritePre" },
@@ -150,9 +138,12 @@ return {
 			{
 				"<leader>f",
 				function()
-					require("conform").format({ async = true, lsp_format = "fallback" })
+					require("conform").format({
+						async = true,
+						lsp_format = "fallback",
+					})
 				end,
-				mode = "",
+				mode = { "n", "v" }, -- FIXED
 			},
 		},
 		opts = {
@@ -163,6 +154,7 @@ return {
 			formatters_by_ft = {
 				c = { "clang_format" },
 				cpp = { "clang_format" },
+				haskell = { "ormolu" },
 				python = { "ruff_format" },
 				javascript = { "prettier" },
 				typescript = { "prettier" },
@@ -179,16 +171,18 @@ return {
 		},
 	},
 
-	-- completion
+	-- Completion
 	{
 		"hrsh7th/nvim-cmp",
 		dependencies = { "L3MON4D3/LuaSnip" },
 		config = function()
 			local cmp = require("cmp")
+
 			cmp.setup({
 				sources = {
 					{ name = "nvim_lsp" },
 				},
+
 				mapping = cmp.mapping.preset.insert({
 					["<CR>"] = cmp.mapping.confirm({ select = true }),
 					["<C-Space>"] = cmp.mapping.complete(),
@@ -197,9 +191,13 @@ return {
 					["<Down>"] = cmp.mapping.select_next_item(),
 					["<Up>"] = cmp.mapping.select_prev_item(),
 				}),
+
 				snippet = {
 					expand = function(args)
-						require("luasnip").lsp_expand(args.body)
+						local ok, luasnip = pcall(require, "luasnip")
+						if ok then
+							luasnip.lsp_expand(args.body)
+						end
 					end,
 				},
 			})

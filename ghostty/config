@@ -1,18 +1,16 @@
-# Hide pointer while typing and make text cursor invisible
 mouse-hide-while-typing = true
 
 font-size = 14
 
-font-family = "IoskeleyMonoTerm Nerd Font"
+# font-family = "IoskeleyMonoTerm Nerd Font"
+font-family = "Source Code Pro"
 # font-family = "Iosevka Nerd Font Mono"
 # font-family = "JetBrains Mono"
 # font-family = "Sf Mono"
 
-# theme = Atom
-theme = GitHub Dark
+theme = Gruvbox Dark
 
-# Disable pane dimming
-unfocused-split-opacity = 1.0
+# Disable pane dimming unfocused-split-opacity = 1.0
 
 split-divider-color = #708090
 
@@ -38,5 +36,7 @@ keybind = super+w=close_surface
 # cursor 
 
 # cursor-color = #ffffff
-cursor-color = #52ae6f
+# cursor-color = #52ae6f
 cursor-text = #1e1e1e
+
+macos-titlebar-style = hidden
