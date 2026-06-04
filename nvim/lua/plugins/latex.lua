@@ -2,14 +2,21 @@ return {
 	"lervag/vimtex",
 	lazy = false,
 	init = function()
-		-- Global Options & Variables for LaTeX
 		vim.g.vimtex_fold_enabled = 1
 		vim.g.vimtex_quickfix_mode = 0
 		vim.g.vimtex_compiler_latexmk_engines = { ["_"] = "-lualatex -shell-escape" }
 		vim.g.vimtex_indent_on_ampersands = 0
 		vim.g.vimtex_view_method = "sioyek"
 		vim.g.matchup_override_vimtex = 1
-		vim.g.latexindent_opt = "-m" -- Used for styling/indentation tweaks
+		vim.opt.conceallevel = 0
+		vim.opt.concealcursor = ""
+		vim.g.latexindent_opt = "-m"
+
+		vim.keymap.set("n", "<leader>ll", "<cmd>VimtexCompile<CR>")
+		vim.keymap.set("n", "<leader>lv", "<cmd>VimtexView<CR>", { desc = "View PDF" })
+		vim.keymap.set("n", "<leader>lc", "<cmd>VimtexClean<CR>", { desc = "Clean aux files" })
+		vim.keymap.set("n", "<leader>le", "<cmd>VimtexErrors<CR>", { desc = "Show errors" })
+		vim.keymap.set("n", "<leader>lt", "<cmd>VimtexTocOpen<CR>", { desc = "Table of contents" })
 
 		vim.opt.wildignore:append({ ".aux", ".out", ".toc" })
 	end,
@@ -41,15 +48,11 @@ return {
 			end
 		end
 
-		-- Treesitter bypass for LaTeX documents
-		-- (Ensures classic Vimtex regex syntax engine takes precedence over Treesitter parser)
 		api.nvim_create_autocmd("FileType", {
 			pattern = { "tex", "latex" },
 			callback = function()
 				vim.bo.syntax = "on"
 
-				-- FIX: Explicitly intercept and overwrite local buffer folding definitions.
-				-- This safely stops Neovim from executing 'nvim_treesitter#foldexpr()' on startup.
 				if vim.g.vimtex_fold_enabled == 1 then
 					vim.opt_local.foldmethod = "expr"
 					vim.opt_local.foldexpr = "vimtex#fold#expr(v:lnum)"

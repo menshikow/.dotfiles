@@ -8,9 +8,9 @@ font-family = "Source Code Pro"
 # font-family = "JetBrains Mono"
 # font-family = "Sf Mono"
 
-theme = Gruvbox Dark
+theme = Atom
 
-# Disable pane dimming unfocused-split-opacity = 1.0
+unfocused-split-opacity = 1.0
 
 split-divider-color = #708090
 
