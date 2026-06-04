@@ -57,9 +57,8 @@
 
 return {
 	"itchyny/lightline.vim",
-	lazy = false, -- also load at start since it's UI
+	lazy = false,
 	config = function()
-		-- no need to also show mode in cmd line when we have bar
 		vim.o.showmode = false
 		vim.g.lightline = {
 			active = {
@@ -77,6 +76,7 @@ return {
 				filename = "LightlineFilename",
 			},
 		}
+
 		function LightlineFilenameInLua(opts)
 			if vim.fn.expand("%:t") == "" then
 				return "[No Name]"
