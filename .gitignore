@@ -46,3 +46,21 @@ node_modules/
 prompts/
 
 Thumbs.db
+
+
+# emacs
+elpa/
+
+eln-cache/
+
+ido.last
+smex-items
+recentf
+bookmarks
+places
+
+auto-save-list/
+*.elc
+
+*~
+\#*\#
