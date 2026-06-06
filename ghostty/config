@@ -1,6 +1,6 @@
 mouse-hide-while-typing = true
 
-font-size = 22
+font-size = 18
 
 # font-family = "IoskeleyMonoTerm Nerd Font"
 font-family = "Iosevka Nerd Font Mono"
@@ -37,5 +37,7 @@ keybind = super+w=close_surface
 # cursor-color = #ffffff
 # cursor-color = #52ae6f
 cursor-text = #1e1e1e
+
+cursor-style = block
 
 macos-titlebar-style = hidden
