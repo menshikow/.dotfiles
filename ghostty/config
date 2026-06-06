@@ -2,10 +2,9 @@ mouse-hide-while-typing = true
 
 font-size = 16
 
-font-family = "IoskeleyMonoTerm Nerd Font"
-# font-family = "Source Code Pro"
+# font-family = "IoskeleyMonoTerm Nerd Font"
 # font-family = "Iosevka Nerd Font Mono"
-# font-family = "JetBrains Mono"
+font-family = "JetBrains Mono"
 # font-family = "Sf Mono"
 
 theme = Atom
@@ -36,7 +35,7 @@ keybind = super+w=close_surface
 # cursor 
 
 # cursor-color = #ffffff
-# cursor-color = #52ae6f
-cursor-text = #1e1e1e
+cursor-color = #52ae6f
+# cursor-text = #1e1e1e
 
 macos-titlebar-style = hidden

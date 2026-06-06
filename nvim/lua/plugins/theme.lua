@@ -31,7 +31,7 @@ return {
 	config = function()
 		vim.cmd.colorscheme("zenburn")
 		vim.api.nvim_set_hl(0, "Normal", {
-			bg = "#1c1c1c",
+			bg = "#000000",
 		})
 	end,
 }
