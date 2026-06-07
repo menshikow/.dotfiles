@@ -5,7 +5,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(annalist corfu diff-hl evil-collection evil-surround
+   '(annalist apheleia corfu diff-hl evil-collection evil-surround
 	      exec-path-from-shell general gruber-darker-theme magit
 	      magit-section multiple-cursors smex transient
 	      treesit-auto with-editor)))

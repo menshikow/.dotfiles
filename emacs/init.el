@@ -116,6 +116,9 @@
   (my-leader-def
     "SPC" '(smex :which-key "M-x (Smex)")
 
+    "c"   '(:ignore t :which-key "Code")
+    "cf"  '(apheleia-format-buffer :which-key "Format buffer")
+
     "f"   '(:ignore t :which-key "Files")
     "ff"  '(find-file :which-key "Find file")
     "fs"  '(save-buffer :which-key "Save file")
@@ -200,6 +203,11 @@
   
   (add-hook 'magit-pre-refresh-hook 'diff-hl-magit-pre-refresh)
   (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh))
+
+(use-package apheleia
+  :config
+  ;; Enable it globally so it automatically formats on save
+  (apheleia-global-mode +1))
 
 
 ;; loading the custom file (should always be at the end)
