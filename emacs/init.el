@@ -63,6 +63,9 @@
 		                :height 180
 		                :weight 'light)
 
+;; compile comamnd
+(setq compile-command "")
+
 (global-set-key [escape] 'keyboard-escape-quit)
 
 ;;; scrolling 
@@ -77,15 +80,20 @@
 (add-to-list 'display-buffer-alist
 	           '("\\*Warnings\\*" (display-buffer-no-window)))
 
+;; THEMES 
+
 ;; (use-package gruber-darker-theme
 ;;   :config (load-theme 'gruber-darker t))
 
 
-;; the light theme
+
+;; light 
 ;; (use-package modus-themes
 ;;   :config
 ;;   (load-theme 'modus-operandi t))
 
+
+;; dark
 (use-package modus-themes
   :config
   (load-theme 'modus-vivendi t))
@@ -176,7 +184,8 @@
 
 (my-leader-def
   "j" 'flymake-goto-next-error
-  "k" 'flymake-goto-prev-error)
+  "k" 'flymake-goto-prev-error
+  "r" '(repeat-complex-command :which-key "Repeat last command"))
 
 (use-package evil-commentary
   :after evil
@@ -305,3 +314,4 @@
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (when (file-exists-p custom-file)
   (load custom-file))
+(put 'dired-find-alternate-file 'disabled nil)

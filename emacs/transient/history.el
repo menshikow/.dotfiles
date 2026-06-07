@@ -1,3 +1,7 @@
 ((magit-commit
   ("--verbose"))
- (magit-push nil))
+ (magit-dispatch nil)
+ (magit-push nil)
+ (magit-rebase
+  ("--autostash"))
+ (magit-status-jump nil))
