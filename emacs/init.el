@@ -59,9 +59,10 @@
 (setq backup-directory-alist `(("." . "~/.config/emacs/saves/")))
 
 (set-face-attribute 'default nil
-		                :font "IoskeleyMonoTerm Nerd Font"
-		                :height 180
-		                :weight 'light)
+                    ;; :font "UbuntuMono Nerd Font"
+                    :font "Menlo"
+                    :height 160
+                    :weight 'light)
 
 ;; compile comamnd
 (setq compile-command "")
@@ -85,13 +86,10 @@
 ;; (use-package gruber-darker-theme
 ;;   :config (load-theme 'gruber-darker t))
 
-
-
 ;; light 
 ;; (use-package modus-themes
 ;;   :config
 ;;   (load-theme 'modus-operandi t))
-
 
 ;; dark
 (use-package modus-themes
@@ -99,18 +97,18 @@
   (load-theme 'modus-vivendi t))
 
 
+;; status-line 
+
 (setq-default mode-line-format
-              '(" "                   ; Padding
-                "%m"                  ; The major mode (Language)
-                "  "                  ; Spacing
+              '(" "                   
                 (:eval (if (boundp 'evil-mode-line-tag) evil-mode-line-tag ""))
-                "  "                  ; Spacing
-                "%b"                  ; Buffer name (filename)
-                "  "                  ; Spacing
-                (:eval vc-mode)       ; Git branch (dynamically evaluated)
-                "  "                  ; Spacing
-                "(%l-%c)"             ; Line and Column
-                " "))                 ; Padding
+                "  "                
+                "%b"               
+                "  "              
+                (:eval vc-mode)  
+                "  "                  
+                "(%l-%c)"             
+                " "))                 
 
 ;; =============================================================================
 ;; 4. EVIL & KEYBINDINGS
