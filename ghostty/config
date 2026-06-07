@@ -1,8 +1,8 @@
 mouse-hide-while-typing = true
 
-font-size = 18
+font-size = 20
 
-font-family = "Menlo"
+font-family = "Iosevka Nerd Font Mono"
 
 theme = Gruber Darker
 

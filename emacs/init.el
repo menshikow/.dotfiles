@@ -54,14 +54,12 @@
 (global-display-line-numbers-mode 1)
 (setq display-line-numbers 'relative)
 
-(electric-pair-mode 1)
-
+(electric-pair-mode 0)
 (setq backup-directory-alist `(("." . "~/.config/emacs/saves/")))
 
 (set-face-attribute 'default nil
-                    ;; :font "UbuntuMono Nerd Font"
-                    :font "Menlo"
-                    :height 160
+                    :font "Iosevka Nerd Font Mono"
+                    :height 200
                     :weight 'light)
 
 ;; compile comamnd
@@ -83,32 +81,44 @@
 
 ;; THEMES 
 
-;; (use-package gruber-darker-theme
-;;   :config (load-theme 'gruber-darker t))
-
-;; light 
 ;; (use-package modus-themes
 ;;   :config
-;;   (load-theme 'modus-operandi t))
+;;   (load-theme 'modus-vivendi t))
 
-;; dark
-(use-package modus-themes
-  :config
-  (load-theme 'modus-vivendi t))
 
+;; (use-package doom-themes
+;;   :ensure t
+;;   :custom
+;;   ;; Global settings (defaults)
+;;   (doom-themes-enable-bold t)   ; if nil, bold is universally disabled
+;;   (doom-themes-enable-italic t) ; if nil, italics is universally disabled
+;;   ;; for treemacs users
+;;   (doom-themes-treemacs-theme "doom-atom") ; use "doom-colors" for less minimal icon theme
+;;   :config
+;;   (load-theme 'doom-one t)
+
+;;   ;; Enable flashing mode-line on errors
+;;   (doom-themes-visual-bell-config)
+
+;;   ;; Corrects (and improves) org-mode's native fontification.
+;;   (doom-themes-org-config))
 
 ;; status-line 
 
 (setq-default mode-line-format
-              '(" "                   
+              '(" "                   ; Padding
+                "%m"                  ; The major mode (Language)
+                "  "                  ; Spacing
                 (:eval (if (boundp 'evil-mode-line-tag) evil-mode-line-tag ""))
-                "  "                
-                "%b"               
-                "  "              
-                (:eval vc-mode)  
-                "  "                  
-                "(%l-%c)"             
-                " "))                 
+                "  "                  ; Spacing
+                "%b"                  ; Buffer name (filename)
+                "  "                  ; Spacing
+                (:eval vc-mode)       ; Git branch (dynamically evaluated)
+                "  "                  ; Spacing
+                "(%l-%c)"             ; Line and Column
+                " "))                 ; Padding
+
+
 
 ;; =============================================================================
 ;; 4. EVIL & KEYBINDINGS
@@ -280,15 +290,35 @@
 (use-package org
   :ensure nil ; Org is built-in, no need to download
   :custom
-  (org-ellipsis " ▾")                     ; Replaces '...' with a clean dropdown arrow
   (org-hide-emphasis-markers t)           ; Hides the * in *bold* etc.
   (org-startup-indented t)                ; Clean, dynamic indentation for headers
   (org-startup-with-inline-images t)      ; Show images by default
   (org-log-done 'time)                    ; Timestamp when completing a TODO
+
+  ;; Settings for planing 
+  (org-directory "~/org/") 
+  
+  ;; 2. What files to scan with agenda
+  (org-agenda-files '("~/org/tasks.org" "~/org/projects.org"))
+  
+  ;; 3. Custom statuses
+  (org-todo-keywords
+   '((sequence "TODO(t)" "IN-PROGRESS(i)" "WAITING(w)" "|" "DONE(d)" "CANCELLED(c)")))
+  
   :bind
   (("C-c l" . org-store-link)
    ("C-c a" . org-agenda)
    ("C-c c" . org-capture)))
+
+;; Интегрируем управление Agenda в ваш существующий General / Evil-лидер ("SPC")
+(with-eval-after-load 'general
+  (my-leader-def
+    "o"   '(:ignore t :which-key "Org / Agenda")
+    "oa"  '(org-agenda :which-key "Open Agenda")
+    "oc"  '(org-capture :which-key "Capture note/task")
+    "ot"  '(org-todo :which-key "Toggle TODO status")
+    "os"  '(org-schedule :which-key "Schedule task")
+    "od"  '(org-deadline :which-key "Set deadline")))
 
 ;; ==============================================================================
 ;; 9. LANGUAGE SETTINGS
@@ -300,7 +330,6 @@
               c-basic-offset 2) ; Fallback for classic c-mode/c++-mode
 
 ;; OCaml
-;; tuareg-mode defaults to 2, but we enforce it here just in case
 (setq-default tuareg-default-indent 2
               tuareg-indent-align-with-first-arg nil)
 
