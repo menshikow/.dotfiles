@@ -3,10 +3,25 @@
 ;; ==============================================================================
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+(add-to-list 'package-archives '("nongnu" . "https://elpa.nongnu.org/nongnu/") t)
 (package-initialize)
+
+(unless package-archive-contents
+  (package-refresh-contents))
+
+(unless (package-installed-p 'use-package)
+  (package-install 'use-package))
 
 (require 'use-package)
 (setq use-package-always-ensure t)
+
+;; ==============================================================================
+;; ENVIRONMENT VARIABLES (macOS Fix)
+;; ==============================================================================
+(use-package exec-path-from-shell
+  :if (memq window-system '(mac ns x))
+  :config
+  (exec-path-from-shell-initialize))
 
 ;; ==============================================================================
 ;; 2. MACOS & GERMAN KEYBOARD
@@ -23,6 +38,9 @@
 (tool-bar-mode -1)
 (menu-bar-mode -1)
 
+(setq frame-resize-pixelwise t
+      window-resize-pixelwise t)
+
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
 (setq visible-bell t
@@ -31,9 +49,10 @@
       native-comp-async-report-warnings-errors nil)
 
 (global-display-line-numbers-mode 1)
+(setq display-line-numbers 'relative)
+
 (electric-pair-mode 1)
 
-;; Fixed path typo: .conifg -> .config
 (setq backup-directory-alist `(("." . "~/.config/emacs/saves/")))
 
 (set-face-attribute 'default nil
@@ -54,7 +73,7 @@
 (use-package gruber-darker-theme
   :config (load-theme 'gruber-darker t))
 
-;; ==============================================================================
+;; =============================================================================
 ;; 4. EVIL & KEYBINDINGS
 ;; ==============================================================================
 (use-package evil
@@ -75,7 +94,18 @@
 (use-package evil-surround
   :config (global-evil-surround-mode 1))
 
+(global-set-key (kbd "M-+") 'text-scale-increase)
+(global-set-key (kbd "M--") 'text-scale-decrease)
+(global-set-key (kbd "M-0") (lambda () (interactive) (text-scale-set 0)))
+
+(use-package which-key
+  :init (which-key-mode)
+  :custom (which-key-idle-delay 0.3))
+
+(recentf-mode 1)
+
 (use-package general
+  :after evil
   :config
   (general-create-definer my-leader-def
     :states '(normal visual)
@@ -85,20 +115,23 @@
 
   (my-leader-def
     "SPC" '(smex :which-key "M-x (Smex)")
-    "f" '(:ignore t :which-key "Files")
-    "ff" '(find-file :which-key "Find file")
-    "fs" '(save-buffer :which-key "Save file")
-    "fr" '(recentf-open-files :which-key "Recent files")
-    "b" '(:ignore t :which-key "Buffers")
-    "bb" '(switch-to-buffer :which-key "Switch buffer")
-    "bk" '(kill-buffer :which-key "Kill buffer")
-    "bn" '(next-buffer :which-key "Next buffer")
-    "bp" '(previous-buffer :which-key "Previous buffer")
-    "s" '(:ignore t :which-key "Windows")
-    "sv" '(split-window-right :which-key "Split vertical")
-    "sh" '(split-window-below :which-key "Split horizontal")
-    "sd" '(delete-window :which-key "Close window")
-    "ss" '(other-window :which-key "Next window")
+
+    "f"   '(:ignore t :which-key "Files")
+    "ff"  '(find-file :which-key "Find file")
+    "fs"  '(save-buffer :which-key "Save file")
+    "fr"  '(recentf-open-files :which-key "Recent files")
+
+    "b"   '(:ignore t :which-key "Buffers")
+    "bb"  '(switch-to-buffer :which-key "Switch buffer")
+    "bk"  '(kill-buffer :which-key "Kill buffer")
+    "bn"  '(next-buffer :which-key "Next buffer")
+    "bp"  '(previous-buffer :which-key "Previous buffer")
+
+    "s"   '(:ignore t :which-key "Windows")
+    "sv"  '(split-window-right :which-key "Split vertical")
+    "sh"  '(split-window-below :which-key "Split horizontal")
+    "sd"  '(delete-window :which-key "Close window")
+    "ss"  '(other-window :which-key "Next window")))
 
 ;; ==============================================================================
 ;; 5. COMPLETION & TOOLS
@@ -116,7 +149,16 @@
   :ensure nil
   :custom
   (dired-listing-switches "-algh")
-  (dired-kill-when-opening-new-dired-buffer t))
+  (dired-kill-when-opening-new-dired-buffer t)
+  :config
+
+  (general-define-key
+   :states 'normal
+   :keymaps 'dired-mode-map
+   "RET" 'dired-find-file
+   "-"   'dired-up-directory
+   "o"   'dired-find-file-other-window
+   "q"   'quit-window))
 
 (use-package multiple-cursors
   :bind (("C-S-c C-S-c" . mc/edit-lines)
@@ -144,8 +186,23 @@
   :hook ((python-ts-mode c-ts-mode c++-ts-mode ocaml-ts-mode tuareg-mode) . eglot-ensure))
 
 ;; ==============================================================================
-;; 6. CUSTOM FILE
+;; 7. GIT INTEGRATION
 ;; ==============================================================================
+
+(use-package magit
+  :bind ("C-x g" . magit-status)) 
+
+(use-package diff-hl
+  :config
+  (global-diff-hl-mode)
+  
+  (diff-hl-flydiff-mode 1)
+  
+  (add-hook 'magit-pre-refresh-hook 'diff-hl-magit-pre-refresh)
+  (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh))
+
+
+;; loading the custom file (should always be at the end)
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (when (file-exists-p custom-file)
   (load custom-file))
