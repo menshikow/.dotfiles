@@ -43,6 +43,9 @@
 
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
+;;; don't turnicate lines
+(setq-default truncate-lines t)
+
 (setq visible-bell t
       ring-bell-function 'ignore
       warning-minimum-level :emergency
@@ -56,22 +59,50 @@
 (setq backup-directory-alist `(("." . "~/.config/emacs/saves/")))
 
 (set-face-attribute 'default nil
-		    :font "Iosevka Nerd Font Mono"
-		    :height 180
-		    :weight 'light)
+		                :font "IoskeleyMonoTerm Nerd Font"
+		                :height 180
+		                :weight 'light)
 
 (global-set-key [escape] 'keyboard-escape-quit)
 
-(setq scroll-margin 2
-      scroll-conservatively 101
-      scroll-preserve-screen-position t)
+;;; scrolling 
+(setq scroll-conservatively 101
+      scroll-preserve-screen-position t
+      mouse-wheel-scroll-amount '(1 ((shift) . 1)) 
+      mouse-wheel-progressive-speed nil            
+      mouse-wheel-follow-mouse 't)                 
+
 (pixel-scroll-precision-mode 1)
 
 (add-to-list 'display-buffer-alist
-	     '("\\*Warnings\\*" (display-buffer-no-window)))
+	           '("\\*Warnings\\*" (display-buffer-no-window)))
 
-(use-package gruber-darker-theme
-  :config (load-theme 'gruber-darker t))
+;; (use-package gruber-darker-theme
+;;   :config (load-theme 'gruber-darker t))
+
+
+;; the light theme
+;; (use-package modus-themes
+;;   :config
+;;   (load-theme 'modus-operandi t))
+
+(use-package modus-themes
+  :config
+  (load-theme 'modus-vivendi t))
+
+
+(setq-default mode-line-format
+              '(" "                   ; Padding
+                "%m"                  ; The major mode (Language)
+                "  "                  ; Spacing
+                (:eval (if (boundp 'evil-mode-line-tag) evil-mode-line-tag ""))
+                "  "                  ; Spacing
+                "%b"                  ; Buffer name (filename)
+                "  "                  ; Spacing
+                (:eval vc-mode)       ; Git branch (dynamically evaluated)
+                "  "                  ; Spacing
+                "(%l-%c)"             ; Line and Column
+                " "))                 ; Padding
 
 ;; =============================================================================
 ;; 4. EVIL & KEYBINDINGS
@@ -79,9 +110,9 @@
 (use-package evil
   :init
   (setq evil-want-integration t
-	evil-want-keybinding nil)
+	      evil-want-keybinding nil)
   :custom
-  (evil-insert-state-cursor 'box)
+  (evil-insert-state-cursor 'bar)
   (evil-normal-state-cursor 'box)
   (evil-visual-state-cursor 'box)
   (evil-replace-state-cursor 'box)
@@ -136,6 +167,22 @@
     "sd"  '(delete-window :which-key "Close window")
     "ss"  '(other-window :which-key "Next window")))
 
+(general-define-key
+ :states 'normal
+ "gl" 'flymake-show-diagnostic-at-point
+ "K"  'eldoc-box-help-at-point           
+ "[d" 'flymake-goto-prev-error   
+ "]d" 'flymake-goto-next-error)
+
+(my-leader-def
+  "j" 'flymake-goto-next-error
+  "k" 'flymake-goto-prev-error)
+
+(use-package evil-commentary
+  :after evil
+  :config
+  (evil-commentary-mode))
+
 ;; ==============================================================================
 ;; 5. COMPLETION & TOOLS
 ;; ==============================================================================
@@ -150,9 +197,11 @@
 
 (use-package dired
   :ensure nil
+  :bind ("M-d" . dired-jump)
   :custom
   (dired-listing-switches "-algh")
   (dired-kill-when-opening-new-dired-buffer t)
+
   :config
 
   (general-define-key
@@ -165,9 +214,9 @@
 
 (use-package multiple-cursors
   :bind (("C-S-c C-S-c" . mc/edit-lines)
-	 ("C->"         . mc/mark-next-like-this)
-	 ("C-<"         . mc/mark-previous-like-this)
-	 ("C-c C-<"     . mc/mark-all-like-this)))
+	       ("C->"         . mc/mark-next-like-this)
+	       ("C-<"         . mc/mark-previous-like-this)
+	       ("C-c C-<"     . mc/mark-all-like-this)))
 
 (use-package corfu
   :custom
@@ -187,6 +236,15 @@
   :ensure nil
   :config (fset #'jsonrpc--log-event #'ignore)
   :hook ((python-ts-mode c-ts-mode c++-ts-mode ocaml-ts-mode tuareg-mode) . eglot-ensure))
+
+(use-package eldoc-box
+  :custom
+  (eldoc-box-max-pixel-width 600)
+  (eldoc-box-max-pixel-height 400)
+  (eldoc-box-clear-with-C-g t) ; Close the box by pressing Escape/C-g
+  :config
+
+  (set-face-attribute 'eldoc-box-border nil :background "#555555"))
 
 ;; ==============================================================================
 ;; 7. GIT INTEGRATION
@@ -209,6 +267,39 @@
   ;; Enable it globally so it automatically formats on save
   (apheleia-global-mode +1))
 
+;; ==============================================================================
+;; 8. ORG MODE
+;; ==============================================================================
+(use-package org
+  :ensure nil ; Org is built-in, no need to download
+  :custom
+  (org-ellipsis " ▾")                     ; Replaces '...' with a clean dropdown arrow
+  (org-hide-emphasis-markers t)           ; Hides the * in *bold* etc.
+  (org-startup-indented t)                ; Clean, dynamic indentation for headers
+  (org-startup-with-inline-images t)      ; Show images by default
+  (org-log-done 'time)                    ; Timestamp when completing a TODO
+  :bind
+  (("C-c l" . org-store-link)
+   ("C-c a" . org-agenda)
+   ("C-c c" . org-capture)))
+
+;; ==============================================================================
+;; 9. LANGUAGE SETTINGS
+;; ==============================================================================
+
+;; C and C++ (Tree-sitter and Classic modes)
+(setq-default c-ts-mode-indent-offset 2
+              c-ts-mode-indent-style 'gnu
+              c-basic-offset 2) ; Fallback for classic c-mode/c++-mode
+
+;; OCaml
+;; tuareg-mode defaults to 2, but we enforce it here just in case
+(setq-default tuareg-default-indent 2
+              tuareg-indent-align-with-first-arg nil)
+
+;; Global default for any mode that respects standard offset variables
+(setq-default tab-width 2
+              indent-tabs-mode nil) ; Use spaces instead of tabs
 
 ;; loading the custom file (should always be at the end)
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
