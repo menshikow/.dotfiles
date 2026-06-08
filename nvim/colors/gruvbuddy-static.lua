@@ -89,7 +89,7 @@ hi("MatchParen", { fg = "#8abeb7" })
 hi("ModeMsg", { fg = "#b3f6c0" })
 hi("MoreMsg", { fg = "#8cf8f7" })
 hi("NonText", { fg = "#4e545d" })
-hi("Normal", { fg = "#e0e0e0", bg = "#111111" })
+
 hi("NormalFloat", { fg = "#fafafa", bg = "#000000" })
 hi("Number", { fg = "#cc6666" })
 hi("NvimInternalError", { fg = "#ff0000", bg = "#ff0000" })

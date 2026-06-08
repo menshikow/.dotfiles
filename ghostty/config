@@ -2,7 +2,8 @@ mouse-hide-while-typing = true
 
 font-size = 20
 
-font-family = "Iosevka Nerd Font Mono"
+# font-family = "Iosevka Nerd Font Mono"
+font-family = "IoskeleyMonoTerm Nerd Font"
 
 theme = Gruber Darker
 

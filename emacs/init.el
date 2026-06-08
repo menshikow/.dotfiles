@@ -54,12 +54,12 @@
 (global-display-line-numbers-mode 1)
 (setq display-line-numbers 'relative)
 
-(electric-pair-mode 0)
+(electric-pair-mode 1)
 (setq backup-directory-alist `(("." . "~/.config/emacs/saves/")))
 
 (set-face-attribute 'default nil
-                    :font "Iosevka Nerd Font Mono"
-                    :height 200
+                    :font "IoskeleyMonoTerm Nerd Font"
+                    :height 180
                     :weight 'light)
 
 ;; compile comamnd
@@ -81,27 +81,9 @@
 
 ;; THEMES 
 
-;; (use-package modus-themes
-;;   :config
-;;   (load-theme 'modus-vivendi t))
-
-
-;; (use-package doom-themes
-;;   :ensure t
-;;   :custom
-;;   ;; Global settings (defaults)
-;;   (doom-themes-enable-bold t)   ; if nil, bold is universally disabled
-;;   (doom-themes-enable-italic t) ; if nil, italics is universally disabled
-;;   ;; for treemacs users
-;;   (doom-themes-treemacs-theme "doom-atom") ; use "doom-colors" for less minimal icon theme
-;;   :config
-;;   (load-theme 'doom-one t)
-
-;;   ;; Enable flashing mode-line on errors
-;;   (doom-themes-visual-bell-config)
-
-;;   ;; Corrects (and improves) org-mode's native fontification.
-;;   (doom-themes-org-config))
+(use-package modus-themes
+  :config
+  (load-theme 'modus-vivendi t))
 
 ;; status-line 
 
@@ -117,7 +99,6 @@
                 "  "                  ; Spacing
                 "(%l-%c)"             ; Line and Column
                 " "))                 ; Padding
-
 
 
 ;; =============================================================================
@@ -243,12 +224,6 @@
   (corfu-quit-no-match t)
   :init (global-corfu-mode))
 
-(use-package move-text
-  :ensure t
-  :bind
-  (([(meta up)] . move-text-up)
-   ([(meta down)] . move-text-down)))
-
 (use-package treesit-auto
   :custom (treesit-auto-install 'prompt)
   :config
@@ -287,7 +262,6 @@
 
 (use-package apheleia
   :config
-  ;; Enable it globally so it automatically formats on save
   (apheleia-global-mode +1))
 
 ;; ==============================================================================
