@@ -128,7 +128,7 @@
   (setq evil-want-integration t
 	      evil-want-keybinding nil)
   :custom
-  (evil-insert-state-cursor 'bar)
+  (evil-insert-state-cursor 'box)
   (evil-normal-state-cursor 'box)
   (evil-visual-state-cursor 'box)
   (evil-replace-state-cursor 'box)
@@ -243,6 +243,12 @@
   (corfu-quit-no-match t)
   :init (global-corfu-mode))
 
+(use-package move-text
+  :ensure t
+  :bind
+  (([(meta up)] . move-text-up)
+   ([(meta down)] . move-text-down)))
+
 (use-package treesit-auto
   :custom (treesit-auto-install 'prompt)
   :config
@@ -310,7 +316,6 @@
    ("C-c a" . org-agenda)
    ("C-c c" . org-capture)))
 
-;; Интегрируем управление Agenda в ваш существующий General / Evil-лидер ("SPC")
 (with-eval-after-load 'general
   (my-leader-def
     "o"   '(:ignore t :which-key "Org / Agenda")

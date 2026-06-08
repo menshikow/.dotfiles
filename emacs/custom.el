@@ -22,8 +22,8 @@
    '(annalist apheleia corfu diff-hl doom-themes eldoc-box
               evil-collection evil-commentary evil-surround
               exec-path-from-shell general gruber-darker-theme magit
-              magit-section modus-themes multiple-cursors smex
-              transient treesit-auto with-editor)))
+              magit-section modus-themes move-text multiple-cursors
+              smex transient treesit-auto with-editor)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
