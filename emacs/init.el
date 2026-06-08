@@ -43,6 +43,9 @@
 
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
+;; Remove the macOS window title bar completely
+(add-to-list 'default-frame-alist '(undecorated . t))
+
 ;;; don't turnicate lines
 (setq-default truncate-lines t)
 
@@ -60,7 +63,7 @@
 (set-face-attribute 'default nil
                     :font "IoskeleyMonoTerm Nerd Font"
                     :height 180
-                    :weight 'light)
+                    :weight 'regular)
 
 ;; compile comamnd
 (setq compile-command "")
@@ -78,12 +81,6 @@
 
 (add-to-list 'display-buffer-alist
 	           '("\\*Warnings\\*" (display-buffer-no-window)))
-
-;; THEMES 
-
-(use-package modus-themes
-  :config
-  (load-theme 'modus-vivendi t))
 
 ;; status-line 
 
@@ -109,7 +106,7 @@
   (setq evil-want-integration t
 	      evil-want-keybinding nil)
   :custom
-  (evil-insert-state-cursor 'box)
+  (evil-insert-state-cursor 'bar)
   (evil-normal-state-cursor 'box)
   (evil-visual-state-cursor 'box)
   (evil-replace-state-cursor 'box)
@@ -308,13 +305,26 @@
               c-ts-mode-indent-style 'gnu
               c-basic-offset 2) ; Fallback for classic c-mode/c++-mode
 
-;; OCaml
-(setq-default tuareg-default-indent 2
-              tuareg-indent-align-with-first-arg nil)
+
+;; ocaml
+(use-package tuareg
+  :mode ("\\.ml[ily]?\\'" . tuareg-mode)
+  :custom
+  (tuareg-default-indent 2)
+  (tuareg-indent-align-with-first-arg nil))
+
+(use-package dune
+  :mode ("dune\\(?:-project\\|-workspace\\)?\\'" . dune-mode))
+
+(use-package utop
+  :hook (tuareg-mode . utop-minor-mode)
+  :custom
+  (utop-command "opam exec -- utop -emacs"))
 
 ;; Global default for any mode that respects standard offset variables
 (setq-default tab-width 2
               indent-tabs-mode nil) ; Use spaces instead of tabs
+
 
 ;; loading the custom file (should always be at the end)
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
