@@ -6,7 +6,20 @@
  ;; If there is more than one, they won't work right.
  '(custom-enabled-themes '(modus-operandi))
  '(custom-safe-themes
-   '("f64189544da6f16bab285747d04a92bd57c7e7813d8c24c30f382f087d460a33"
+   '("1b2727001d06f63916118b811da49a9344582c16f9e2d7e26657634712886775"
+     "6aff83667a3bad8db2f55d69cf595f58b56af233f116ec24d93fe2aa51033eef"
+     "2b9e0d7bceebee7473c100ecbf2c76a65b6e2129c73775f5949e39a677fa621f"
+     "0da9f48243b77c83719c569efd88a7e47c1d8a3f2887838408745d2d52fad8a8"
+     "6a95b0faf6cee6adfda34cdfadb2fed6f4157a1d49aabef8cc9b94c187d69a1d"
+     "6d58e2b15bdf919fb3f975572af5de59556507b4addf71d8a0d4da3b5af1e830"
+     "98f2052cba13ccbf7dc91e6ce4dbc02fc9f6421782c11f8403504222f4d423f7"
+     "2c7dc80264de0ba9409d4ebb3c7b31cf8e4982015066174c786f16a672db71b2"
+     "0f738dce3f831b6d64ee3e98052bdea663b74d5149dcbbf555327dcb4517fc08"
+     "546f3e8c4cb46043df1f646322c4b57049fc4c31fdf96e41db077c3408660057"
+     "578002ec7093cedeb7d279794492b19ad7413cca3e16286e776168eb544798c4"
+     "4d5d11bfef87416d85673947e3ca3d3d5d985ad57b02a7bb2e32beaf785a100e"
+     "456697e914823ee45365b843c89fbc79191fdbaff471b29aad9dcbe0ee1d5641"
+     "f64189544da6f16bab285747d04a92bd57c7e7813d8c24c30f382f087d460a33"
      "0c83e0b50946e39e237769ad368a08f2cd1c854ccbcd1a01d39fdce4d6f86478"
      "e14289199861a5db890065fdc5f3d3c22c5bac607e0dbce7f35ce60e6b55fc52"
      "c3c135e69890de6a85ebf791017d458d3deb3954f81dcb7ac8c430e1620bb0f1"
@@ -48,7 +61,12 @@
      "0ef0c3e24c8f704430e2b2f473101c08fb8bab93d09a80dbc2ea2dbb799aa861"
      "01a9797244146bbae39b18ef37e6f2ca5bebded90d9fe3a2f342a9e863aaa4fd"
      default))
- '(package-selected-packages nil))
+ '(package-selected-packages
+   '(apheleia corfu diff-hl doom-themes dune ef-themes eldoc-box
+              evil-collection evil-commentary evil-surround
+              exec-path-from-shell general gruber-darker-theme
+              haskell-mode magit modus-themes move-text
+              multiple-cursors smex treesit-auto tuareg utop)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

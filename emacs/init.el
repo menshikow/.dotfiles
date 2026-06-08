@@ -16,12 +16,15 @@
 (setq use-package-always-ensure t)
 
 ;; ==============================================================================
-;; ENVIRONMENT VARIABLES (macOS Fix)
+;; macOS fix 
 ;; ==============================================================================
 (use-package exec-path-from-shell
   :if (memq window-system '(mac ns x))
   :config
-  (exec-path-from-shell-initialize))
+  (exec-path-from-shell-initialize)
+  (let ((ghcup-bin (expand-file-name "~/.ghcup/bin")))
+    (when (file-directory-p ghcup-bin)
+      (push ghcup-bin exec-path))))
 
 ;; ==============================================================================
 ;; 2. MACOS & GERMAN KEYBOARD
@@ -61,7 +64,7 @@
 (setq backup-directory-alist `(("." . "~/.config/emacs/saves/")))
 
 (set-face-attribute 'default nil
-                    :font "IoskeleyMonoTerm Nerd Font"
+                    :font "Menlo"
                     :height 180
                     :weight 'regular)
 
@@ -230,7 +233,7 @@
 (use-package eglot
   :ensure nil
   :config (fset #'jsonrpc--log-event #'ignore)
-  :hook ((python-ts-mode c-ts-mode c++-ts-mode ocaml-ts-mode tuareg-mode) . eglot-ensure))
+  :hook ((python-ts-mode c-ts-mode c++-ts-mode ocaml-ts-mode tuareg-mode haskell-mode haskell-ts-mode) . eglot-ensure))
 
 (use-package eldoc-box
   :custom
@@ -300,11 +303,27 @@
 ;; 9. LANGUAGE SETTINGS
 ;; ==============================================================================
 
-;; C and C++ (Tree-sitter and Classic modes)
+;; C and C++ 
 (setq-default c-ts-mode-indent-offset 2
               c-ts-mode-indent-style 'gnu
-              c-basic-offset 2) ; Fallback for classic c-mode/c++-mode
+              c-basic-offset 2) ;;; fallback for classic c-mode
 
+
+
+
+;; haskell
+(use-package haskell-mode
+  :mode ("\\.hs\\'" . haskell-mode)
+  :custom
+  (haskell-indentation-stylish t)
+  (haskell-indent-spaces 2))
+
+;; Use ghcup's HLS (matches GHC 9.6.7) instead of Homebrew's (GHC 9.14)
+(with-eval-after-load 'eglot
+  (add-to-list 'eglot-server-programs
+               '(haskell-mode . ("haskell-language-server-wrapper")))
+  (add-to-list 'eglot-server-programs
+               '(haskell-ts-mode . ("haskell-language-server-wrapper"))))
 
 ;; ocaml
 (use-package tuareg
