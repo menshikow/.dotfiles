@@ -57,8 +57,8 @@
       warning-minimum-level :emergency
       native-comp-async-report-warnings-errors nil)
 
+(setq-default display-line-numbers-type 'relative)
 (global-display-line-numbers-mode 1)
-(setq display-line-numbers 'relative)
 
 (electric-pair-mode 1)
 (setq backup-directory-alist `(("." . "~/.config/emacs/saves/")))
@@ -85,12 +85,11 @@
 (add-to-list 'display-buffer-alist
 	           '("\\*Warnings\\*" (display-buffer-no-window)))
 
-;; status-line 
+;;; status line 
 
 (setq-default mode-line-format
-              '(" "                   ; Padding
-                "%m"                  ; The major mode (Language)
-                "  "                  ; Spacing
+              '(
+                " "                  ; Spacing
                 (:eval (if (boundp 'evil-mode-line-tag) evil-mode-line-tag ""))
                 "  "                  ; Spacing
                 "%b"                  ; Buffer name (filename)
@@ -99,7 +98,6 @@
                 "  "                  ; Spacing
                 "(%l-%c)"             ; Line and Column
                 " "))                 ; Padding
-
 
 ;; =============================================================================
 ;; 4. EVIL & KEYBINDINGS
@@ -223,6 +221,14 @@
   (corfu-auto-prefix 2)
   (corfu-quit-no-match t)
   :init (global-corfu-mode))
+
+;; paste with meta-p
+(dolist (map (list minibuffer-local-map
+                   minibuffer-local-ns-map
+                   minibuffer-local-completion-map
+                   minibuffer-local-must-match-map))
+  (define-key map (kbd "M-v") #'yank))
+
 
 (use-package treesit-auto
   :custom (treesit-auto-install 'prompt)

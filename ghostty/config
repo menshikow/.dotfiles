@@ -2,9 +2,9 @@ mouse-hide-while-typing = true
 
 font-size = 20
 
-font-family = "IoskeleyMonoTerm Nerd Font"
+font-family = "Menlo"
 
-theme = Gruber Darker
+theme = Nord
 
 unfocused-split-opacity = 1.0
 

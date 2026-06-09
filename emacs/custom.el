@@ -4,9 +4,10 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(custom-enabled-themes '(modus-operandi))
+ '(custom-enabled-themes '(doom-nord-aurora))
  '(custom-safe-themes
-   '("1b2727001d06f63916118b811da49a9344582c16f9e2d7e26657634712886775"
+   '("42a6583a45e0f413e3197907aa5acca3293ef33b4d3b388f54fa44435a494739"
+     "1b2727001d06f63916118b811da49a9344582c16f9e2d7e26657634712886775"
      "6aff83667a3bad8db2f55d69cf595f58b56af233f116ec24d93fe2aa51033eef"
      "2b9e0d7bceebee7473c100ecbf2c76a65b6e2129c73775f5949e39a677fa621f"
      "0da9f48243b77c83719c569efd88a7e47c1d8a3f2887838408745d2d52fad8a8"
