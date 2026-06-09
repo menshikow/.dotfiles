@@ -67,7 +67,8 @@
               evil-collection evil-commentary evil-surround
               exec-path-from-shell general gruber-darker-theme
               haskell-mode magit modus-themes move-text
-              multiple-cursors smex treesit-auto tuareg utop)))
+              multiple-cursors org-resource-download smex treesit-auto
+              tuareg utop)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

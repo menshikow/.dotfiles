@@ -105,7 +105,7 @@
 (use-package evil
   :init
   (setq evil-want-integration t
-	      evil-want-keybinding nil)
+        evil-want-keybinding nil)
   :custom
   (evil-insert-state-cursor 'bar)
   (evil-normal-state-cursor 'box)
@@ -124,10 +124,6 @@
 (global-set-key (kbd "M--") 'text-scale-decrease)
 (global-set-key (kbd "M-0") (lambda () (interactive) (text-scale-set 0)))
 
-(use-package which-key
-  :init (which-key-mode)
-  :custom (which-key-idle-delay 0.3))
-
 (recentf-mode 1)
 
 (use-package general
@@ -140,39 +136,35 @@
     :global-prefix "C-SPC")
 
   (my-leader-def
-    "SPC" '(smex :which-key "M-x (Smex)")
+    "SPC" 'smex
 
-    "c"   '(:ignore t :which-key "Code")
-    "cf"  '(apheleia-format-buffer :which-key "Format buffer")
+    "cf"  'apheleia-format-buffer
 
-    "f"   '(:ignore t :which-key "Files")
-    "ff"  '(find-file :which-key "Find file")
-    "fs"  '(save-buffer :which-key "Save file")
-    "fr"  '(recentf-open-files :which-key "Recent files")
+    "ff"  'find-file
+    "fs"  'save-buffer
+    "fr"  'recentf-open-files
 
-    "b"   '(:ignore t :which-key "Buffers")
-    "bb"  '(switch-to-buffer :which-key "Switch buffer")
-    "bk"  '(kill-buffer :which-key "Kill buffer")
-    "bn"  '(next-buffer :which-key "Next buffer")
-    "bp"  '(previous-buffer :which-key "Previous buffer")
+    "bb"  'switch-to-buffer
+    "bk"  'kill-buffer
+    "bn"  'next-buffer
+    "bp"  'previous-buffer
 
-    "s"   '(:ignore t :which-key "Windows")
-    "sv"  '(split-window-right :which-key "Split vertical")
-    "sh"  '(split-window-below :which-key "Split horizontal")
-    "sd"  '(delete-window :which-key "Close window")
-    "ss"  '(other-window :which-key "Next window")))
+    "sv"  'split-window-right
+    "sh"  'split-window-below
+    "sd"  'delete-window
+    "ss"  'other-window))
 
 (general-define-key
  :states 'normal
  "gl" 'flymake-show-diagnostic-at-point
- "K"  'eldoc-box-help-at-point           
+ "K"  'eldoc-box-help-at-point            
  "[d" 'flymake-goto-prev-error   
  "]d" 'flymake-goto-next-error)
 
 (my-leader-def
   "j" 'flymake-goto-next-error
   "k" 'flymake-goto-prev-error
-  "r" '(repeat-complex-command :which-key "Repeat last command"))
+  "r" 'repeat-complex-command)
 
 (use-package evil-commentary
   :after evil
@@ -304,6 +296,9 @@
     "ot"  '(org-todo :which-key "Toggle TODO status")
     "os"  '(org-schedule :which-key "Schedule task")
     "od"  '(org-deadline :which-key "Set deadline")))
+
+(use-package org-resource-download
+  :after org :config (setq org-download-image-dir "images") (setq org-download-heading nil))
 
 ;; ==============================================================================
 ;; 9. LANGUAGE SETTINGS
