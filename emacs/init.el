@@ -49,9 +49,6 @@
 ;; Remove the macOS window title bar completely
 (add-to-list 'default-frame-alist '(undecorated . t))
 
-;;; don't turnicate lines
-(setq-default truncate-lines t)
-
 (setq visible-bell t
       ring-bell-function 'ignore
       warning-minimum-level :emergency
@@ -60,11 +57,12 @@
 (setq-default display-line-numbers-type 'relative)
 (global-display-line-numbers-mode 1)
 
-(electric-pair-mode 1)
+;; double paranthesis
+(electric-pair-mode 0)
 (setq backup-directory-alist `(("." . "~/.config/emacs/saves/")))
 
 (set-face-attribute 'default nil
-                    :font "Menlo"
+                    :font "Source Code Pro"
                     :height 180
                     :weight 'regular)
 
@@ -107,7 +105,7 @@
   (setq evil-want-integration t
         evil-want-keybinding nil)
   :custom
-  (evil-insert-state-cursor 'bar)
+  (evil-insert-state-cursor 'box)
   (evil-normal-state-cursor 'box)
   (evil-visual-state-cursor 'box)
   (evil-replace-state-cursor 'box)
@@ -214,6 +212,11 @@
   (corfu-quit-no-match t)
   :init (global-corfu-mode))
 
+;; snippets 
+(use-package yasnippet
+  :config
+  (yas-global-mode 1))
+
 ;; paste with meta-p
 (dolist (map (list minibuffer-local-map
                    minibuffer-local-ns-map
@@ -221,6 +224,8 @@
                    minibuffer-local-must-match-map))
   (define-key map (kbd "M-v") #'yank))
 
+
+(add-to-list 'treesit-extra-load-path "~/.emacs.d/tree-sitter/")
 
 (use-package treesit-auto
   :custom (treesit-auto-install 'prompt)
@@ -266,7 +271,7 @@
 ;; 8. ORG MODE
 ;; ==============================================================================
 (use-package org
-  :ensure nil ; Org is built-in, no need to download
+  :ensure nil 
   :custom
   (org-hide-emphasis-markers t)           ; Hides the * in *bold* etc.
   (org-startup-indented t)                ; Clean, dynamic indentation for headers

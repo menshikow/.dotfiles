@@ -2,9 +2,9 @@ mouse-hide-while-typing = true
 
 font-size = 20
 
-font-family = "Menlo"
+font-family = "Source Code Pro"
 
-theme = Nord
+theme = Gruber Darker
 
 unfocused-split-opacity = 1.0
 

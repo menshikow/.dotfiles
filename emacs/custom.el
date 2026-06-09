@@ -4,9 +4,12 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(custom-enabled-themes '(doom-nord-aurora))
+ '(custom-enabled-themes '(gruber-darker))
  '(custom-safe-themes
-   '("42a6583a45e0f413e3197907aa5acca3293ef33b4d3b388f54fa44435a494739"
+   '("87fa3605a6501f9b90d337ed4d832213155e3a2e36a512984f83e847102a42f4"
+     "d2ab3d4f005a9ad4fb789a8f65606c72f30ce9d281a9e42da55f7f4b9ef5bfc6"
+     "5a4cdc4365122d1a17a7ad93b6e3370ffe95db87ed17a38a94713f6ffe0d8ceb"
+     "42a6583a45e0f413e3197907aa5acca3293ef33b4d3b388f54fa44435a494739"
      "1b2727001d06f63916118b811da49a9344582c16f9e2d7e26657634712886775"
      "6aff83667a3bad8db2f55d69cf595f58b56af233f116ec24d93fe2aa51033eef"
      "2b9e0d7bceebee7473c100ecbf2c76a65b6e2129c73775f5949e39a677fa621f"
@@ -66,9 +69,10 @@
    '(apheleia corfu diff-hl doom-themes dune ef-themes eldoc-box
               evil-collection evil-commentary evil-surround
               exec-path-from-shell general gruber-darker-theme
-              haskell-mode magit modus-themes move-text
-              multiple-cursors org-resource-download smex treesit-auto
-              tuareg utop)))
+              haskell-mode kanagawa-themes magit move-text
+              multiple-cursors nord-theme org-download
+              org-resource-download smex treesit-auto tuareg utop
+              yasnippet)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
