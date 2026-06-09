@@ -62,5 +62,10 @@ places
 auto-save-list/
 *.elc
 
+tree-sitter/
+transient/
+saves/
+custom.el
+
 *~
 \#*\#
