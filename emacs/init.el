@@ -36,6 +36,7 @@
 ;; ==============================================================================
 ;; 3. UI & DEFAULTS
 ;; ==============================================================================
+(setq-default cursor-type 'box)
 (setq inhibit-startup-message t)
 (scroll-bar-mode -1)
 (tool-bar-mode -1)
@@ -64,7 +65,7 @@
 (set-face-attribute 'default nil
                     :font "Source Code Pro"
                     :height 180
-                    :weight 'regular)
+                    :weight 'light)
 
 ;; compile comamnd
 (setq compile-command "")
@@ -104,12 +105,12 @@
   :init
   (setq evil-want-integration t
         evil-want-keybinding nil)
-  :custom
-  (evil-insert-state-cursor 'box)
-  (evil-normal-state-cursor 'box)
-  (evil-visual-state-cursor 'box)
-  (evil-replace-state-cursor 'box)
-  :config (evil-mode 1))
+  :config
+  (setq evil-insert-state-cursor 'box
+        evil-normal-state-cursor 'box
+        evil-visual-state-cursor 'box
+        evil-replace-state-cursor 'box)
+  (evil-mode 1))
 
 (use-package evil-collection
   :after evil
