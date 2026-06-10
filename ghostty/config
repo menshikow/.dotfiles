@@ -1,3 +1,5 @@
+command = /bin/zsh
+
 mouse-hide-while-typing = true
 
 font-size = 20

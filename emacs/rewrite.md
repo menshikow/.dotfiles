@@ -1,10 +1,12 @@
 FOR FUTURE EMACS CONFIG REWRITE + add markdown and latex support 
 
-- ubind the shit with :, the shit with visual k, the buffer shit, which pops up when i don't need it
-- fix the haskell REPL
-- omptimize the garbage collector
-- get better evil support, but dont use evil keymaps, only want emacs keybindings for things and evil for modular editing
-- understand org mode better 
+- [ ] ubind the shit with :, the shit with visual k, the buffer shit, which pops up when i don't need it
+- [ ] fix the haskell REPL
+- [ ] omptimize the garbage collector
+- [ ] get better evil support, but dont use evil keymaps, only want emacs keybindings for things and evil for modular editing
+- [ ] 
+
+- [ ] understand org mode better 
 
 
 
