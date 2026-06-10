@@ -7,8 +7,8 @@
 
 (add-hook 'emacs-startup-hook
           (lambda ()
-            (setq gc-cons-threshold 800000
-                  gc-cons-percentage 0.1)))
+            (setq gc-cons-threshold 100000000
+                  gc-cons-percentage 0.6)))
 
 ;; ==============================================================================
 ;; 1. PACKAGE MANAGEMENT
