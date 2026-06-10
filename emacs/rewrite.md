@@ -4,7 +4,12 @@ FOR FUTURE EMACS CONFIG REWRITE + add markdown and latex support
 - [ ] fix the haskell REPL
 - [ ] omptimize the garbage collector
 - [ ] get better evil support, but dont use evil keymaps, only want emacs keybindings for things and evil for modular editing
+
+emacs tweaks: 
+
+- [ ] add flycheck-pos-tip 
 - [ ] 
+
 
 - [ ] understand org mode better 
 
