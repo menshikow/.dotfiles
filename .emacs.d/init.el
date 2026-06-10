@@ -8,7 +8,7 @@
 (add-hook 'emacs-startup-hook
           (lambda ()
             (setq gc-cons-threshold 100000000
-                  gc-cons-percentage 0.6)))
+                  gc-cons-percentage 0.1)))
 
 ;; ==============================================================================
 ;; 1. PACKAGE MANAGEMENT
@@ -18,12 +18,6 @@
 (add-to-list 'package-archives '("nongnu" . "https://elpa.nongnu.org/nongnu/") t)
 (package-initialize)
 
-(let ((elapsed (float-time (time-subtract (current-time)
-                                          (or (bound-and-true-p package--last-refresh)
-                                              (current-time))))))
-  (when (or (not package-archive-contents) (> elapsed 86400))
-    (package-refresh-contents)))
-
 (unless (package-installed-p 'use-package)
   (package-install 'use-package))
 
@@ -31,22 +25,16 @@
 (setq use-package-always-ensure t)
 
 ;; ==============================================================================
-;; macOS fix 
-;; ==============================================================================
-(use-package exec-path-from-shell
-  :if (memq window-system '(mac ns x))
-  :config
-  (exec-path-from-shell-initialize)
-  (let ((ghcup-bin (expand-file-name "~/.ghcup/bin")))
-    (when (file-directory-p ghcup-bin)
-      (push ghcup-bin exec-path))))
-
-;; ==============================================================================
 ;; 2. MACOS & GERMAN KEYBOARD
 ;; ==============================================================================
 (setq ns-command-modifier 'meta)
 (setq ns-option-modifier 'none)
 (setq ns-right-alternate-modifier 'none)
+
+;; force emacs to see homebrew
+(when (eq system-type 'darwin)
+  (add-to-list 'exec-path "/opt/homebrew/bin")
+  (setenv "PATH" (concat "/opt/homebrew/bin:" (getenv "PATH"))))
 
 ;; ==============================================================================
 ;; 3. UI & DEFAULTS
@@ -73,14 +61,17 @@
 (setq-default display-line-numbers-type 'relative)
 (global-display-line-numbers-mode 1)
 
-;; double paranthesis
-(electric-pair-mode 0)
+;; Don't check for version control on every file
+(setq vc-handled-backends '(Git))
+;; Make opening files snappier by disabling unnecessary auto-checks
+(setq find-file-visit-truename nil)
+
 (setq backup-directory-alist `(("." . "~/.config/emacs/saves/")))
 
 (set-face-attribute 'default nil
                     :font "Source Code Pro"
                     :height 180
-                    :weight 'light)
+                    :weight 'regular)
 
 ;; load theme
 (add-to-list 'custom-theme-load-path
@@ -103,19 +94,6 @@
 
 (add-to-list 'display-buffer-alist
              '("\\*Warnings\\*" (display-buffer-no-window)))
-
-;;; status line 
-(setq-default mode-line-format
-              '(
-                " "                  ; Spacing
-                (:eval (if (boundp 'evil-mode-line-tag) evil-mode-line-tag ""))
-                "  "                 ; Spacing
-                "%b"                 ; Buffer name (filename)
-                "  "                 ; Spacing
-                (:eval vc-mode)       ; Git branch (dynamically evaluated)
-                "  "                 ; Spacing
-                "(%l-%c)"             ; Line and Column
-                " "))                 ; Padding
 
 ;; =============================================================================
 ;; 4. EVIL & KEYBINDINGS
@@ -187,9 +165,7 @@
   :bind ("M-d" . dired-jump)
   :custom
   (dired-listing-switches "-algh")
-  (dired-kill-when-opening-new-dired-buffer t)
   :config
-  ;; Dired specific keybindings using standard maps
   (with-eval-after-load 'dired
     (define-key dired-mode-map (kbd "RET") 'dired-find-file)
     (define-key dired-mode-map (kbd "-") 'dired-up-directory)
@@ -225,15 +201,27 @@
 (add-to-list 'treesit-extra-load-path "~/.emacs.d/tree-sitter/")
 
 (use-package treesit-auto
-  :custom (treesit-auto-install 'prompt)
+  :custom 
+  (treesit-auto-install 'prompt)
   :config
-  (treesit-auto-add-to-auto-mode-alist 'all)
-  (global-treesit-auto-mode))
+  (treesit-auto-add-to-auto-mode-alist 'all))
+
+(defvar my/ts-grammar-cache (make-hash-table :test 'equal))
+
+(defadvice treesit-language-available-p (around cache-check activate)
+  (let ((lang (ad-get-arg 0)))
+    (if (gethash lang my/ts-grammar-cache)
+        (setq ad-return-value t)
+      (ad-do-it)
+      (when ad-return-value
+        (puthash lang t my/ts-grammar-cache)))))
 
 (use-package eglot
   :ensure nil
-  :config (fset #'jsonrpc--log-event #'ignore)
-  :hook ((python-ts-mode c-ts-mode c++-ts-mode ocaml-ts-mode tuareg-mode haskell-mode haskell-ts-mode) . eglot-ensure))
+  :custom
+  (eglot-sync-connect nil)
+  :config 
+  (fset #'jsonrpc--log-event #'ignore))
 
 (use-package eldoc-box
   :custom
@@ -307,14 +295,13 @@
   (haskell-indentation-stylish t)
   (haskell-indent-spaces 2))
 
-;; Use ghcup's HLS (matches GHC 9.6.7) instead of Homebrew's (GHC 9.14)
 (with-eval-after-load 'eglot
   (add-to-list 'eglot-server-programs
                '(haskell-mode . ("haskell-language-server-wrapper")))
   (add-to-list 'eglot-server-programs
                '(haskell-ts-mode . ("haskell-language-server-wrapper"))))
 
-;; ocaml
+;; Ocaml
 (use-package tuareg
   :mode ("\\.ml[ily]?\\'" . tuareg-mode)
   :custom
@@ -333,8 +320,12 @@
 (setq-default tab-width 2
               indent-tabs-mode nil) ; Use spaces instead of tabs
 
+;; Python 
+(use-package python
+  :mode ("\\.py\\'" . python-ts-mode)
+  :hook (python-ts-mode . eglot-ensure)) ; Starts Eglot automatically
+
 ;; loading the custom file (should always be at the end)
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (when (file-exists-p custom-file)
   (load custom-file))
-(put 'dired-find-alternate-file 'disabled nil)
