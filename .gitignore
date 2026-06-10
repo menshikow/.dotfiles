@@ -1,5 +1,4 @@
 *.local
-zsh/
 .env
 .env.*
 .secret
@@ -69,4 +68,5 @@ custom.el
 
 *~
 \#*\#
-rexim-emacs/
+emacs/rewrite.md
+emacs-commands
