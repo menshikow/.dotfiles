@@ -1,4 +1,16 @@
 ;; ==============================================================================
+;; 0. PERFORMANCE
+;; ==============================================================================
+(setq gc-cons-threshold most-positive-fixnum
+      gc-cons-percentage 0.6
+      native-comp-async-report-warnings-errors nil)
+
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (setq gc-cons-threshold 800000
+                  gc-cons-percentage 0.1)))
+
+;; ==============================================================================
 ;; 1. PACKAGE MANAGEMENT
 ;; ==============================================================================
 (require 'package)
@@ -6,8 +18,11 @@
 (add-to-list 'package-archives '("nongnu" . "https://elpa.nongnu.org/nongnu/") t)
 (package-initialize)
 
-(unless package-archive-contents
-  (package-refresh-contents))
+(let ((elapsed (float-time (time-subtract (current-time)
+                                          (or (bound-and-true-p package--last-refresh)
+                                              (current-time))))))
+  (when (or (not package-archive-contents) (> elapsed 86400))
+    (package-refresh-contents)))
 
 (unless (package-installed-p 'use-package)
   (package-install 'use-package))
@@ -66,6 +81,11 @@
                     :font "Source Code Pro"
                     :height 180
                     :weight 'light)
+
+;; load theme
+(add-to-list 'custom-theme-load-path
+             (expand-file-name "themes" user-emacs-directory))
+(load-theme 'aanila t)
 
 ;; compile comamnd
 (setq compile-command "")

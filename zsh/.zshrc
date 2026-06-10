@@ -2,7 +2,7 @@
 if [ -d "$HOME/.oh-my-zsh" ]; then
   export ZSH="$HOME/.oh-my-zsh"
   ZSH_THEME="lambda"
-  plugins=(git brew docker macos gh node npm pip python cargo)
+  plugins=(git brew docker macos gh node npm pip python)
   source "$ZSH/oh-my-zsh.sh"
 fi
 
