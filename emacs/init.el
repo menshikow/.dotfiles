@@ -85,7 +85,7 @@
 ;; load theme
 (add-to-list 'custom-theme-load-path
              (expand-file-name "themes" user-emacs-directory))
-(load-theme 'aanila t)
+(ignore-errors (load-theme 'aanila t))
 
 ;; compile comamnd
 (setq compile-command "")
@@ -102,19 +102,18 @@
 (pixel-scroll-precision-mode 1)
 
 (add-to-list 'display-buffer-alist
-	           '("\\*Warnings\\*" (display-buffer-no-window)))
+             '("\\*Warnings\\*" (display-buffer-no-window)))
 
 ;;; status line 
-
 (setq-default mode-line-format
               '(
                 " "                  ; Spacing
                 (:eval (if (boundp 'evil-mode-line-tag) evil-mode-line-tag ""))
-                "  "                  ; Spacing
-                "%b"                  ; Buffer name (filename)
-                "  "                  ; Spacing
+                "  "                 ; Spacing
+                "%b"                 ; Buffer name (filename)
+                "  "                 ; Spacing
                 (:eval vc-mode)       ; Git branch (dynamically evaluated)
-                "  "                  ; Spacing
+                "  "                 ; Spacing
                 "(%l-%c)"             ; Line and Column
                 " "))                 ; Padding
 
@@ -130,7 +129,13 @@
         evil-normal-state-cursor 'box
         evil-visual-state-cursor 'box
         evil-replace-state-cursor 'box)
-  (evil-mode 1))
+  (evil-mode 1)
+  
+  ;; Standard normal-state keybindings for diagnostics/docs
+  (define-key evil-normal-state-map (kbd "gl") 'flymake-show-diagnostic-at-point)
+  (define-key evil-normal-state-map (kbd "K") 'eldoc-box-help-at-point)
+  (define-key evil-normal-state-map (kbd "[d") 'flymake-goto-prev-error)
+  (define-key evil-normal-state-map (kbd "]d") 'flymake-goto-next-error))
 
 (use-package evil-collection
   :after evil
@@ -139,68 +144,43 @@
 (use-package evil-surround
   :config (global-evil-surround-mode 1))
 
+(use-package evil-commentary
+  :after evil
+  :config
+  (evil-commentary-mode))
+
+;; Global Emacs adjustments
 (global-set-key (kbd "M-+") 'text-scale-increase)
 (global-set-key (kbd "M--") 'text-scale-decrease)
 (global-set-key (kbd "M-0") (lambda () (interactive) (text-scale-set 0)))
 
 (recentf-mode 1)
 
-(use-package general
-  :after evil
-  :config
-  (general-create-definer my-leader-def
-    :states '(normal visual)
-    :keymaps 'override
-    :prefix "SPC"
-    :global-prefix "C-SPC")
-
-  (my-leader-def
-    "SPC" 'smex
-
-    "cf"  'apheleia-format-buffer
-
-    "ff"  'find-file
-    "fs"  'save-buffer
-    "fr"  'recentf-open-files
-
-    "bb"  'switch-to-buffer
-    "bk"  'kill-buffer
-    "bn"  'next-buffer
-    "bp"  'previous-buffer
-
-    "sv"  'split-window-right
-    "sh"  'split-window-below
-    "sd"  'delete-window
-    "ss"  'other-window))
-
-(general-define-key
- :states 'normal
- "gl" 'flymake-show-diagnostic-at-point
- "K"  'eldoc-box-help-at-point            
- "[d" 'flymake-goto-prev-error   
- "]d" 'flymake-goto-next-error)
-
-(my-leader-def
-  "j" 'flymake-goto-next-error
-  "k" 'flymake-goto-prev-error
-  "r" 'repeat-complex-command)
-
-(use-package evil-commentary
-  :after evil
-  :config
-  (evil-commentary-mode))
-
 ;; ==============================================================================
-;; 5. COMPLETION & TOOLS
+;; 5. COMPLETION & TOOLS (Vertico Stack)
 ;; ==============================================================================
-(require 'ido)
-(setq ido-enable-flex-matching t
-      ido-everywhere t)
-(ido-mode 1)
 
-(use-package smex
-  :config (smex-initialize)
-  :bind ("M-x" . smex))
+;; Enable Vertico for a clean, vertical minibuffer UI
+(use-package vertico
+  :init
+  (vertico-mode))
+
+;; Persist history over Emacs restarts (Replaces Smex)
+(use-package savehist
+  :init
+  (savehist-mode))
+
+;; Add rich annotations in the minibuffer (docstrings, keybindings, etc.)
+(use-package marginalia
+  :init
+  (marginalia-mode))
+
+;; Use Orderless for space-separated, out-of-order fuzzy matching (Replaces Ido-flex)
+(use-package orderless
+  :custom
+  (completion-styles '(orderless basic))
+  (completion-category-defaults nil)
+  (completion-category-overrides '((file (styles partial-completion)))))
 
 (use-package dired
   :ensure nil
@@ -208,22 +188,19 @@
   :custom
   (dired-listing-switches "-algh")
   (dired-kill-when-opening-new-dired-buffer t)
-
   :config
-
-  (general-define-key
-   :states 'normal
-   :keymaps 'dired-mode-map
-   "RET" 'dired-find-file
-   "-"   'dired-up-directory
-   "o"   'dired-find-file-other-window
-   "q"   'quit-window))
+  ;; Dired specific keybindings using standard maps
+  (with-eval-after-load 'dired
+    (define-key dired-mode-map (kbd "RET") 'dired-find-file)
+    (define-key dired-mode-map (kbd "-") 'dired-up-directory)
+    (define-key dired-mode-map (kbd "o") 'dired-find-file-other-window)
+    (define-key dired-mode-map (kbd "q") 'quit-window)))
 
 (use-package multiple-cursors
   :bind (("C-S-c C-S-c" . mc/edit-lines)
-	       ("C->"         . mc/mark-next-like-this)
-	       ("C-<"         . mc/mark-previous-like-this)
-	       ("C-c C-<"     . mc/mark-all-like-this)))
+         ("C->"         . mc/mark-next-like-this)
+         ("C-<"         . mc/mark-previous-like-this)
+         ("C-c C-<"     . mc/mark-all-like-this)))
 
 (use-package corfu
   :custom
@@ -238,13 +215,12 @@
   :config
   (yas-global-mode 1))
 
-;; paste with meta-p
+;; paste with meta-p in minibuffer
 (dolist (map (list minibuffer-local-map
                    minibuffer-local-ns-map
                    minibuffer-local-completion-map
                    minibuffer-local-must-match-map))
   (define-key map (kbd "M-v") #'yank))
-
 
 (add-to-list 'treesit-extra-load-path "~/.emacs.d/tree-sitter/")
 
@@ -265,7 +241,6 @@
   (eldoc-box-max-pixel-height 400)
   (eldoc-box-clear-with-C-g t) ; Close the box by pressing Escape/C-g
   :config
-
   (set-face-attribute 'eldoc-box-border nil :background "#555555"))
 
 ;; ==============================================================================
@@ -278,11 +253,10 @@
 (use-package diff-hl
   :config
   (global-diff-hl-mode)
-  
   (diff-hl-flydiff-mode 1)
-  
   (add-hook 'magit-pre-refresh-hook 'diff-hl-magit-pre-refresh)
-  (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh))
+  (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh)
+  (setq dired-auto-revert-buffer t))
 
 (use-package apheleia
   :config
@@ -294,10 +268,10 @@
 (use-package org
   :ensure nil 
   :custom
-  (org-hide-emphasis-markers t)           ; Hides the * in *bold* etc.
-  (org-startup-indented t)                ; Clean, dynamic indentation for headers
-  (org-startup-with-inline-images t)      ; Show images by default
-  (org-log-done 'time)                    ; Timestamp when completing a TODO
+  (org-hide-emphasis-markers t)            ; Hides the * in *bold* etc.
+  (org-startup-indented t)                 ; Clean, dynamic indentation for headers
+  (org-startup-with-inline-images t)       ; Show images by default
+  (org-log-done 'time)                     ; Timestamp when completing a TODO
 
   ;; Settings for planing 
   (org-directory "~/org/") 
@@ -314,15 +288,6 @@
    ("C-c a" . org-agenda)
    ("C-c c" . org-capture)))
 
-(with-eval-after-load 'general
-  (my-leader-def
-    "o"   '(:ignore t :which-key "Org / Agenda")
-    "oa"  '(org-agenda :which-key "Open Agenda")
-    "oc"  '(org-capture :which-key "Capture note/task")
-    "ot"  '(org-todo :which-key "Toggle TODO status")
-    "os"  '(org-schedule :which-key "Schedule task")
-    "od"  '(org-deadline :which-key "Set deadline")))
-
 (use-package org-resource-download
   :after org :config (setq org-download-image-dir "images") (setq org-download-heading nil))
 
@@ -334,9 +299,6 @@
 (setq-default c-ts-mode-indent-offset 2
               c-ts-mode-indent-style 'gnu
               c-basic-offset 2) ;;; fallback for classic c-mode
-
-
-
 
 ;; haskell
 (use-package haskell-mode
@@ -370,7 +332,6 @@
 ;; Global default for any mode that respects standard offset variables
 (setq-default tab-width 2
               indent-tabs-mode nil) ; Use spaces instead of tabs
-
 
 ;; loading the custom file (should always be at the end)
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
