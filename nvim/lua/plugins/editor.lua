@@ -3,7 +3,17 @@ return {
 		"lewis6991/gitsigns.nvim",
 		opts = {},
 	},
-
+	{
+		"notjedi/nvim-rooter.lua",
+		config = function()
+			require("nvim-rooter").setup()
+		end,
+	},
+	{
+		"folke/todo-comments.nvim",
+		dependencies = { "nvim-lua/plenary.nvim" },
+		opts = {},
+	},
 	{
 		"rcarriga/nvim-notify",
 		config = function()
@@ -14,7 +24,7 @@ return {
 				timeout = 2000,
 				render = "minimal",
 				background_colour = "#000000",
-				fps = 60,
+				fps = 120,
 				top_down = true,
 			})
 

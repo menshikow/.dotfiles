@@ -1,4 +1,3 @@
-
 # =========================
 # PATH and Homebrew
 # =========================
@@ -16,6 +15,8 @@ ZSH_THEME="lambda"
 
 plugins=(
   git
+  zsh-autosuggestions
+  zsh-syntax-highlighting
 )
 
 source "$ZSH/oh-my-zsh.sh"
@@ -28,11 +29,12 @@ export CLICOLOR=1
 export CLICOLOR_FORCE=1
 export LSCOLORS='cxfxcxdxbxegedabagacad'
 
+alias e='eza -l -a'
+alias ls='eza -l -a'
+alias ll='eza -l -a'
 alias vim='nvim'
 alias u='cursor'
 alias c='code --reuse-window'
-alias ll='ls -la'
-alias ls='CLICOLOR_FORCE=1 LSCOLORS=cxfxcxdxbxegedabagacad command ls -G'
 alias gs='git status'
 alias gd='git diff'
 alias ..='cd ..'

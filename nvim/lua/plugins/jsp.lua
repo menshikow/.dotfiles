@@ -46,7 +46,7 @@ return {
 
 			vim.api.nvim_create_autocmd("FileType", {
 				callback = function(args)
-					local ok = pcall(vim.treesitter.start, args.buf)
+					local ok = pcall(vim.treesitter.get_parser, args.buf)
 					if not ok then
 						vim.bo[args.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
 					end
@@ -81,7 +81,7 @@ return {
 				basedpyright = {
 					settings = {
 						basedpyright = {
-							analysis = { -- FIXED: Nested typeCheckingMode under analysis
+							analysis = {
 								typeCheckingMode = "off",
 							},
 						},
@@ -95,7 +95,25 @@ return {
 				ocamllsp = {},
 				rust_analyzer = {},
 				zls = {},
+
+				texlab = {
+					settings = {
+						texlab = {
+							build = {
+								executable = "latexmk",
+								args = {
+									"-pdf",
+									"-interaction=nonstopmode",
+									"-synctex=1",
+									"%f",
+								},
+							},
+						},
+					},
+				},
 			}
+
+			-- mason
 
 			require("mason-lspconfig").setup({
 				ensure_installed = vim.tbl_keys(servers),
@@ -109,6 +127,15 @@ return {
 						require("lspconfig")[server_name].setup(server)
 					end,
 				},
+			})
+
+			vim.api.nvim_create_autocmd("LspAttach", {
+				callback = function(args)
+					local client = vim.lsp.get_client_by_id(args.data.client_id)
+					if client then
+						client.server_capabilities.semanticTokensProvider = nil
+					end
+				end,
 			})
 
 			vim.diagnostic.config({

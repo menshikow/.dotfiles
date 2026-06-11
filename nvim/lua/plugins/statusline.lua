@@ -1,25 +1,40 @@
 return {
-	"wincent/base16-nvim",
+	"itchyny/lightline.vim",
 	lazy = false,
-	priority = 1000,
 	config = function()
-		vim.cmd([[colorscheme gruvbox-dark-hard]])
-		vim.o.background = "dark"
-		vim.cmd([[hi Normal ctermbg=NONE]])
+		vim.o.showmode = false
+		vim.g.lightline = {
+			active = {
+				left = {
+					{ "mode", "paste" },
+					{ "readonly", "filename", "modified" },
+				},
+				right = {
+					{ "lineinfo" },
+					{ "percent" },
+					{ "fileencoding", "filetype" },
+				},
+			},
+			component_function = {
+				filename = "LightlineFilename",
+			},
+		}
 
-		-- Less visible window separator
-		vim.api.nvim_set_hl(0, "WinSeparator", { fg = 1250067 })
+		function LightlineFilenameInLua(opts)
+			if vim.fn.expand("%:t") == "" then
+				return "[No Name]"
+			else
+				return vim.fn.getreg("%")
+			end
+		end
 
-		-- Make comments more prominent -- they are important.
-		local bools = vim.api.nvim_get_hl(0, { name = "Boolean" })
-		vim.api.nvim_set_hl(0, "Comment", bools)
-
-		-- Make it clearly visible which argument we're at.
-		local marked = vim.api.nvim_get_hl(0, { name = "PMenu" })
-		vim.api.nvim_set_hl(
-			0,
-			"LspSignatureActiveParameter",
-			{ fg = marked.fg, bg = marked.bg, ctermfg = marked.ctermfg, ctermbg = marked.ctermbg, bold = true }
+		vim.api.nvim_exec(
+			[[
+				function! g:LightlineFilename()
+					return v:lua.LightlineFilenameInLua()
+				endfunction
+				]],
+			true
 		)
 	end,
 }
