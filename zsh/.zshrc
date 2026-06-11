@@ -1,118 +1,166 @@
-# ── Oh My Zsh ──────────────────────────────────────────────
-if [ -d "$HOME/.oh-my-zsh" ]; then
-  export ZSH="$HOME/.oh-my-zsh"
-  ZSH_THEME="lambda"
-  plugins=(git brew docker macos gh node npm pip python)
-  source "$ZSH/oh-my-zsh.sh"
+
+# =========================
+# PATH and Homebrew
+# =========================
+
+export PATH="$HOME/.local/bin:$PATH"
+export PATH="/opt/homebrew/opt/tree-sitter@0.25/libexec/bin:$PATH"
+export PATH="/Library/TeX/texbin:$PATH"
+
+if [[ -f /opt/homebrew/bin/brew ]]; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
 fi
 
-# ── Shell Options ──────────────────────────────────────────
-setopt autocd cdablevars interactivecomments
-setopt extendedhistory histignorealldups histignoredups
-setopt histreduceblanks histverify histnostore
-setopt incappendhistory sharehistory
-setopt nomatch notify globdots
+export ZSH="$HOME/.oh-my-zsh"
+ZSH_THEME="lambda"  
 
-HISTSIZE=100000
-SAVEHIST=200000
+plugins=(
+  git
+)
+
+source "$ZSH/oh-my-zsh.sh"
+
+# =========================
+# Aliases
+# =========================
+
+export CLICOLOR=1
+export CLICOLOR_FORCE=1
+export LSCOLORS='cxfxcxdxbxegedabagacad'
+
+alias vim='nvim'
+alias u='cursor'
+alias c='code --reuse-window'
+alias ll='ls -la'
+alias ls='CLICOLOR_FORCE=1 LSCOLORS=cxfxcxdxbxegedabagacad command ls -G'
+alias gs='git status'
+alias gd='git diff'
+alias ..='cd ..'
+alias reload='source ~/.zshrc'
+alias ta='task add'
+alias tn='task next'
+alias tl='task list'
+alias tt='taskwarrior-tui'
+
+# =========================
+# Shell Options
+# =========================
+
+setopt CORRECT
+unsetopt CASE_GLOB
+
+# =========================
+# History
+# =========================
+
+HISTSIZE=10000
+SAVEHIST=10000
 HISTFILE="$HOME/.zsh_history"
 
-# ── PATH & Environment ─────────────────────────────────────
-addpath() { case ":${PATH:=$1}:" in *:"$1":*) ;; *) PATH="$1:$PATH";; esac; }
+setopt SHARE_HISTORY
+setopt HIST_IGNORE_DUPS
+setopt HIST_IGNORE_ALL_DUPS
 
-addpath "$HOME/.local/bin"
-addpath "$HOME/.cargo/bin"
-addpath "$HOME/.ghcup/bin"
-addpath "$HOME/.cabal/bin"
-addpath "/opt/homebrew/bin"
+# =========================
+# Completion Cache
+# =========================
 
-# OCaml
-[ -f "$HOME/.opam/opam-init/init.zsh" ] && . "$HOME/.opam/opam-init/init.zsh" 2>/dev/null
+autoload -Uz compinit
+compinit
 
-# Haskell
-[ -f "$HOME/.ghcup/env" ] && . "$HOME/.ghcup/env"
+mkdir -p ~/.zsh/cache
 
-# Conda
-__conda_setup="$('/opt/miniconda3/bin/conda' 'shell.zsh' 'hook' 2>/dev/null)"
-if [ $? -eq 0 ]; then
-  eval "$__conda_setup"
-else
-  [ -f "/opt/miniconda3/etc/profile.d/conda.sh" ] && . "/opt/miniconda3/etc/profile.d/conda.sh"
-  addpath "/opt/miniconda3/bin"
+zstyle ':completion:*' use-cache on
+zstyle ':completion:*' cache-path ~/.zsh/cache
+
+# =========================
+# NVM (Node.js)
+# =========================
+
+export NVM_DIR="$HOME/.nvm"
+
+[ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] && source "$NVM_DIR/bash_completion"
+
+# =========================
+# GVM (Go)
+# =========================
+
+[[ -s "$HOME/.gvm/scripts/gvm" ]] && source "$HOME/.gvm/scripts/gvm"
+
+# =========================
+# Pyenv
+# =========================
+
+export PYENV_ROOT="$HOME/.pyenv"
+
+if ! command -v pyenv >/dev/null; then
+  export PATH="$PYENV_ROOT/bin:$PATH"
 fi
+
+eval "$(pyenv init -)"
+
+# =========================
+# ASDF
+# =========================
+
+[ -f "$HOME/.asdf/asdf.sh" ] && source "$HOME/.asdf/asdf.sh"
+
+# =========================
+# Bun
+# =========================
+
+export BUN_INSTALL="$HOME/.bun"
+
+[ -s "$BUN_INSTALL/_bun" ] && source "$BUN_INSTALL/_bun"
+
+export PATH="$BUN_INSTALL/bin:$PATH"
+
+# =========================
+# GHCup (Haskell)
+# =========================
+
+[ -f "$HOME/.ghcup/env" ] && source "$HOME/.ghcup/env"
+
+# =========================
+# PNPM
+# =========================
+
+export PNPM_HOME="$HOME/Library/pnpm"
+
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+
+# =========================
+# Conda
+# =========================
+
+__conda_setup="$('/opt/miniconda3/bin/conda' 'shell.zsh' 'hook' 2>/dev/null)"
+
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/opt/miniconda3/etc/profile.d/conda.sh" ]; then
+        source "/opt/miniconda3/etc/profile.d/conda.sh"
+    else
+        export PATH="/opt/miniconda3/bin:$PATH"
+    fi
+fi
+
 unset __conda_setup
 
-export EDITOR=nvim
-export VISUAL=nvim
-export PAGER=less
+# =========================
+# Opam (OCaml)
+# =========================
 
-# ── Aliases ─────────────────────────────────────────────────
-alias ls='ls -G'
-alias ll='ls -lhG'
-alias la='ls -lhaG'
-alias lt='ls -lhtG'
-alias lr='ls -lhtrG'
+[ -r "$HOME/.opam/opam-init/init.zsh" ] && \
+    source "$HOME/.opam/opam-init/init.zsh" >/dev/null 2>/dev/null
 
-alias ..='cd ..'
-alias ...='cd ../..'
-alias ....='cd ../../..'
+# =========================
+# Extra PATH Entries
+# =========================
 
-alias g='git'
-alias gs='git status'
-alias ga='git add'
-alias gc='git commit'
-alias gp='git push'
-alias gl='git log --oneline --graph --decorate'
-
-alias m='make'
-alias mc='make clean'
-alias mb='make build'
-alias mr='make run'
-
-alias c='cabal'
-alias cs='cabal build'
-alias cr='cabal run'
-alias ct='cabal test'
-alias cghci='cabal repl'
-
-alias hs='stack'
-alias hsg='stack ghci'
-alias hsb='stack build'
-alias hst='stack test'
-
-alias oc='ocaml'
-alias ocb='ocamlbuild'
-alias ocd='ocamldebug'
-
-alias cpp='g++ -std=c++17 -Wall -Wextra'
-alias cc='gcc -std=c17 -Wall -Wextra'
-
-alias cl='clang -Wall -Wextra'
-alias clxx='clang++ -std=c++17 -Wall -Wextra'
-
-# ── Language-Specific Helpers ───────────────────────────────
-ocaml_repl() { rlwrap ocaml -init <(echo '#use "topfind";;'); }
-cabal_repl() { cabal repl --repl-options=-fno-code; }
-hs_repl() { stack ghci --ghci-options=-fno-code; }
-
-make_targets() { grep -E '^[a-zA-Z_-]+:' Makefile 2>/dev/null | cut -d: -f1 | sort; }
-
-# ── Starship fallback prompt (if no oh-my-zsh) ──────────────
-if [ ! -d "$HOME/.oh-my-zsh" ]; then
-  precmd() {
-    local exit=$?
-    local dir="${PWD/#$HOME/\~}"
-    local branch="$(git symbolic-ref --short HEAD 2>/dev/null)"
-    local symbol=" λ "
-    local suffix=""
-    if [ "$exit" -ne 0 ]; then
-      suffix=" %F{red}✗%f"
-    fi
-    PROMPT="%F{green}${symbol}%f%F{blue}${dir}%f%F{yellow}${branch:+ ($branch)}%f →${suffix} "
-  }
-fi
-
-# ── Auto-start tmux ──────────────────────────────────────────
-if [[ -z "$TMUX" && -z "$VSCODE_INJECTION" && "$TERM_PROGRAM" != "vscode" ]]; then
-  exec tmux new-session -A -s main
-fi
+export PATH="/Applications/Emacs.app/Contents/MacOS:$PATH"
+export PATH="$HOME/.opencode/bin:$PATH"

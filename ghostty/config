@@ -6,7 +6,7 @@ font-size = 20
 
 font-family = "Source Code Pro"
 
-theme = Gruber Darker
+theme = Gruvbox Dark
 
 unfocused-split-opacity = 1.0
 

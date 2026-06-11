@@ -1,56 +1,25 @@
 return {
-	"tjdevries/express_line.nvim",
-
+	"wincent/base16-nvim",
+	lazy = false,
+	priority = 1000,
 	config = function()
-		local el = require("el")
-		local builtin = require("el.builtin")
-		local modes = require("el.data").modes
-		local sections = require("el.sections")
+		vim.cmd([[colorscheme gruvbox-dark-hard]])
+		vim.o.background = "dark"
+		vim.cmd([[hi Normal ctermbg=NONE]])
 
-		local plain_mode = function()
-			local mode = vim.api.nvim_get_mode().mode
-			local display = (modes[mode] and modes[mode][1]) or mode
-			return string.format("[%s]", display)
-		end
+		-- Less visible window separator
+		vim.api.nvim_set_hl(0, "WinSeparator", { fg = 1250067 })
 
-		vim.opt.laststatus = 2
+		-- Make comments more prominent -- they are important.
+		local bools = vim.api.nvim_get_hl(0, { name = "Boolean" })
+		vim.api.nvim_set_hl(0, "Comment", bools)
 
-		vim.api.nvim_set_hl(0, "StatusLine", {
-			bg = "NONE",
-			reverse = false,
-		})
-
-		vim.api.nvim_set_hl(0, "StatusLineNC", {
-			bg = "NONE",
-			reverse = false,
-		})
-
-		el.setup({
-			generator = function()
-				return {
-					plain_mode,
-					sections.split,
-					sections.split,
-					" ",
-					builtin.file_relative,
-					sections.split,
-					" ",
-					sections.split,
-					"[",
-					builtin.line,
-					" : ",
-					builtin.column,
-					"]",
-					builtin.filetype,
-				}
-			end,
-		})
-
-		vim.api.nvim_create_autocmd("FileType", {
-			pattern = "TelescopePrompt",
-			callback = function()
-				vim.opt_local.statusline = ""
-			end,
-		})
+		-- Make it clearly visible which argument we're at.
+		local marked = vim.api.nvim_get_hl(0, { name = "PMenu" })
+		vim.api.nvim_set_hl(
+			0,
+			"LspSignatureActiveParameter",
+			{ fg = marked.fg, bg = marked.bg, ctermfg = marked.ctermfg, ctermbg = marked.ctermbg, bold = true }
+		)
 	end,
 }
