@@ -93,7 +93,39 @@ return {
 				hls = {},
 				lua_ls = {},
 				ocamllsp = {},
-				rust_analyzer = {},
+				rust_analyzer = {
+					-- TODO configure rust analizer
+					--
+					--
+					--                  vim.lsp.config('rust_analyzer', {
+					-- 	-- Server-specific settings. See `:help lspconfig-setup`
+					-- 	settings = {
+					-- 		["rust-analyzer"] = {
+					-- 			cargo = {
+					-- 				features = "all",
+					-- 			},
+					-- 			checkOnSave = {
+					-- 				enable = true,
+					-- 			},
+					-- 			check = {
+					-- 				command = "clippy",
+					-- 			},
+					-- 			imports = {
+					-- 				group = {
+					-- 					enable = false,
+					-- 				},
+					-- 			},
+					-- 			completion = {
+					-- 				postfix = {
+					-- 					enable = false,
+					-- 				},
+					-- 			},
+					-- 		},
+					-- 	},
+					-- })
+					-- vim.lsp.enable('rust_analyzer')
+					--
+				},
 				zls = {},
 
 				texlab = {
