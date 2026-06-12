@@ -60,12 +60,6 @@ return {
 		dependencies = { "nvim-treesitter/nvim-treesitter" },
 	},
 
-	{
-		"nvim-treesitter/nvim-treesitter-context",
-		dependencies = { "nvim-treesitter/nvim-treesitter" },
-		opts = {},
-	},
-
 	-- LSP
 	{
 		"neovim/nvim-lspconfig",

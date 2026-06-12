@@ -40,7 +40,7 @@ return {
 				opts.cmd = "fd --color=never --hidden --type f --type l --exclude .git"
 				local base = vim.fn.fnamemodify(vim.fn.expand("%"), ":h:.:S")
 				if base ~= "." then
-					local prox_sort_path = "~/.dotfiles/proximity-sort"
+					local prox_sort_path = "~/.dotfiles/scripts/proximity-sort"
 					opts.cmd = opts.cmd .. (" | %s %s"):format(prox_sort_path, vim.fn.shellescape(vim.fn.expand("%")))
 				end
 				opts.fzf_opts = {
@@ -66,7 +66,7 @@ return {
 				})
 			end
 
-			-- Use fzf to search buffers as well (mapping to your custom logic)
+			-- fzf for buffers
 			vim.keymap.set("n", "<leader>;", custom_buffer_search, { desc = "Find buffers (custom)" })
 			vim.keymap.set("n", "<leader>fb", custom_buffer_search, { desc = "[F]ind [B]uffers" })
 
