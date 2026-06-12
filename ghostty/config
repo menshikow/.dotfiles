@@ -7,7 +7,7 @@ font-size = 16
 font-family = "Noto Sans Mono"
 font-style = "regular"
 
-theme = Gruvbox Dark
+theme = Carbonfox
 
 unfocused-split-opacity = 1.0
 

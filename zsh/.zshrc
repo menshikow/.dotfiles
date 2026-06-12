@@ -1,10 +1,3 @@
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block; everything else may go below.
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
-
 # =========================
 # PATH and Homebrew
 # =========================
@@ -18,7 +11,8 @@ if [[ -f /opt/homebrew/bin/brew ]]; then
 fi
 
 export ZSH="$HOME/.oh-my-zsh"
-ZSH_THEME="powerlevel10k/powerlevel10k"
+# Disabled to use custom prompt
+ZSH_THEME=""
 
 plugins=(
   git
@@ -172,7 +166,17 @@ unset __conda_setup
 # =========================
 
 export PATH="/Applications/Emacs.app/Contents/MacOS:$PATH"
-export PATH="$HOME/.opencode/bin:$PATH"
 
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+# ==========================================
+# Gruvbox Prompt
+# ==========================================
+autoload -Uz vcs_info
+precmd() { vcs_info }
+# Git branch format: space, (branch), reset
+zstyle ':vcs_info:git:*' formats ' %F{#98971a}(%b)%f'
+
+setopt PROMPT_SUBST
+# Format: [HH:MM] hostname:dir (git) |
+# Colors: Gray, Blue, Gray, Yellow, Green, Red
+PROMPT='%F{#928374}[%D{%H:%M}] %F{#458588}%m%F{#928374}:%F{#d79921}%1~%f${vcs_info_msg_0_} %F{#cc241d}| %f'

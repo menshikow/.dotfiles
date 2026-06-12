@@ -97,7 +97,7 @@ return {
 					-- TODO configure rust analizer
 					--
 					--
-					--                  vim.lsp.config('rust_analyzer', {
+					--  vim.lsp.config('rust_analyzer', {
 					-- 	-- Server-specific settings. See `:help lspconfig-setup`
 					-- 	settings = {
 					-- 		["rust-analyzer"] = {
@@ -171,7 +171,11 @@ return {
 			})
 
 			vim.diagnostic.config({
-				virtual_text = false,
+				-- Change this to a table to enable and customize the inline text
+				virtual_text = {
+					spacing = 4,
+					prefix = "●", -- Changes the bullet point before the text. You can use "~" or "■" too.
+				},
 				float = { border = "rounded", source = true },
 				signs = {
 					text = {
@@ -181,10 +185,22 @@ return {
 						[vim.diagnostic.severity.INFO] = "I",
 					},
 				},
+				-- I recommend turning underline back on (true) for errors, but leaving it false if you hate the squiggly lines!
 				underline = false,
 				update_in_insert = false,
 				severity_sort = true,
 			})
+
+			-- MOVED HERE: Custom Highlights for Diagnostics
+			-- Force Red for inline errors
+			vim.api.nvim_set_hl(0, "DiagnosticVirtualTextError", { fg = "#cc241d", italic = true })
+
+			-- Force White for inline hints
+			vim.api.nvim_set_hl(0, "DiagnosticVirtualTextHint", { fg = "#ebdbb2", italic = true })
+
+			-- (Optional) Set Warning and Info colors just in case
+			vim.api.nvim_set_hl(0, "DiagnosticVirtualTextWarn", { fg = "#d79921", italic = true })
+			vim.api.nvim_set_hl(0, "DiagnosticVirtualTextInfo", { fg = "#83a598", italic = true })
 		end,
 	},
 

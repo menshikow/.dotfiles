@@ -1,9 +1,5 @@
 return {
 	{ "tpope/vim-surround" },
-	-- {
-	-- 	"windwp/nvim-ts-autotag",
-	-- 	opts = {},
-	-- },
 	{ "windwp/nvim-autopairs", opts = {} },
 
 	{
@@ -25,6 +21,4 @@ return {
 			})
 		end,
 	},
-
-	{ "wakatime/vim-wakatime", lazy = false },
 }
