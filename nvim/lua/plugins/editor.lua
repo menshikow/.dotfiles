@@ -14,23 +14,6 @@ return {
 		dependencies = { "nvim-lua/plenary.nvim" },
 		opts = {},
 	},
-	-- {
-	-- 	"rcarriga/nvim-notify",
-	-- 	config = function()
-	-- 		local notify = require("notify")
-	--
-	-- 		notify.setup({
-	-- 			stages = "static",
-	-- 			timeout = 2000,
-	-- 			render = "minimal",
-	-- 			background_colour = "#000000",
-	-- 			fps = 120,
-	-- 			top_down = true,
-	-- 		})
-	--
-	-- 		vim.notify = notify
-	-- 	end,
-	-- },
 	{
 		"mg979/vim-visual-multi",
 		branch = "master",

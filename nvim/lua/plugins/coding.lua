@@ -1,7 +1,5 @@
 return {
 	{ "tpope/vim-surround" },
-	{ "windwp/nvim-autopairs", opts = {} },
-
 	{
 		"echasnovski/mini.ai",
 		version = false,
