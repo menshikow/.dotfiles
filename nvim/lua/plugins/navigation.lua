@@ -70,9 +70,7 @@ return {
 			vim.keymap.set("n", "<leader>;", custom_buffer_search, { desc = "Find buffers (custom)" })
 			vim.keymap.set("n", "<leader>fb", custom_buffer_search, { desc = "[F]ind [B]uffers" })
 
-			-- ==========================================================
-			-- PORTED TELESCOPE KEYMAPS
-			-- ==========================================================
+			-- ported keymaps form telescope
 
 			-- Files & Search
 			vim.keymap.set("n", "<leader>ff", function()

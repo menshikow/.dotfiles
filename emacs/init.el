@@ -23,15 +23,25 @@
 (setq use-package-always-ensure t)
 
 ;; ==============================================================================
-;; 2. MACOS & GERMAN KEYBOARD
+;; 2. OS-SPECIFIC SETTINGS 
 ;; ==============================================================================
-(setq ns-command-modifier 'meta)
-(setq ns-option-modifier 'none)
-(setq ns-right-alternate-modifier 'none)
-
-(when (eq system-type 'darwin)
+(cond
+ ;; --- macOS ---
+ ((eq system-type 'darwin)
+  ;; German keyboard modifiers
+  (setq ns-command-modifier 'meta
+        ns-option-modifier 'none
+        ns-right-alternate-modifier 'none)
+  ;; Homebrew PATH
   (add-to-list 'exec-path "/opt/homebrew/bin")
-  (setenv "PATH" (concat "/opt/homebrew/bin:" (getenv "PATH"))))
+  (setenv "PATH" (concat "/opt/homebrew/bin:" (getenv "PATH")))
+  ;; Remove macOS window title bar
+  (add-to-list 'default-frame-alist '(undecorated . t)))
+
+ ;; --- Linux ---
+ ((eq system-type 'gnu/linux)
+  ;; Add any Linux-specific PATHs, UI tweaks, or modifier overrides here
+  ))
 
 ;; ==============================================================================
 ;; 3. UI & DEFAULTS
@@ -179,11 +189,6 @@
   (corfu-auto-prefix 2)
   (corfu-quit-no-match t)
   :init (global-corfu-mode))
-
-;; snippets
-(use-package yasnippet
-  :config
-  (yas-global-mode 1))
 
 ;; paste with Meta-p in minibuffer
 (dolist (map (list minibuffer-local-map
