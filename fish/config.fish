@@ -29,12 +29,6 @@ set -gx LSCOLORS cxfxcxdxbxegedabagacad
 # Custom Greeting
 # =========================
 function fish_greeting
-    echo "      /`·.¸"
-    echo "     /¸...¸`:·"
-    echo " ¸.·´  ¸   `·.¸.·´)"
-    echo ": o ):´;      ¸  {"
-    echo " `·.¸ `·  ¸.·´\\`·¸)"
-    echo "     `\\´´\\¸.·´"
 end
 
 # =========================
@@ -52,6 +46,7 @@ set -x LESS_TERMCAP_us (set_color -u 146)
 # Abbreviations
 # =========================
 # General
+abbr -a ls "eza -l -a"
 abbr -a e "eza -l -a"
 abbr -a vim "nvim"
 abbr -a u "cursor"
@@ -136,25 +131,25 @@ function fish_prompt
     # Git branch
     set -l branch (git branch --show-current 2>/dev/null)
 
-    set_color 928374
+    set_color 565f89
     echo -n "[$time] "
 
-    set_color 458588
+    set_color bb9af7
     echo -n "$host"
 
-    set_color 928374
+    set_color a9b1d6
     echo -n ":"
 
-    set_color d79921
+    set_color e0af68
     echo -n "$dir"
 
     if test -n "$branch"
-        set_color a3be8c
+        set_color 7dcfff
         echo -n " ($branch)"
     end
 
-    set_color cc241d
-    echo -n " | "
+    set_color f7768e
+    echo -n " ;; "
 
     set_color normal
 end

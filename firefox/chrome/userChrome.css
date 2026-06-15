@@ -86,7 +86,7 @@
 	 * Oh, yeah, and the popup-notification-panel (like biometrics prompts)
 	 * of course follows different rules again, and needs its own special
 	 * rule.
-	 */
+  */
   #mainPopupSet panel.panel-no-padding {
     margin-top: calc(-50vh + 40px) !important;
   }

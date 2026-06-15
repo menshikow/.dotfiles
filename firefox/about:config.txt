@@ -1,0 +1,2 @@
+- toolkit.legacyUserProfileCustomizations.stylesheets
+- browser.urlbar.scotchBonnet.enableOverride 

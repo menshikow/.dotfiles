@@ -1,13 +1,14 @@
-command = /bin/zsh
+command = /opt/homebrew/bin/fish
 
 mouse-hide-while-typing = true
 
 font-size = 18
-
-font-family = "Noto Sans Mono"
+ 
+# font-family = "Noto Sans Mono"
+font-family = "IoskeleyMonoTerm Nerd Font"
 font-style = "regular"
 
-theme = Gruvbox Dark Hard
+theme = Ultra Dark
 
 unfocused-split-opacity = 1.0
 
@@ -34,10 +35,7 @@ keybind = super+w=close_surface
 
 # cursor 
 
-cursor-color = #ffffff
-# cursor-color = #52ae6f
-# cursor-text = #1e1e1e
-
+cursor-text = #1e1e1e
 cursor-style = block
 
 macos-titlebar-style = hidden
