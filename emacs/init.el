@@ -67,7 +67,7 @@
 
 (set-face-attribute 'default nil
                     :font "Menlo"
-                    :height 150
+                    :height 155
                     :weight 'regular)
 
 
@@ -374,20 +374,3 @@
 
 (provide 'init)
 ;;; init.el ends here
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   '(apheleia corfu diff-hl dune eldoc-box evil-collection
-              evil-commentary evil-surround flycheck flycheck-eglot
-              flycheck-posframe haskell-mode magit marginalia
-              markdown-mode multiple-cursors orderless org-download
-              treesit-auto tuareg utop vertico yasnippet)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
