@@ -4,10 +4,9 @@ return {
 		opts = {},
 	},
 	{
-		"notjedi/nvim-rooter.lua",
-		config = function()
-			require("nvim-rooter").setup()
-		end,
+		"windwp/nvim-autopairs",
+		event = "InsertEnter",
+		config = true,
 	},
 	{
 		"folke/todo-comments.nvim",

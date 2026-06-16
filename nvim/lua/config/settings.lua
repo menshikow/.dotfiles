@@ -8,6 +8,9 @@ vim.opt.list = false
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
 
+-- testing
+vim.opt.iskeyword:remove("_")
+
 -- clipboard
 vim.opt.clipboard = "unnamedplus"
 

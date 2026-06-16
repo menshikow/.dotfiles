@@ -2,40 +2,25 @@ command = /opt/homebrew/bin/fish
 
 mouse-hide-while-typing = true
 
-font-size = 18
- 
-# font-family = "Noto Sans Mono"
-font-family = "IoskeleyMonoTerm Nerd Font"
-font-style = "regular"
+font-feature = -calt, -liga, -dlig
 
-theme = Ultra Dark
+font-size = 16
+
+theme = nord
 
 unfocused-split-opacity = 1.0
 
-split-divider-color = #708090
-
-# Split panes (macOS)
 keybind = super+d=new_split:right
 keybind = super+shift+d=new_split:down
 
-# Vim-style pane navigation
 keybind = super+h=goto_split:left
 keybind = super+j=goto_split:down
 keybind = super+k=goto_split:up
 keybind = super+l=goto_split:right
 
-# Vim-style pane resizing
 keybind = super+shift+h=resize_split:left,30
 keybind = super+shift+j=resize_split:down,30
 keybind = super+shift+k=resize_split:up,30
 keybind = super+shift+l=resize_split:right,30
 
-# Close focused pane
 keybind = super+w=close_surface
-
-# cursor 
-
-cursor-text = #1e1e1e
-cursor-style = block
-
-macos-titlebar-style = hidden

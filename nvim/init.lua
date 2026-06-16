@@ -2,6 +2,8 @@ require("config.lazy")
 require("config.settings")
 require("config.keymaps")
 
+vim.cmd.colorscheme("nord")
+
 vim.env.PATH = vim.env.PATH .. ":/opt/homebrew/bin"
 
 local node_bin = vim.fn.trim(vim.fn.system("which node 2>/dev/null"))

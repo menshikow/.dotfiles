@@ -11,14 +11,6 @@ if test -f /opt/homebrew/bin/brew
 end
 
 # =========================
-# Tmux Auto-Start
-# =========================
-if status is-interactive
-    and not set -q TMUX
-    exec tmux new-session -A -s main
-end
-
-# =========================
 # UI / Terminal Colors
 # =========================
 set -gx CLICOLOR 1
@@ -45,12 +37,13 @@ set -x LESS_TERMCAP_us (set_color -u 146)
 # =========================
 # Abbreviations
 # =========================
+
 # General
-abbr -a ls "eza -l -a"
+abbr -a l "ls -l -a"
+abbr -a ls "ls -l -a"
+abbr -a e "eza -l -a"
 abbr -a e "eza -l -a"
 abbr -a vim "nvim"
-abbr -a u "cursor"
-abbr -a c "code --reuse-window"
 abbr -a .. "cd .."
 abbr -a reload "source ~/.config/fish/config.fish"
 
@@ -117,41 +110,6 @@ function fish_user_key_bindings
     if functions -q fzf_key_bindings
         fzf_key_bindings
     end
-end
-
-# =========================
-# Prompt
-# =========================
-
-function fish_prompt
-    set -l time (date "+%H:%M")
-    set -l host (hostname -s)
-    set -l dir (prompt_pwd)
-
-    # Git branch
-    set -l branch (git branch --show-current 2>/dev/null)
-
-    set_color 565f89
-    echo -n "[$time] "
-
-    set_color bb9af7
-    echo -n "$host"
-
-    set_color a9b1d6
-    echo -n ":"
-
-    set_color e0af68
-    echo -n "$dir"
-
-    if test -n "$branch"
-        set_color 7dcfff
-        echo -n " ($branch)"
-    end
-
-    set_color f7768e
-    echo -n " ;; "
-
-    set_color normal
 end
 
 # >>> conda initialize >>>

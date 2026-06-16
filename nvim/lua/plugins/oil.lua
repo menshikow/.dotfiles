@@ -14,8 +14,6 @@ return {
 			})
 
 			vim.keymap.set("n", "<leader>e", "<CMD>Oil<CR>", { desc = "Open file [E]xplorer" })
-			vim.keymap.set("n", "<leader>o", "<CMD>Oil<CR>", { desc = "Open [O]il" })
-			vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory in Oil" })
 		end,
 	},
 }
