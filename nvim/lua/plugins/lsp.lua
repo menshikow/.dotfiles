@@ -185,14 +185,13 @@ return {
 				severity_sort = true,
 			})
 
-			-- MOVED HERE: Custom Highlights for Diagnostics
 			-- Force Red for inline errors
 			vim.api.nvim_set_hl(0, "DiagnosticVirtualTextError", { fg = "#cc241d", italic = true })
 
 			-- Force White for inline hints
 			vim.api.nvim_set_hl(0, "DiagnosticVirtualTextHint", { fg = "#ebdbb2", italic = true })
 
-			-- (Optional) Set Warning and Info colors just in case
+			-- Set Warning and Info colors just in case
 			vim.api.nvim_set_hl(0, "DiagnosticVirtualTextWarn", { fg = "#d79921", italic = true })
 			vim.api.nvim_set_hl(0, "DiagnosticVirtualTextInfo", { fg = "#83a598", italic = true })
 		end,

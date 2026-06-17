@@ -6,7 +6,7 @@ font-feature = -calt, -liga, -dlig
 
 font-size = 16
 
-theme = nord
+theme = Nvim Dark 
 
 unfocused-split-opacity = 1.0
 
