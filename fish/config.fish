@@ -43,7 +43,6 @@ abbr -a l "ls -l -a"
 abbr -a ls "ls -l -a"
 abbr -a e "eza -l -a"
 abbr -a e "eza -l -a"
-abbr -a vim "nvim"
 abbr -a .. "cd .."
 abbr -a reload "source ~/.config/fish/config.fish"
 
