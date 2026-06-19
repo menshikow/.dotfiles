@@ -21,7 +21,7 @@ set -gx LSCOLORS cxfxcxdxbxegedabagacad
 # Custom Greeting
 # =========================
 function fish_greeting
-end
+end 
 
 # =========================
 # Colored Man Pages
@@ -42,6 +42,7 @@ set -x LESS_TERMCAP_us (set_color -u 146)
 abbr -a l "ls -l -a"
 abbr -a ls "ls -l -a"
 abbr -a e "eza -l -a"
+abbr -a c "code --reuse-window"
 abbr -a e "eza -l -a"
 abbr -a .. "cd .."
 abbr -a reload "source ~/.config/fish/config.fish"

@@ -3,7 +3,7 @@
 ;; ==============================================================================
 (setq gc-cons-threshold most-positive-fixnum
       gc-cons-percentage 0.6
-      native-comp-async-report-warnings-errors nil)
+      native-comp-async-report-warnings-errors 'silent)
 
 (add-hook 'emacs-startup-hook
           (lambda ()
@@ -53,9 +53,9 @@
 (add-to-list 'default-frame-alist '(undecorated . t))
 
 (setq visible-bell t
-      ring-bell-function 'ignore
-      warning-minimum-level :emergency
-      native-comp-async-report-warnings-errors nil)
+            ring-bell-function 'ignore
+            warning-minimum-level :emergency
+            native-comp-async-report-warnings-errors nil)
 
 (setq-default display-line-numbers-type 'relative)
 (global-display-line-numbers-mode 1)
@@ -68,15 +68,11 @@
 (setq backup-directory-alist `(("." . "~/.config/emacs/saves/")))
 
 (set-face-attribute 'default nil
-                    :font "noto sans mono"
-                    :height 160
+                    :font "menlo"
+                    :height 150
                     :weight 'regular)
 
-;; load theme
-(add-to-list 'custom-theme-load-path (expand-file-name "themes" user-emacs-directory))
-(load-theme 'aanila t)
-
-;; compile comamnd
+;; compile command
 (setq compile-command "")
 
 (global-set-key [escape] 'keyboard-escape-quit)
@@ -101,7 +97,7 @@
   (setq evil-want-integration t
         evil-want-keybinding nil)
   :config
-  (setq evil-insert-state-cursor 'box
+  (setq evil-insert-state-cursor 'bar
         evil-normal-state-cursor 'box
         evil-visual-state-cursor 'box
         evil-replace-state-cursor 'box)
@@ -203,18 +199,19 @@
   :custom
   (treesit-auto-install t)
   :config
-  (treesit-auto-add-to-auto-mode-alist 'all)
   (global-treesit-auto-mode))
 
 (defvar my/ts-grammar-cache (make-hash-table :test 'equal))
 
-(defadvice treesit-language-available-p (around cache-check activate)
-  (let ((lang (ad-get-arg 0)))
-    (if (gethash lang my/ts-grammar-cache)
-        (setq ad-return-value t)
-      (ad-do-it)
-      (when ad-return-value
-        (puthash lang t my/ts-grammar-cache)))))
+(defun my/treesit-language-available-p-cache (orig-fun lang &rest args)
+  (if (gethash lang my/ts-grammar-cache)
+      t
+    (let ((res (apply orig-fun lang args)))
+      (when res
+        (puthash lang t my/ts-grammar-cache))
+      res)))
+
+(advice-add 'treesit-language-available-p :around #'my/treesit-language-available-p-cache)
 
 (use-package eglot
   :ensure nil
@@ -377,4 +374,3 @@
 
 (provide 'init)
 ;;; init.el ends here
-

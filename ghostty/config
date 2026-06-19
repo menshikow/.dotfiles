@@ -4,9 +4,9 @@ mouse-hide-while-typing = true
 
 font-feature = -calt, -liga, -dlig
 
-font-size = 16
+font-size = 15
 
-theme = Nvim Dark 
+theme = Builtin Pastel Dark
 
 unfocused-split-opacity = 1.0
 
