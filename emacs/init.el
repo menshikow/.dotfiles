@@ -21,7 +21,6 @@
 (unless (package-installed-p 'use-package)
   (package-install 'use-package))
 
-(require 'use-package)
 (setq use-package-always-ensure t)
 
 ;; ==============================================================================
@@ -43,6 +42,9 @@
 (scroll-bar-mode -1)
 (tool-bar-mode -1)
 (menu-bar-mode -1)
+(global-visual-line-mode 1)
+(electric-pair-mode 1)
+(add-to-list 'auto-mode-alist '("/[^./]+\\'" . org-mode))
 
 (setq frame-resize-pixelwise t
       window-resize-pixelwise t)
@@ -53,9 +55,9 @@
 (add-to-list 'default-frame-alist '(undecorated . t))
 
 (setq visible-bell t
-            ring-bell-function 'ignore
-            warning-minimum-level :emergency
-            native-comp-async-report-warnings-errors nil)
+      ring-bell-function 'ignore
+      warning-minimum-level :emergency
+      native-comp-async-report-warnings-errors nil)
 
 (setq-default display-line-numbers-type 'relative)
 (global-display-line-numbers-mode 1)
@@ -68,7 +70,7 @@
 (setq backup-directory-alist `(("." . "~/.config/emacs/saves/")))
 
 (set-face-attribute 'default nil
-                    :font "menlo"
+                    :font "CaskaydiaMono Nerd Font"
                     :height 150
                     :weight 'regular)
 
@@ -148,7 +150,7 @@
   :init
   (marginalia-mode))
 
-;; use orderless for space-separated, out-of-order fuzzy matching (replaces ido-flex)
+;; use orderless for space-separated, out-of-order fuzzy matching
 (use-package orderless
   :custom
   (completion-styles '(orderless basic))
@@ -193,7 +195,7 @@
                    minibuffer-local-must-match-map))
   (define-key map (kbd "M-v") #'yank))
 
-(add-to-list 'treesit-extra-load-path "~/.emacs.d/tree-sitter/")
+;; (add-to-list 'treesit-extra-load-path "~/.emacs.d/tree-sitter/")
 
 (use-package treesit-auto
   :custom
@@ -242,6 +244,10 @@
   :config
   (global-flycheck-eglot-mode 1))
 
+(with-eval-after-load 'flycheck
+  (setq-default flycheck-disabled-checkers
+                (add-to-list 'flycheck-disabled-checkers 'org-lint)))
+
 (use-package flycheck-posframe
   :after flycheck
   :custom
@@ -276,31 +282,111 @@
 (use-package org
   :ensure nil
   :custom
-  (org-hide-emphasis-markers t)            ; hides the * in *bold* etc.
-  (org-startup-indented t)                 ; clean, dynamic indentation for headers
-  (org-startup-with-inline-images t)       ; show images by default
-  (org-log-done 'time)                     ; timestamp when completing a todo
+  ;; visual & ui
+  (org-hide-emphasis-markers t)
+  (org-startup-indented t)
+  (org-startup-with-inline-images t)
+  (org-image-actual-width nil)
+  (org-pretty-entities t)
 
-  ;; settings for planing
-  (org-directory "~/org/")
+  ;; latex
+  (org-highlight-latex-and-related '(latex script entities))
 
-  ;; 2. what files to scan with agenda
-  (org-agenda-files '("~/org/tasks.org" "~/org/projects.org"))
+  ;; org-babel
+  (org-confirm-babel-evaluate nil)
+  (org-src-fontify-natively t)
+  (org-src-tab-acts-natively t)
+  (org-src-window-setup 'current-window)
 
-  ;; 3. custom statuses
-  (org-todo-keywords
-   '((sequence "todo(t)" "in-progress(i)" "waiting(w)" "|" "done(d)" "cancelled(c)")))
+  ;; workflow
+  (org-log-done 'time)
 
   :bind
   (("C-c l" . org-store-link)
    ("C-c a" . org-agenda)
    ("C-c c" . org-capture)))
 
+;; safely scale latex fragments only after org has completely loaded
+(with-eval-after-load 'org
+  (setq org-format-latex-options (plist-put org-format-latex-options :scale 1)))
+
 (use-package org-download
   :after org
   :config
-  (setq org-download-image-dir "images"
-        org-download-heading nil))
+  (setq-default org-download-image-dir "./images")
+  (org-download-enable))
+
+(defun my-org-clean-latex-trash ()
+  "Delete LaTeX auxiliary files and report the folder being cleaned."
+  (interactive)
+  (let* ((trash-regex "\\.\\(aux\\|log\\|out\\|fdb_latexmk\\|fls\\|toc\\|bbl\\|bcf\\|run\\.xml\\|blg\\)\\'")
+         (target-dir (expand-file-name default-directory))
+         (files (directory-files target-dir t trash-regex))
+         (deleted-count 0))
+    (dolist (file files)
+      (delete-file file)
+      (setq deleted-count (1+ deleted-count)))
+    (message "Cleaned %d files in: %s" deleted-count target-dir)))
+
+(with-eval-after-load 'org
+  (define-key org-mode-map (kbd "C-c d") #'my-org-clean-latex-trash))
+
+
+;; ==============================================================================
+;; 8.2 LATEX AND MATHEMATICS
+;; ==============================================================================
+
+;; start emacs server so sioyek can communicate back
+(server-start)
+
+;; auctex sioyek integration
+(use-package tex
+  :ensure auctex
+  :custom
+  (TeX-auto-save t)
+  (TeX-parse-self t)
+  (TeX-master nil)
+  (TeX-PDF-mode t)
+  (TeX-source-correlate-mode t)
+  (TeX-source-correlate-start-server t)
+  
+  :config
+  ;; define sioyek and set it as default for auctex
+  (setq TeX-view-program-selection '((output-pdf "Sioyek")))
+  (setq TeX-view-program-list
+        '(("Sioyek" "/Applications/sioyek.app/Contents/MacOS/sioyek %o --reuse-instance --forward-search-file %b.tex --forward-search-line %n")))
+  
+  :hook
+  (LaTeX-mode . turn-on-reftex)
+  (LaTeX-mode . flyspell-mode)
+  (LaTeX-mode . LaTeX-math-mode))
+
+;; standard org export sioyek integration
+(with-eval-after-load 'org
+  (setq org-file-apps
+        (append '(("\\.pdf\\'" . "/Applications/sioyek.app/Contents/MacOS/sioyek %s"))
+                org-file-apps)))
+
+;; cdlatex: fast input methods for latex environments and math symbols
+(use-package cdlatex
+  :ensure t
+  :hook
+  (LaTeX-mode . turn-on-cdlatex)
+  (org-mode . turn-on-org-cdlatex))          ; seamless integration with org-mode
+
+;; reftex: citation and reference management
+(use-package reftex
+  :ensure nil
+  :custom
+  (reftex-plug-into-AUCTeX t)
+  (reftex-use-external-file-finders t))
+
+;; org latex export configuration
+(use-package ox-latex
+  :ensure nil
+  :custom
+  (org-latex-pdf-process
+   '("latexmk -f -pdf -synctex=1 -interaction=nonstopmode -output-directory=%o %f")))
 
 ;; ==============================================================================
 ;; 9. LANGUAGE SETTINGS
@@ -367,10 +453,11 @@
   :custom
   (markdown-command "multimarkdown"))
 
-;; loading the custom file (should always be at the end)
+;; loading the custom file
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (when (file-exists-p custom-file)
   (load custom-file))
 
 (provide 'init)
 ;;; init.el ends here
+(put 'downcase-region 'disabled nil)

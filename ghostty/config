@@ -3,6 +3,7 @@ command = /opt/homebrew/bin/fish
 mouse-hide-while-typing = true
 
 font-feature = -calt, -liga, -dlig
+font-family = CaskaydiaMono Nerd Font
 
 font-size = 15
 
