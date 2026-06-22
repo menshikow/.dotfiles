@@ -60,18 +60,22 @@
       native-comp-async-report-warnings-errors nil)
 
 (setq-default display-line-numbers-type 'relative)
-(global-display-line-numbers-mode 1)
+(global-display-line-numbers-mode t)
 
 ;; don't check for version control on every file
 (setq vc-handled-backends '(git))
+
 ;; make opening files snappier by disabling unnecessary auto-checks
-(setq find-file-visit-truename nil)
+(setq find- nil)
 
 (setq backup-directory-alist `(("." . "~/.config/emacs/saves/")))
 
 (set-face-attribute 'default nil
-                    :font "CaskaydiaMono Nerd Font"
-                    :height 150
+                    ;; :font "CaskaydiaMono Nerd Font"
+                    ;; :font "noto sans mono"
+                    :font "DejaVu Sans Mono"
+                    ;; :font "Menlo"
+                    :height 180
                     :weight 'regular)
 
 ;; compile command
@@ -317,24 +321,23 @@
   (org-download-enable))
 
 (defun my-org-clean-latex-trash ()
-  "Delete LaTeX auxiliary files and report the folder being cleaned."
+  "Delete LaTeX auxiliary files, including intermediate .tex files, and report the folder being cleaned."
   (interactive)
-  (let* ((trash-regex "\\.\\(aux\\|log\\|out\\|fdb_latexmk\\|fls\\|toc\\|bbl\\|bcf\\|run\\.xml\\|blg\\)\\'")
+  ;; Added tex, tex.pdf, and tex.synctex.gz to the deletion list
+  (let* ((trash-regex "\\.\\(aux\\|log\\|out\\|fdb_latexmk\\|fls\\|toc\\|bbl\\|bcf\\|run\\.xml\\|blg\\|tex\\|tex\\.pdf\\)\\'")
          (target-dir (expand-file-name default-directory))
          (files (directory-files target-dir t trash-regex))
          (deleted-count 0))
     (dolist (file files)
-      (delete-file file)
-      (setq deleted-count (1+ deleted-count)))
+      (when (file-regular-p file) 
+        (delete-file file)
+        (setq deleted-count (1+ deleted-count))))
     (message "Cleaned %d files in: %s" deleted-count target-dir)))
 
 (with-eval-after-load 'org
-  (define-key org-mode-map (kbd "C-c d") #'my-org-clean-latex-trash))
+  (define-key org-mode-map (kbd "C-c C-d") #'my-org-clean-latex-trash))
 
-
-;; ==============================================================================
-;; 8.2 LATEX AND MATHEMATICS
-;; ==============================================================================
+;; latex
 
 ;; start emacs server so sioyek can communicate back
 (server-start)
