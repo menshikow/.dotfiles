@@ -72,7 +72,7 @@
 
 (set-face-attribute 'default nil
                     :font "Menlo"
-                    :height 160
+                    :height 150
                     :weight 'regular)
 
 ;; compile command
