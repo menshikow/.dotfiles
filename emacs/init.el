@@ -71,11 +71,8 @@
 (setq backup-directory-alist `(("." . "~/.config/emacs/saves/")))
 
 (set-face-attribute 'default nil
-                    ;; :font "CaskaydiaMono Nerd Font"
-                    ;; :font "noto sans mono"
-                    :font "DejaVu Sans Mono"
-                    ;; :font "Menlo"
-                    :height 180
+                    :font "Menlo"
+                    :height 160
                     :weight 'regular)
 
 ;; compile command
