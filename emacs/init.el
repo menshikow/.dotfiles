@@ -41,20 +41,6 @@
 ;; ==============================================================================
 ;; 3. UI & DEFAULTS
 ;; ==============================================================================
-
-;; theme
-(use-package color-theme-sanityinc-tomorrow
-  :config
-  (load-theme 'sanityinc-tomorrow-night t))
-
-(set-face-attribute 'font-lock-string-face nil :foreground "#8ABEB7")
-(set-face-attribute 'font-lock-keyword-face nil :foreground "#81A2BE")
-(set-face-attribute 'font-lock-function-name-face nil :foreground "#DE935F")
-(set-face-attribute 'line-number nil :background "#000000")
-(set-face-attribute 'fringe nil :background "#000000")
-(set-face-attribute 'default nil :background "#000000")
-(set-cursor-color "#FFFFFF")
-
 (setq-default cursor-type 'box)
 (setq inhibit-startup-message t)
 (scroll-bar-mode -1)
@@ -63,6 +49,8 @@
 (global-visual-line-mode t)
 (electric-pair-mode 1)
 (add-to-list 'auto-mode-alist '("/[^./]+\\'" . org-mode))
+(setq backward-delete-char-untabify-method 'hungry)
+(setq initial-buffer-choice "~/")
 
 (setq frame-resize-pixelwise t
       window-resize-pixelwise t)
@@ -89,9 +77,22 @@
 (setq backup-directory-alist `(("." . "~/.config/emacs/saves/")))
 
 (set-face-attribute 'default nil
-                    :font "CaskaydiaMono Nerd Font"
+                    :font "DejaVu Sans Mono"
                     :height 180
                     :weight 'regular)
+
+;; theme
+(use-package color-theme-sanityinc-tomorrow
+  :config
+  (load-theme 'sanityinc-tomorrow-night t))
+
+(set-face-attribute 'font-lock-string-face nil :foreground "#8ABEB7")
+(set-face-attribute 'font-lock-keyword-face nil :foreground "#81A2BE")
+(set-face-attribute 'font-lock-function-name-face nil :foreground "#DE935F")
+(set-face-attribute 'line-number nil :background "#000000")
+(set-face-attribute 'fringe nil :background "#000000")
+(set-face-attribute 'default nil :background "#000000")
+(set-cursor-color "#FFFFFF")
 
 ;; compile command
 (setq compile-command "")
