@@ -137,6 +137,15 @@
   :config
   (evil-commentary-mode))
 
+;; multi-cursor
+(use-package evil-mc
+  :after evil
+  :config
+  (global-evil-mc-mode 1)
+  (define-key evil-normal-state-map (kbd "C-n") 'evil-mc-make-and-goto-next-match)
+  (define-key evil-visual-state-map (kbd "C-n") 'evil-mc-make-and-goto-next-match)
+  (define-key evil-normal-state-map (kbd "<escape>") 'evil-mc-undo-all-cursors))
+
 ;; global emacs adjustments
 (global-set-key (kbd "M-+") 'text-scale-increase)
 (global-set-key (kbd "M--") 'text-scale-decrease)
@@ -188,12 +197,6 @@
     (define-key dired-mode-map (kbd "-") 'dired-up-directory)
     (define-key dired-mode-map (kbd "o") 'dired-find-file-other-window)
     (define-key dired-mode-map (kbd "q") 'quit-window)))
-
-(use-package multiple-cursors
-  :bind (("C-S-c C-S-c" . mc/edit-lines)
-         ("C->"         . mc/mark-next-like-this)
-         ("C-<"         . mc/mark-previous-like-this)
-         ("C-c C-<"     . mc/mark-all-like-this)))
 
 (use-package corfu
   :custom
