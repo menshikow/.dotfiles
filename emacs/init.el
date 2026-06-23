@@ -1,6 +1,10 @@
+;; -*- lexical-binding: t; -*-
+
 ;; ==============================================================================
 ;; 0. PERFORMANCE
 ;; ==============================================================================
+(defvar native-comp-async-report-warnings-errors)
+
 (setq gc-cons-threshold most-positive-fixnum
       gc-cons-percentage 0.6
       native-comp-async-report-warnings-errors 'silent)
@@ -37,12 +41,26 @@
 ;; ==============================================================================
 ;; 3. UI & DEFAULTS
 ;; ==============================================================================
+
+;; theme
+(use-package color-theme-sanityinc-tomorrow
+  :config
+  (load-theme 'sanityinc-tomorrow-night t))
+
+(set-face-attribute 'font-lock-string-face nil :foreground "#8ABEB7")
+(set-face-attribute 'font-lock-keyword-face nil :foreground "#81A2BE")
+(set-face-attribute 'font-lock-function-name-face nil :foreground "#DE935F")
+(set-face-attribute 'line-number nil :background "#000000")
+(set-face-attribute 'fringe nil :background "#000000")
+(set-face-attribute 'default nil :background "#000000")
+(set-cursor-color "#FFFFFF")
+
 (setq-default cursor-type 'box)
 (setq inhibit-startup-message t)
 (scroll-bar-mode -1)
 (tool-bar-mode -1)
 (menu-bar-mode -1)
-(global-visual-line-mode 1)
+(global-visual-line-mode t)
 (electric-pair-mode 1)
 (add-to-list 'auto-mode-alist '("/[^./]+\\'" . org-mode))
 
@@ -72,7 +90,7 @@
 
 (set-face-attribute 'default nil
                     :font "CaskaydiaMono Nerd Font"
-                    :height 150
+                    :height 180
                     :weight 'regular)
 
 ;; compile command
@@ -100,10 +118,10 @@
   (setq evil-want-integration t
         evil-want-keybinding nil)
   :config
-  (setq evil-insert-state-cursor 'bar
-        evil-normal-state-cursor 'box
-        evil-visual-state-cursor 'box
-        evil-replace-state-cursor 'box)
+  (setq evil-insert-state-cursor '("#FFFFFF" bar)
+        evil-normal-state-cursor '("#FFFFFF" box)
+        evil-visual-state-cursor '("#FFFFFF" box)
+        evil-replace-state-cursor '("#FFFFFF" box))
   (evil-mode 1))
 
 (use-package evil-collection
@@ -196,12 +214,13 @@
                    minibuffer-local-must-match-map))
   (define-key map (kbd "M-v") #'yank))
 
-;; (add-to-list 'treesit-extra-load-path "~/.emacs.d/tree-sitter/")
+(setq treesit-extra-load-path '("~/.config/emacs/tree-sitter"))
 
 (use-package treesit-auto
   :custom
   (treesit-auto-install t)
   :config
+  (treesit-auto-add-to-auto-mode-alist 'all)
   (global-treesit-auto-mode))
 
 (defvar my/ts-grammar-cache (make-hash-table :test 'equal))
@@ -223,20 +242,19 @@
   :config
   (fset #'jsonrpc--log-event #'ignore))
 
-(use-package eldoc-box
-  :custom
-  (eldoc-box-max-pixel-width 600)
-  (eldoc-box-max-pixel-height 400)
-  (eldoc-box-clear-with-c-g t) ; close the box by pressing escape/C-g
-  :config
-  (set-face-attribute 'eldoc-box-border nil :background "#555555"))
+;; ==============================================================================
+;; 6. FLYCHECK, EGLOT & ERROR DISPLAY
+;; ==============================================================================
 
-;; ==============================================================================
-;; 6. FLYCHECK, EGLOT & POSFRAME TOOLTIPS
-;; ==============================================================================
+(setq eldoc-idle-delay 0)
+
 (use-package flycheck
   :init
-  (global-flycheck-mode))
+  (global-flycheck-mode)
+  :config
+  ;; Nuke strict package-author linters for personal config files
+  (setq-default flycheck-disabled-checkers
+                '(emacs-lisp-checkdoc emacs-lisp-package-lint org-lint)))
 
 (use-package flycheck-eglot
   :after (flycheck eglot)
@@ -244,20 +262,6 @@
   (flycheck-eglot-exclusive nil)
   :config
   (global-flycheck-eglot-mode 1))
-
-(with-eval-after-load 'flycheck
-  (setq-default flycheck-disabled-checkers
-                (add-to-list 'flycheck-disabled-checkers 'org-lint)))
-
-(use-package flycheck-posframe
-  :after flycheck
-  :custom
-  (flycheck-posframe-position 'point)
-  (flycheck-posframe-border-width 1)
-  (flycheck-posframe-inhibit-functions '((lambda (&rest _) (not (flycheck-posframe-check-position)))))
-  :config
-  (add-hook 'flycheck-mode-hook #'flycheck-posframe-mode)
-  (set-face-attribute 'flycheck-posframe-border-face nil :background "#555555"))
 
 ;; ==============================================================================
 ;; 7. GIT INTEGRATION
@@ -318,9 +322,8 @@
   (org-download-enable))
 
 (defun my-org-clean-latex-trash ()
-  "Delete LaTeX auxiliary files, including intermediate .tex files, and report the folder being cleaned."
+  "Delete LaTeX auxiliary files."
   (interactive)
-  ;; Added tex, tex.pdf, and tex.synctex.gz to the deletion list
   (let* ((trash-regex "\\.\\(aux\\|log\\|out\\|fdb_latexmk\\|fls\\|toc\\|bbl\\|bcf\\|run\\.xml\\|blg\\|tex\\|tex\\.pdf\\)\\'")
          (target-dir (expand-file-name default-directory))
          (files (directory-files target-dir t trash-regex))
@@ -335,8 +338,6 @@
   (define-key org-mode-map (kbd "C-c C-d") #'my-org-clean-latex-trash))
 
 ;; latex
-
-;; start emacs server so sioyek can communicate back
 (server-start)
 
 ;; auctex sioyek integration
@@ -351,7 +352,6 @@
   (TeX-source-correlate-start-server t)
   
   :config
-  ;; define sioyek and set it as default for auctex
   (setq TeX-view-program-selection '((output-pdf "Sioyek")))
   (setq TeX-view-program-list
         '(("Sioyek" "/Applications/sioyek.app/Contents/MacOS/sioyek %o --reuse-instance --forward-search-file %b.tex --forward-search-line %n")))
@@ -361,27 +361,23 @@
   (LaTeX-mode . flyspell-mode)
   (LaTeX-mode . LaTeX-math-mode))
 
-;; standard org export sioyek integration
 (with-eval-after-load 'org
   (setq org-file-apps
         (append '(("\\.pdf\\'" . "/Applications/sioyek.app/Contents/MacOS/sioyek %s"))
                 org-file-apps)))
 
-;; cdlatex: fast input methods for latex environments and math symbols
 (use-package cdlatex
   :ensure t
   :hook
   (LaTeX-mode . turn-on-cdlatex)
-  (org-mode . turn-on-org-cdlatex))          ; seamless integration with org-mode
+  (org-mode . turn-on-org-cdlatex))
 
-;; reftex: citation and reference management
 (use-package reftex
   :ensure nil
   :custom
   (reftex-plug-into-AUCTeX t)
   (reftex-use-external-file-finders t))
 
-;; org latex export configuration
 (use-package ox-latex
   :ensure nil
   :custom
@@ -391,12 +387,9 @@
 ;; ==============================================================================
 ;; 9. LANGUAGE SETTINGS
 ;; ==============================================================================
-
-;; global default for any mode that respects standard offset variables
 (setq-default tab-width 4
               indent-tabs-mode nil)
 
-;; delete spaces in chunks of `tab-width`
 (with-eval-after-load 'evil
   (define-key evil-insert-state-map (kbd "<backspace>") 'backward-delete-char-untabify))
 
@@ -453,11 +446,11 @@
   :custom
   (markdown-command "multimarkdown"))
 
-;; loading the custom file
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (when (file-exists-p custom-file)
   (load custom-file))
 
 (provide 'init)
+
 ;;; init.el ends here
 (put 'downcase-region 'disabled nil)
