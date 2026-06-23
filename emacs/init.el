@@ -4,7 +4,6 @@
 ;; 0. PERFORMANCE
 ;; ==============================================================================
 (defvar native-comp-async-report-warnings-errors)
-
 (setq gc-cons-threshold most-positive-fixnum
       gc-cons-percentage 0.6
       native-comp-async-report-warnings-errors 'silent)
@@ -48,7 +47,7 @@
 (menu-bar-mode -1)
 (global-visual-line-mode t)
 (electric-pair-mode 1)
-(add-to-list 'auto-mode-alist '("/[^./]+\\'" . org-mode))
+(add-to-list 'auto-mode-alist '("/[^./]+\\'" . org-mode) t)
 (setq backward-delete-char-untabify-method 'hungry)
 (setq initial-buffer-choice "~/")
 
@@ -56,32 +55,28 @@
       window-resize-pixelwise t)
 
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
-
-;; remove the macos window title bar completely
 (add-to-list 'default-frame-alist '(undecorated . t))
 
 (setq visible-bell t
       ring-bell-function 'ignore
-      warning-minimum-level :emergency
-      native-comp-async-report-warnings-errors nil)
+      warning-minimum-level :emergency)
 
 (setq-default display-line-numbers-type 'relative)
 (global-display-line-numbers-mode t)
-
-;; don't check for version control on every file
 (setq vc-handled-backends '(git))
 
-;; make opening files snappier by disabling unnecessary auto-checks
+(defvar my/file-name-handler-alist-backup file-name-handler-alist)
 (setq file-name-handler-alist nil)
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (setq file-name-handler-alist my/file-name-handler-alist-backup)))
 
 (setq backup-directory-alist `(("." . "~/.config/emacs/saves/")))
 
-(set-face-attribute 'default nil
-                    :font "DejaVu Sans Mono"
-                    :height 180
-                    :weight 'regular)
+(set-face-attribute 'default nil :font "DejaVu Sans Mono" :height 180 :weight 'regular)
+(set-face-attribute 'fixed-pitch nil :family "DejaVu Sans Mono" :height 180)
+(set-face-attribute 'variable-pitch nil :family "Iosevka Etoile" :height 180)
 
-;; theme
 (use-package color-theme-sanityinc-tomorrow
   :config
   (load-theme 'sanityinc-tomorrow-night t))
@@ -94,12 +89,9 @@
 (set-face-attribute 'default nil :background "#000000")
 (set-cursor-color "#FFFFFF")
 
-;; compile command
 (setq compile-command "")
-
 (global-set-key [escape] 'keyboard-escape-quit)
 
-;; scrolling
 (setq scroll-conservatively 101
       scroll-preserve-screen-position t
       mouse-wheel-scroll-amount '(1 ((shift) . 1))
@@ -107,17 +99,14 @@
       mouse-wheel-follow-mouse 't)
 
 (pixel-scroll-precision-mode 1)
+(add-to-list 'display-buffer-alist '("\\*warnings\\*" (display-buffer-no-window)))
 
-(add-to-list 'display-buffer-alist
-             '("\\*warnings\\*" (display-buffer-no-window)))
-
-;; =============================================================================
+;; ==============================================================================
 ;; 4. EVIL & KEYBINDINGS
 ;; ==============================================================================
 (use-package evil
   :init
-  (setq evil-want-integration t
-        evil-want-keybinding nil)
+  (setq evil-want-integration t evil-want-keybinding nil)
   :config
   (setq evil-insert-state-cursor '("#FFFFFF" bar)
         evil-normal-state-cursor '("#FFFFFF" box)
@@ -134,10 +123,8 @@
 
 (use-package evil-commentary
   :after evil
-  :config
-  (evil-commentary-mode))
+  :config (evil-commentary-mode))
 
-;; multi-cursor
 (use-package evil-mc
   :after evil
   :config
@@ -146,40 +133,20 @@
   (define-key evil-visual-state-map (kbd "C-n") 'evil-mc-make-and-goto-next-match)
   (define-key evil-normal-state-map (kbd "<escape>") 'evil-mc-undo-all-cursors))
 
-;; global emacs adjustments
 (global-set-key (kbd "M-+") 'text-scale-increase)
 (global-set-key (kbd "M--") 'text-scale-decrease)
 (global-set-key (kbd "M-0") (lambda () (interactive) (text-scale-set 0)))
-
-;; bind C-x C-b to do the same as C-x b
 (global-set-key (kbd "C-x C-b") 'switch-to-buffer)
-
-;; error navigation
 (global-set-key (kbd "M-n") 'flycheck-next-error)
 (global-set-key (kbd "M-p") 'flycheck-previous-error)
-
 (recentf-mode 1)
 
 ;; ==============================================================================
 ;; 5. COMPLETION & TOOLS
 ;; ==============================================================================
-
-;; enable vertico for a clean, vertical minibuffer ui
-(use-package vertico
-  :init
-  (vertico-mode))
-
-;; persist history over emacs restarts (replaces smex)
-(use-package savehist
-  :init
-  (savehist-mode))
-
-;; add rich annotations in the minibuffer (docstrings, keybindings, etc.)
-(use-package marginalia
-  :init
-  (marginalia-mode))
-
-;; use orderless for space-separated, out-of-order fuzzy matching
+(use-package vertico :init (vertico-mode))
+(use-package savehist :init (savehist-mode))
+(use-package marginalia :init (marginalia-mode))
 (use-package orderless
   :custom
   (completion-styles '(orderless basic))
@@ -189,8 +156,7 @@
 (use-package dired
   :ensure nil
   :bind ("M-d" . dired-jump)
-  :custom
-  (dired-listing-switches "-algh")
+  :custom (dired-listing-switches "-algh")
   :config
   (with-eval-after-load 'dired
     (define-key dired-mode-map (kbd "RET") 'dired-find-file)
@@ -201,260 +167,151 @@
 (use-package corfu
   :custom
   (corfu-auto t)
-  (corfu-auto-delay 0.2)
-  (corfu-auto-prefix 2)
+  (corfu-auto-delay 0.1)
+  (corfu-auto-prefix 3)
   (corfu-quit-no-match t)
-  :init (global-corfu-mode))
+  :init
+  (global-corfu-mode))
 
-;; snippets
-(use-package yasnippet
-  :config
-  (yas-global-mode 1))
+(use-package yasnippet :config (yas-global-mode 1))
 
-;; paste with Meta-p in minibuffer
-(dolist (map (list minibuffer-local-map
-                   minibuffer-local-ns-map
-                   minibuffer-local-completion-map
-                   minibuffer-local-must-match-map))
+(dolist (map (list minibuffer-local-map minibuffer-local-ns-map minibuffer-local-completion-map minibuffer-local-must-match-map))
   (define-key map (kbd "M-v") #'yank))
 
-(setq treesit-extra-load-path '("~/.config/emacs/tree-sitter"))
-
-(use-package treesit-auto
-  :custom
-  (treesit-auto-install t)
-  :config
-  (treesit-auto-add-to-auto-mode-alist 'all)
-  (global-treesit-auto-mode))
-
-(defvar my/ts-grammar-cache (make-hash-table :test 'equal))
-
-(defun my/treesit-language-available-p-cache (orig-fun lang &rest args)
-  (if (gethash lang my/ts-grammar-cache)
-      t
-    (let ((res (apply orig-fun lang args)))
-      (when res
-        (puthash lang t my/ts-grammar-cache))
-      res)))
-
-(advice-add 'treesit-language-available-p :around #'my/treesit-language-available-p-cache)
-
+;; ==============================================================================
+;; 6. FLYCHECK & EGLOT
+;; ==============================================================================
 (use-package eglot
   :ensure nil
-  :custom
-  (eglot-sync-connect nil)
-  :config
-  (fset #'jsonrpc--log-event #'ignore))
+  :custom (eglot-sync-connect nil)
+  :config (fset #'jsonrpc--log-event #'ignore))
 
-;; ==============================================================================
-;; 6. FLYCHECK, EGLOT & ERROR DISPLAY
-;; ==============================================================================
+(setq eglot-events-buffer-size 0)
+(fset #'jsonrpc--log-event #'ignore)
+
+(setq read-process-output-max (* 1024 1024))
+
 
 (setq eldoc-idle-delay 0)
-
 (use-package flycheck
-  :init
-  (global-flycheck-mode)
+  :init (global-flycheck-mode)
   :config
-  ;; Nuke strict package-author linters for personal config files
-  (setq-default flycheck-disabled-checkers
-                '(emacs-lisp-checkdoc emacs-lisp-package-lint org-lint)))
+  (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc emacs-lisp-package-lint org-lint)))
 
 (use-package flycheck-eglot
   :after (flycheck eglot)
-  :custom
-  (flycheck-eglot-exclusive nil)
-  :config
-  (global-flycheck-eglot-mode 1))
+  :custom (flycheck-eglot-exclusive nil)
+  :config (global-flycheck-eglot-mode 1))
 
 ;; ==============================================================================
 ;; 7. GIT INTEGRATION
 ;; ==============================================================================
-(use-package magit
-  :bind ("C-x g" . magit-status))
-
+(use-package magit :bind ("C-x g" . magit-status))
 (use-package diff-hl
   :config
   (global-diff-hl-mode)
   (diff-hl-flydiff-mode 1)
   (add-hook 'magit-pre-refresh-hook 'diff-hl-magit-pre-refresh)
-  (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh)
-  (setq dired-auto-revert-buffer t))
+  (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh))
 
-(use-package apheleia
-  :config
-  (apheleia-global-mode +1))
+(use-package apheleia :config (apheleia-global-mode +1))
 
 ;; ==============================================================================
-;; 8. ORG MODE
+;; 8. ORG MODE & LATEX
 ;; ==============================================================================
 (use-package org
   :ensure nil
   :custom
-  ;; visual & ui
   (org-hide-emphasis-markers t)
   (org-startup-indented t)
   (org-startup-with-inline-images t)
   (org-image-actual-width nil)
   (org-pretty-entities t)
-
-  ;; latex
   (org-highlight-latex-and-related '(latex script entities))
-
-  ;; org-babel
   (org-confirm-babel-evaluate nil)
   (org-src-fontify-natively t)
   (org-src-tab-acts-natively t)
   (org-src-window-setup 'current-window)
-
-  ;; workflow
   (org-log-done 'time)
+  :bind (("C-c l" . org-store-link)
+         ("C-c a" . org-agenda)
+         ("C-c c" . org-capture)))
 
-  :bind
-  (("C-c l" . org-store-link)
-   ("C-c a" . org-agenda)
-   ("C-c c" . org-capture)))
-
-;; safely scale latex fragments only after org has completely loaded
 (with-eval-after-load 'org
-  (setq org-format-latex-options (plist-put org-format-latex-options :scale 1)))
+  (setq org-format-latex-options (plist-put org-format-latex-options :scale 1))
+  (define-key org-mode-map (kbd "C-c C-d") #'my-org-clean-latex-trash))
 
-(use-package org-download
-  :after org
-  :config
-  (setq-default org-download-image-dir "./images")
-  (org-download-enable))
+(use-package org-download :after org :config (org-download-enable))
 
 (defun my-org-clean-latex-trash ()
-  "Delete LaTeX auxiliary files."
   (interactive)
   (let* ((trash-regex "\\.\\(aux\\|log\\|out\\|fdb_latexmk\\|fls\\|toc\\|bbl\\|bcf\\|run\\.xml\\|blg\\|tex\\|tex\\.pdf\\)\\'")
          (target-dir (expand-file-name default-directory))
-         (files (directory-files target-dir t trash-regex))
-         (deleted-count 0))
-    (dolist (file files)
-      (when (file-regular-p file) 
-        (delete-file file)
-        (setq deleted-count (1+ deleted-count))))
-    (message "Cleaned %d files in: %s" deleted-count target-dir)))
+         (files (directory-files target-dir t trash-regex)))
+    (dolist (file files) (when (file-regular-p file) (delete-file file)))))
 
-(with-eval-after-load 'org
-  (define-key org-mode-map (kbd "C-c C-d") #'my-org-clean-latex-trash))
-
-;; latex
 (server-start)
 
-;; auctex sioyek integration
 (use-package tex
   :ensure auctex
   :custom
-  (TeX-auto-save t)
-  (TeX-parse-self t)
-  (TeX-master nil)
-  (TeX-PDF-mode t)
-  (TeX-source-correlate-mode t)
-  (TeX-source-correlate-start-server t)
-  
+  (TeX-auto-save t) (TeX-parse-self t) (TeX-master nil) (TeX-PDF-mode t)
+  (TeX-source-correlate-mode t) (TeX-source-correlate-start-server t)
   :config
   (setq TeX-view-program-selection '((output-pdf "Sioyek")))
-  (setq TeX-view-program-list
-        '(("Sioyek" "/Applications/sioyek.app/Contents/MacOS/sioyek %o --reuse-instance --forward-search-file %b.tex --forward-search-line %n")))
-  
-  :hook
-  (LaTeX-mode . turn-on-reftex)
-  (LaTeX-mode . flyspell-mode)
-  (LaTeX-mode . LaTeX-math-mode))
+  (setq TeX-view-program-list '(("Sioyek" "/Applications/sioyek.app/Contents/MacOS/sioyek %o --reuse-instance --forward-search-file %b.tex --forward-search-line %n")))
+  :hook ((LaTeX-mode . turn-on-reftex) (LaTeX-mode . flyspell-mode) (LaTeX-mode . LaTeX-math-mode)))
 
-(with-eval-after-load 'org
-  (setq org-file-apps
-        (append '(("\\.pdf\\'" . "/Applications/sioyek.app/Contents/MacOS/sioyek %s"))
-                org-file-apps)))
-
-(use-package cdlatex
-  :ensure t
-  :hook
-  (LaTeX-mode . turn-on-cdlatex)
-  (org-mode . turn-on-org-cdlatex))
-
-(use-package reftex
-  :ensure nil
-  :custom
-  (reftex-plug-into-AUCTeX t)
-  (reftex-use-external-file-finders t))
-
-(use-package ox-latex
-  :ensure nil
-  :custom
-  (org-latex-pdf-process
-   '("latexmk -f -pdf -synctex=1 -interaction=nonstopmode -output-directory=%o %f")))
+(use-package cdlatex :ensure t :hook ((LaTeX-mode . turn-on-cdlatex) (org-mode . turn-on-org-cdlatex)))
+(use-package reftex :ensure nil :custom (reftex-plug-into-AUCTeX t))
+(use-package ox-latex :ensure nil :custom (org-latex-pdf-process '("latexmk -f -pdf -synctex=1 -interaction=nonstopmode -output-directory=%o %f")))
 
 ;; ==============================================================================
 ;; 9. LANGUAGE SETTINGS
 ;; ==============================================================================
-(setq-default tab-width 4
-              indent-tabs-mode nil)
+(setq-default tab-width 4 indent-tabs-mode nil)
 
-(with-eval-after-load 'evil
-  (define-key evil-insert-state-map (kbd "<backspace>") 'backward-delete-char-untabify))
-
-;; c and c++
-(use-package c-ts-mode
+;; C/C++
+(use-package cc-mode
   :ensure nil
-  :mode (("\\.c\\'" . c-ts-mode)
-         ("\\.h\\'" . c++-ts-mode)
-         ("\\.cpp\\'" . c++-ts-mode)
-         ("\\.hpp\\'" . c++-ts-mode))
-  :custom
-  (c-ts-mode-indent-offset 2)
-  (c-ts-mode-indent-style 'gnu)
-  :hook ((c-ts-mode . eglot-ensure)
-         (c++-ts-mode . eglot-ensure)))
+  :mode (("\\.c\\'"   . c-mode)
+         ("\\.cpp\\'" . c++-mode)
+         ("\\.cc\\'"  . c++-mode)
+         ("\\.cxx\\'" . c++-mode)
+         ("\\.hpp\\'" . c++-mode)
+         ("\\.hh\\'"  . c++-mode))
+  :hook ((c-mode . eglot-ensure)
+         (c++-mode . eglot-ensure)
+         (c-mode-common . my-c-style))
+  :config
+  (setq-default c-basic-offset 4))
 
-;; haskell
+(defun my-c-style ()
+  (setq indent-tabs-mode nil)
+  (setq tab-width 4)
+  (c-set-offset 'innamespace 0)
+  (c-set-offset 'access-label '-)
+  (c-set-offset 'case-label '+))
+
+;; Python
+(use-package python
+  :ensure nil
+  :mode ("\\.py\\'" . python-mode)
+  :hook (python-mode . eglot-ensure))
+
+;; Haskell
 (use-package haskell-mode
   :mode ("\\.hs\\'" . haskell-mode)
-  :custom
-  (haskell-indentation-stylish t)
-  (haskell-indent-spaces 2))
+  :custom (haskell-indentation-stylish t) (haskell-indent-spaces 2))
 
-(with-eval-after-load 'eglot
-  (add-to-list 'eglot-server-programs
-               '(haskell-mode . ("haskell-language-server-wrapper")))
-  (add-to-list 'eglot-server-programs
-               '(haskell-ts-mode . ("haskell-language-server-wrapper"))))
+;; OCaml
+(use-package tuareg :mode ("\\.ml[ily]?\\'" . tuareg-mode))
+(use-package utop :hook (tuareg-mode . utop-minor-mode))
 
-;; ocaml
-(use-package tuareg
-  :mode ("\\.ml[ily]?\\'" . tuareg-mode)
-  :custom
-  (tuareg-default-indent 2)
-  (tuareg-indent-align-with-first-arg nil))
-
-(use-package dune
-  :mode ("dune\\(?:-project\\|-workspace\\)?\\'" . dune-mode))
-
-(use-package utop
-  :hook (tuareg-mode . utop-minor-mode)
-  :custom
-  (utop-command "opam exec -- utop -emacs"))
-
-;; python
-(use-package python
-  :mode ("\\.py\\'" . python-mode)
-  :hook ((python-mode . eglot-ensure)
-         (python-ts-mode . eglot-ensure)))
-
-;; markdown
-(use-package markdown-mode
-  :mode ("\\.md\\'" . markdown-mode)
-  :custom
-  (markdown-command "multimarkdown"))
+;; Markdown
+(use-package markdown-mode :mode ("\\.md\\'" . markdown-mode))
 
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
-(when (file-exists-p custom-file)
-  (load custom-file))
-
+(when (file-exists-p custom-file) (load custom-file))
 (provide 'init)
-
-;;; init.el ends here
 (put 'downcase-region 'disabled nil)
