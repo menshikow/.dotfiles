@@ -66,7 +66,7 @@
 (setq vc-handled-backends '(git))
 
 ;; make opening files snappier by disabling unnecessary auto-checks
-(setq find- nil)
+(setq file-name-handler-alist nil)
 
 (setq backup-directory-alist `(("." . "~/.config/emacs/saves/")))
 
