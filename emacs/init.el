@@ -51,6 +51,10 @@
 (setq backward-delete-char-untabify-method 'hungry)
 (setq initial-buffer-choice "~/")
 
+(use-package avy
+  :ensure t
+  :bind ("C--" . avy-goto-char-timer))
+
 (setq frame-resize-pixelwise t
       window-resize-pixelwise t)
 
@@ -86,19 +90,16 @@
 (set-face-attribute 'fixed-pitch nil :family "DejaVu Sans Mono" :height 170)
 (set-face-attribute 'variable-pitch nil :family "Iosevka Etoile" :height 170)
 
-(load-theme 'tsdh-light t)
-(set-cursor-color "#000000")
-
-;; (use-package color-theme-sanityinc-tomorrow
-;;   :config
-;;   (load-theme 'sanityinc-tomorrow-night t))
-;; (set-face-attribute 'font-lock-string-face nil :foreground "#8ABEB7")
-;; (set-face-attribute 'font-lock-keyword-face nil :foreground "#81A2BE")
-;; (set-face-attribute 'font-lock-function-name-face nil :foreground "#DE935F")
-;; (set-face-attribute 'line-number nil :background "#000000")
-;; (set-face-attribute 'fringe nil :background "#000000")
-;; (set-face-attribute 'default nil :background "#000000")
-;; (set-cursor-color "#FFFFFF")
+(use-package color-theme-sanityinc-tomorrow
+  :config
+  (load-theme 'sanityinc-tomorrow-night t))
+(set-face-attribute 'font-lock-string-face nil :foreground "#8ABEB7")
+(set-face-attribute 'font-lock-keyword-face nil :foreground "#81A2BE")
+(set-face-attribute 'font-lock-function-name-face nil :foreground "#DE935F")
+(set-face-attribute 'line-number nil :background "#000000")
+(set-face-attribute 'fringe nil :background "#000000")
+(set-face-attribute 'default nil :background "#000000")
+(set-cursor-color "#FFFFFF")
 
 
 (setq compile-command "")
@@ -120,10 +121,10 @@
   :init
   (setq evil-want-integration t evil-want-keybinding nil)
   :config
-  (setq evil-insert-state-cursor '(bar)
-        evil-normal-state-cursor '(box)
-        evil-visual-state-cursor '(box)
-        evil-replace-state-cursor '(box))
+  (setq evil-insert-state-cursor '("#FFFFFF" bar)
+        evil-normal-state-cursor '("#FFFFFF" box)
+        evil-visual-state-cursor '("#FFFFFF" box)
+        evil-replace-state-cursor '("#FFFFFF" box))
   (evil-mode 1))
 
 (use-package evil-collection
@@ -323,7 +324,7 @@
 (use-package tuareg :mode ("\\.ml[ily]?\\'" . tuareg-mode))
 (use-package utop :hook (tuareg-mode . utop-minor-mode))
 
-;; Markdown
+;; Mark
 (use-package markdown-mode :mode ("\\.md\\'" . markdown-mode))
 
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
