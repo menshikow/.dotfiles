@@ -214,7 +214,10 @@
   (add-hook 'magit-pre-refresh-hook 'diff-hl-magit-pre-refresh)
   (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh))
 
-(use-package apheleia :config (apheleia-global-mode +1))
+(use-package apheleia 
+  :config 
+  (apheleia-global-mode +1)
+  (setf (alist-get 'python-mode apheleia-mode-alist) '(ruff)))
 
 ;; ==============================================================================
 ;; 8. ORG MODE & LATEX
