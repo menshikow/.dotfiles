@@ -45,7 +45,7 @@
 (scroll-bar-mode -1)
 (tool-bar-mode -1)
 (menu-bar-mode -1)
-(global-visual-line-mode t)
+(global-visual-line-mode 1)
 (electric-pair-mode 1)
 (add-to-list 'auto-mode-alist '("/[^./]+\\'" . org-mode) t)
 (setq backward-delete-char-untabify-method 'hungry)
@@ -62,8 +62,17 @@
       warning-minimum-level :emergency)
 
 (setq-default display-line-numbers-type 'relative)
-(global-display-line-numbers-mode t)
+(global-display-line-numbers-mode -1)
 (setq vc-handled-backends '(git))
+
+;; wanna some function to open ghostty in the directory im in rn
+
+;; (defun my-open-ghostty ()
+;;   "Launch Ghostty in the current directory."
+;;   (interactive)
+;;   (start-process "ghostty-process" nil "/Applications/hostty.app/Contents/MacOS/ghostty"))
+
+;; (global-set-key (kbd "C-c g") 'my-open-ghostty)
 
 (defvar my/file-name-handler-alist-backup file-name-handler-alist)
 (setq file-name-handler-alist nil)
@@ -73,21 +82,24 @@
 
 (setq backup-directory-alist `(("." . "~/.config/emacs/saves/")))
 
-(set-face-attribute 'default nil :font "DejaVu Sans Mono" :height 180 :weight 'regular)
-(set-face-attribute 'fixed-pitch nil :family "DejaVu Sans Mono" :height 180)
-(set-face-attribute 'variable-pitch nil :family "Iosevka Etoile" :height 180)
+(set-face-attribute 'default nil :font "DejaVu Sans Mono" :height 170 :weight 'regular)
+(set-face-attribute 'fixed-pitch nil :family "DejaVu Sans Mono" :height 170)
+(set-face-attribute 'variable-pitch nil :family "Iosevka Etoile" :height 170)
 
-(use-package color-theme-sanityinc-tomorrow
-  :config
-  (load-theme 'sanityinc-tomorrow-night t))
+(load-theme 'tsdh-light t)
+(set-cursor-color "#000000")
 
-(set-face-attribute 'font-lock-string-face nil :foreground "#8ABEB7")
-(set-face-attribute 'font-lock-keyword-face nil :foreground "#81A2BE")
-(set-face-attribute 'font-lock-function-name-face nil :foreground "#DE935F")
-(set-face-attribute 'line-number nil :background "#000000")
-(set-face-attribute 'fringe nil :background "#000000")
-(set-face-attribute 'default nil :background "#000000")
-(set-cursor-color "#FFFFFF")
+;; (use-package color-theme-sanityinc-tomorrow
+;;   :config
+;;   (load-theme 'sanityinc-tomorrow-night t))
+;; (set-face-attribute 'font-lock-string-face nil :foreground "#8ABEB7")
+;; (set-face-attribute 'font-lock-keyword-face nil :foreground "#81A2BE")
+;; (set-face-attribute 'font-lock-function-name-face nil :foreground "#DE935F")
+;; (set-face-attribute 'line-number nil :background "#000000")
+;; (set-face-attribute 'fringe nil :background "#000000")
+;; (set-face-attribute 'default nil :background "#000000")
+;; (set-cursor-color "#FFFFFF")
+
 
 (setq compile-command "")
 (global-set-key [escape] 'keyboard-escape-quit)
@@ -108,10 +120,10 @@
   :init
   (setq evil-want-integration t evil-want-keybinding nil)
   :config
-  (setq evil-insert-state-cursor '("#FFFFFF" bar)
-        evil-normal-state-cursor '("#FFFFFF" box)
-        evil-visual-state-cursor '("#FFFFFF" box)
-        evil-replace-state-cursor '("#FFFFFF" box))
+  (setq evil-insert-state-cursor '(bar)
+        evil-normal-state-cursor '(box)
+        evil-visual-state-cursor '(box)
+        evil-replace-state-cursor '(box))
   (evil-mode 1))
 
 (use-package evil-collection
@@ -207,12 +219,12 @@
 ;; 7. GIT INTEGRATION
 ;; ==============================================================================
 (use-package magit :bind ("C-x g" . magit-status))
-(use-package diff-hl
-  :config
-  (global-diff-hl-mode)
-  (diff-hl-flydiff-mode 1)
-  (add-hook 'magit-pre-refresh-hook 'diff-hl-magit-pre-refresh)
-  (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh))
+;; (use-package diff-hl
+;; :config
+;; (global-diff-hl-mode)
+;; (diff-hl-flydiff-mode 1)
+;; (add-hook 'magit-pre-refresh-hook 'diff-hl-magit-pre-refresh)
+;; (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh))
 
 (use-package apheleia 
   :config 
