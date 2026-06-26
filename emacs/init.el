@@ -1,7 +1,7 @@
 ;; -*- lexical-binding: t; -*-
 
 ;; ==============================================================================
-;; 0. PERFORMANCE
+;; performance
 ;; ==============================================================================
 (defvar native-comp-async-report-warnings-errors)
 (setq gc-cons-threshold most-positive-fixnum
@@ -14,7 +14,7 @@
                   gc-cons-percentage 0.1)))
 
 ;; ==============================================================================
-;; 1. PACKAGE MANAGEMENT
+;; packages
 ;; ==============================================================================
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
@@ -27,7 +27,7 @@
 (setq use-package-always-ensure t)
 
 ;; ==============================================================================
-;; 2. MACOS & GERMAN KEYBOARD
+;; macos and german keyboard
 ;; ==============================================================================
 (setq ns-command-modifier 'meta)
 (setq ns-option-modifier 'none)
@@ -38,18 +38,17 @@
   (setenv "PATH" (concat "/opt/homebrew/bin:" (getenv "PATH"))))
 
 ;; ==============================================================================
-;; 3. UI & DEFAULTS
+;; Ui and defaults
 ;; ==============================================================================
 (setq-default cursor-type 'box)
-(setq inhibit-startup-message t)
+(setq inhibit-startup-message nil)
 (scroll-bar-mode -1)
 (tool-bar-mode -1)
 (menu-bar-mode -1)
 (global-visual-line-mode 1)
 (electric-pair-mode 1)
-(add-to-list 'auto-mode-alist '("/[^./]+\\'" . org-mode) t)
 (setq backward-delete-char-untabify-method 'hungry)
-(setq initial-buffer-choice "~/")
+(setq initial-buffer-choice nil)
 
 (use-package avy
   :ensure t
@@ -65,18 +64,7 @@
       ring-bell-function 'ignore
       warning-minimum-level :emergency)
 
-(setq-default display-line-numbers-type 'relative)
-(global-display-line-numbers-mode -1)
 (setq vc-handled-backends '(git))
-
-;; wanna some function to open ghostty in the directory im in rn
-
-;; (defun my-open-ghostty ()
-;;   "Launch Ghostty in the current directory."
-;;   (interactive)
-;;   (start-process "ghostty-process" nil "/Applications/hostty.app/Contents/MacOS/ghostty"))
-
-;; (global-set-key (kbd "C-c g") 'my-open-ghostty)
 
 (defvar my/file-name-handler-alist-backup file-name-handler-alist)
 (setq file-name-handler-alist nil)
@@ -115,7 +103,7 @@
 (add-to-list 'display-buffer-alist '("\\*warnings\\*" (display-buffer-no-window)))
 
 ;; ==============================================================================
-;; 4. EVIL & KEYBINDINGS
+;; Evil
 ;; ==============================================================================
 (use-package evil
   :init
@@ -155,7 +143,37 @@
 (recentf-mode 1)
 
 ;; ==============================================================================
-;; 5. COMPLETION & TOOLS
+;; Lsp
+;; ==============================================================================
+(use-package eglot
+  :ensure nil
+  :custom (eglot-sync-connect nil)
+  :config
+  (fset #'jsonrpc--log-event #'ignore)
+  (setq eglot-events-buffer-config '(:size 0 :format full))
+  (add-to-list 'eglot-server-programs
+               '(python-mode . ("basedpyright-langserver" "--stdio"))))
+
+(use-package eglot-booster
+  :vc (:url "https://github.com/jdtsmith/eglot-booster")
+  :after eglot
+  :config (eglot-booster-mode))
+
+(setq read-process-output-max (* 1024 1024))
+(setq eldoc-idle-delay 0.2)
+
+(use-package flycheck
+  :init (global-flycheck-mode)
+  :config
+  (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc emacs-lisp-package-lint org-lint)))
+
+(use-package flycheck-eglot
+  :after (flycheck eglot)
+  :custom (flycheck-eglot-exclusive t)
+  :config (global-flycheck-eglot-mode 1))
+
+;; ==============================================================================
+;; Completion and tools
 ;; ==============================================================================
 (use-package vertico :init (vertico-mode))
 (use-package savehist :init (savehist-mode))
@@ -171,6 +189,8 @@
   :bind ("M-d" . dired-jump)
   :custom (dired-listing-switches "-algh")
   :config
+  (when (executable-find "gls")
+    (setq insert-directory-program "gls"))
   (with-eval-after-load 'dired
     (define-key dired-mode-map (kbd "RET") 'dired-find-file)
     (define-key dired-mode-map (kbd "-") 'dired-up-directory)
@@ -192,40 +212,9 @@
   (define-key map (kbd "M-v") #'yank))
 
 ;; ==============================================================================
-;; 6. FLYCHECK & EGLOT
-;; ==============================================================================
-(use-package eglot
-  :ensure nil
-  :custom (eglot-sync-connect nil)
-  :config (fset #'jsonrpc--log-event #'ignore))
-
-(setq eglot-events-buffer-size 0)
-(fset #'jsonrpc--log-event #'ignore)
-
-(setq read-process-output-max (* 1024 1024))
-
-
-(setq eldoc-idle-delay 0)
-(use-package flycheck
-  :init (global-flycheck-mode)
-  :config
-  (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc emacs-lisp-package-lint org-lint)))
-
-(use-package flycheck-eglot
-  :after (flycheck eglot)
-  :custom (flycheck-eglot-exclusive nil)
-  :config (global-flycheck-eglot-mode 1))
-
-;; ==============================================================================
-;; 7. GIT INTEGRATION
+;; Magit
 ;; ==============================================================================
 (use-package magit :bind ("C-x g" . magit-status))
-;; (use-package diff-hl
-;; :config
-;; (global-diff-hl-mode)
-;; (diff-hl-flydiff-mode 1)
-;; (add-hook 'magit-pre-refresh-hook 'diff-hl-magit-pre-refresh)
-;; (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh))
 
 (use-package apheleia 
   :config 
@@ -233,7 +222,7 @@
   (setf (alist-get 'python-mode apheleia-mode-alist) '(ruff)))
 
 ;; ==============================================================================
-;; 8. ORG MODE & LATEX
+;; org-mode and latex
 ;; ==============================================================================
 (use-package org
   :ensure nil
@@ -283,7 +272,7 @@
 (use-package ox-latex :ensure nil :custom (org-latex-pdf-process '("latexmk -f -pdf -synctex=1 -interaction=nonstopmode -output-directory=%o %f")))
 
 ;; ==============================================================================
-;; 9. LANGUAGE SETTINGS
+;; language settings
 ;; ==============================================================================
 (setq-default tab-width 4 indent-tabs-mode nil)
 
@@ -318,11 +307,13 @@
 ;; Haskell
 (use-package haskell-mode
   :mode ("\\.hs\\'" . haskell-mode)
+  :hook (haskell-mode . eglot-ensure)
   :custom (haskell-indentation-stylish t) (haskell-indent-spaces 2))
 
 ;; OCaml
-(use-package tuareg :mode ("\\.ml[ily]?\\'" . tuareg-mode))
-(use-package utop :hook (tuareg-mode . utop-minor-mode))
+(use-package tuareg
+  :mode ("\\.ml[ily]?\\'" . tuareg-mode)
+  :hook (tuareg-mode . eglot-ensure))
 
 ;; Mark
 (use-package markdown-mode :mode ("\\.md\\'" . markdown-mode))
