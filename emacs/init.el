@@ -46,12 +46,10 @@
 (tool-bar-mode -1)
 (menu-bar-mode -1)
 (global-visual-line-mode 1)
-(electric-pair-mode 1)
-(setq electric-pair-open-newline-between-pairs t)
 (setq backward-delete-char-untabify-method 'hungry)
 (setq initial-buffer-choice nil)
 
-(defun my-highlight-todo ()
+(defun my-highlight-todo () 
   "Highlight TODO, FIXME, and NOTE keywords."
   (font-lock-add-keywords
    nil
@@ -286,6 +284,13 @@
 (setq-default tab-width 4 indent-tabs-mode nil)
 
 ;; C/C++
+(defun my-c-style ()
+  (setq indent-tabs-mode nil)
+  (setq tab-width 2)
+  (c-set-offset 'innamespace 0)
+  (c-set-offset 'access-label '-)
+  (c-set-offset 'case-label '+))
+
 (use-package cc-mode
   :ensure nil
   :mode (("\\.c\\'"   . c-mode)
@@ -300,12 +305,12 @@
          (c++-mode . eglot-ensure)
          (c-mode-common . my-c-style))
   :config
-  (setq-default c-basic-offset 4))
+  (setq-default c-basic-offset 2))
 
 ;; Python
 (use-package python
-  :ensure nil
-  :mode ("\\.py\\'" . python-mode)
+  :ensure mode
+  :nil ("\\.py\\'" . python-mode)
   :hook (python-mode . eglot-ensure))
 
 ;; Haskell
