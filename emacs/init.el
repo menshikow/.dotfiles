@@ -38,7 +38,7 @@
   (setenv "PATH" (concat "/opt/homebrew/bin:" (getenv "PATH"))))
 
 ;; ==============================================================================
-;; Ui and Defaults
+;; Ui and defaults
 ;; ==============================================================================
 (setq-default cursor-type 'box)
 (setq inhibit-startup-message nil)
@@ -46,16 +46,9 @@
 (tool-bar-mode -1)
 (menu-bar-mode -1)
 (global-visual-line-mode 1)
+(electric-pair-mode -1) ;; turning the
 (setq backward-delete-char-untabify-method 'hungry)
 (setq initial-buffer-choice nil)
-
-(defun my-highlight-todo () 
-  "Highlight TODO, FIXME, and NOTE keywords."
-  (font-lock-add-keywords
-   nil
-   '(("\\<\\(FIXME\\|TODO\\)\\>" 1 'font-lock-warning-face t)
-     ("\\<\\(NOTE\\)\\>" 0 'font-lock-doc-face t))))
-(add-hook 'prog-mode-hook #'my-highlight-todo)
 
 (use-package avy
   :ensure t
@@ -81,21 +74,19 @@
 
 (setq backup-directory-alist `(("." . "~/.config/emacs/saves/")))
 
-(set-face-attribute 'default nil :font "DejaVu Sans Mono" :height 170 :weight 'regular)
-(set-face-attribute 'fixed-pitch nil :family "DejaVu Sans Mono" :height 170)
-(set-face-attribute 'variable-pitch nil :family "Iosevka Etoile" :height 170)
+(set-face-attribute 'default nil :font "DejaVu Sans Mono" :height 200 :weight 'regular)
+(set-face-attribute 'fixed-pitch nil :family "DejaVu Sans Mono" :height 200 )
+(set-face-attribute 'variable-pitch nil :family "Iosevka Etoile" :height 200 )
 
-(use-package color-theme-sanityinc-tomorrow
-  :config
-  (load-theme 'sanityinc-tomorrow-night t))
-(set-face-attribute 'font-lock-string-face nil :foreground "#8ABEB7")
-(set-face-attribute 'font-lock-keyword-face nil :foreground "#81A2BE")
-(set-face-attribute 'font-lock-function-name-face nil :foreground "#DE935F")
-(set-face-attribute 'line-number nil :background "#000000")
-(set-face-attribute 'fringe nil :background "#000000")
-(set-face-attribute 'default nil :background "#000000")
-(set-cursor-color "#FFFFFF")
-
+;; (use-package color-theme-sanityinc-tomorrow
+;;   :config
+;;   (load-theme 'sanityinc-tomorrow-night t))
+;; (set-face-attribute 'font-lock-string-face nil :foreground "#8ABEB7")
+;; (set-face-attribute 'font-lock-keyword-face nil :foreground "#81A2BE")
+;; (set-face-attribute 'font-lock-function-name-face nil :foreground "#DE935F")
+;; (set-face-attribute 'fringe nil :background "#000000")
+;; (set-face-attribute 'font-lock-variable-name-face nil :foreground "#C5C8C6")
+;; (set-face-attribute 'default nil :background "#000000")
 
 (setq compile-command "")
 (global-set-key [escape] 'keyboard-escape-quit)
@@ -116,10 +107,10 @@
   :init
   (setq evil-want-integration t evil-want-keybinding nil)
   :config
-  (setq evil-insert-state-cursor '("#FFFFFF" bar)
-        evil-normal-state-cursor '("#FFFFFF" box)
-        evil-visual-state-cursor '("#FFFFFF" box)
-        evil-replace-state-cursor '("#FFFFFF" box))
+  (setq evil-insert-state-cursor '(box)
+        evil-normal-state-cursor '(box)
+        evil-visual-state-cursor '(box)
+        evil-replace-state-cursor '(box))
   (evil-mode 1))
 
 (use-package evil-collection
@@ -206,17 +197,12 @@
 
 (use-package corfu
   :custom
-  (corfu-auto t)
-  (corfu-auto-delay 0.1)
-  (corfu-auto-prefix 3)
+  (corfu-auto nil)
   (corfu-quit-no-match t)
   :init
   (global-corfu-mode))
 
-(use-package yasnippet :config (yas-global-mode 1))
-
-(dolist (map (list minibuffer-local-map minibuffer-local-ns-map minibuffer-local-completion-map minibuffer-local-must-match-map))
-  (define-key map (kbd "M-v") #'yank))
+(global-set-key (kbd "C-<tab>") #'completion-at-point)
 
 ;; ==============================================================================
 ;; Magit
@@ -229,7 +215,7 @@
   (setf (alist-get 'python-mode apheleia-mode-alist) '(ruff)))
 
 ;; ==============================================================================
-;; Org-mode and Latex
+;; org-mode and latex
 ;; ==============================================================================
 (use-package org
   :ensure nil
@@ -279,7 +265,7 @@
 (use-package ox-latex :ensure nil :custom (org-latex-pdf-process '("latexmk -f -pdf -synctex=1 -interaction=nonstopmode -output-directory=%o %f")))
 
 ;; ==============================================================================
-;; Language Settings
+;; language settings
 ;; ==============================================================================
 (setq-default tab-width 4 indent-tabs-mode nil)
 
@@ -287,6 +273,7 @@
 (defun my-c-style ()
   (setq indent-tabs-mode nil)
   (setq tab-width 2)
+  (setq c-basic-offset 2)
   (c-set-offset 'innamespace 0)
   (c-set-offset 'access-label '-)
   (c-set-offset 'case-label '+))
@@ -299,18 +286,14 @@
          ("\\.cxx\\'" . c++-mode)
          ("\\.hpp\\'" . c++-mode)
          ("\\.hh\\'"  . c++-mode))
-  :bind (:map c-mode-base-map
-              ("RET" . c-context-line-break))
   :hook ((c-mode . eglot-ensure)
          (c++-mode . eglot-ensure)
-         (c-mode-common . my-c-style))
-  :config
-  (setq-default c-basic-offset 2))
+         (c-mode-common . my-c-style)))
 
 ;; Python
 (use-package python
-  :ensure mode
-  :nil ("\\.py\\'" . python-mode)
+  :ensure nil
+  :mode ("\\.py\\'" . python-mode)
   :hook (python-mode . eglot-ensure))
 
 ;; Haskell
@@ -318,11 +301,6 @@
   :mode ("\\.hs\\'" . haskell-mode)
   :hook (haskell-mode . eglot-ensure)
   :custom (haskell-indentation-stylish t) (haskell-indent-spaces 2))
-
-;; Rust
-(use-package rust-mode
-  :mode ("\\.rs\\'" . rust-mode)
-  :hook (rust-mode . eglot-ensure))
 
 ;; OCaml
 (use-package tuareg
