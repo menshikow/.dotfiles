@@ -38,7 +38,7 @@
   (setenv "PATH" (concat "/opt/homebrew/bin:" (getenv "PATH"))))
 
 ;; ==============================================================================
-;; Ui and defaults
+;; Ui and Defaults
 ;; ==============================================================================
 (setq-default cursor-type 'box)
 (setq inhibit-startup-message nil)
@@ -47,8 +47,17 @@
 (menu-bar-mode -1)
 (global-visual-line-mode 1)
 (electric-pair-mode 1)
+(setq electric-pair-open-newline-between-pairs t)
 (setq backward-delete-char-untabify-method 'hungry)
 (setq initial-buffer-choice nil)
+
+(defun my-highlight-todo ()
+  "Highlight TODO, FIXME, and NOTE keywords."
+  (font-lock-add-keywords
+   nil
+   '(("\\<\\(FIXME\\|TODO\\)\\>" 1 'font-lock-warning-face t)
+     ("\\<\\(NOTE\\)\\>" 0 'font-lock-doc-face t))))
+(add-hook 'prog-mode-hook #'my-highlight-todo)
 
 (use-package avy
   :ensure t
@@ -222,7 +231,7 @@
   (setf (alist-get 'python-mode apheleia-mode-alist) '(ruff)))
 
 ;; ==============================================================================
-;; org-mode and latex
+;; Org-mode and Latex
 ;; ==============================================================================
 (use-package org
   :ensure nil
@@ -272,7 +281,7 @@
 (use-package ox-latex :ensure nil :custom (org-latex-pdf-process '("latexmk -f -pdf -synctex=1 -interaction=nonstopmode -output-directory=%o %f")))
 
 ;; ==============================================================================
-;; language settings
+;; Language Settings
 ;; ==============================================================================
 (setq-default tab-width 4 indent-tabs-mode nil)
 
@@ -285,18 +294,13 @@
          ("\\.cxx\\'" . c++-mode)
          ("\\.hpp\\'" . c++-mode)
          ("\\.hh\\'"  . c++-mode))
+  :bind (:map c-mode-base-map
+              ("RET" . c-context-line-break))
   :hook ((c-mode . eglot-ensure)
          (c++-mode . eglot-ensure)
          (c-mode-common . my-c-style))
   :config
   (setq-default c-basic-offset 4))
-
-(defun my-c-style ()
-  (setq indent-tabs-mode nil)
-  (setq tab-width 4)
-  (c-set-offset 'innamespace 0)
-  (c-set-offset 'access-label '-)
-  (c-set-offset 'case-label '+))
 
 ;; Python
 (use-package python
@@ -309,6 +313,11 @@
   :mode ("\\.hs\\'" . haskell-mode)
   :hook (haskell-mode . eglot-ensure)
   :custom (haskell-indentation-stylish t) (haskell-indent-spaces 2))
+
+;; Rust
+(use-package rust-mode
+  :mode ("\\.rs\\'" . rust-mode)
+  :hook (rust-mode . eglot-ensure))
 
 ;; OCaml
 (use-package tuareg
