@@ -35,7 +35,10 @@
 
 (when (eq system-type 'darwin)
   (add-to-list 'exec-path "/opt/homebrew/bin")
-  (setenv "PATH" (concat "/opt/homebrew/bin:" (getenv "PATH"))))
+  (add-to-list 'exec-path (expand-file-name "~/.pyenv/shims"))
+  (setenv "PATH" (concat (expand-file-name "~/.pyenv/shims") ":"
+                         "/opt/homebrew/bin:"
+                         (getenv "PATH"))))
 
 ;; ==============================================================================
 ;; Ui and defaults
@@ -46,9 +49,28 @@
 (tool-bar-mode -1)
 (menu-bar-mode -1)
 (global-visual-line-mode 1)
-(electric-pair-mode -1) ;; turning the
+(electric-pair-mode 1)
 (setq backward-delete-char-untabify-method 'hungry)
 (setq initial-buffer-choice nil)
+
+(defun my/smart-return ()
+  "Press RET between an empty pair like `{|}`, `(|)`, or `[|]` and
+get the pair split onto two lines with the cursor properly indented
+on the blank line, and the closing delimiter on its own indented
+line below. Otherwise behaves like a normal `newline`."
+  (interactive)
+  (let* ((pairs '((?\{ . ?\}) (?\( . ?\)) (?\[ . ?\])))
+         (match (assq (char-before) pairs)))
+    (if (and match (eq (char-after) (cdr match)))
+        (progn
+          (newline)
+          (save-excursion
+            (newline)
+            (indent-according-to-mode))
+          (indent-according-to-mode))
+      (newline))))
+
+(define-key prog-mode-map (kbd "RET") #'my/smart-return)
 
 (use-package avy
   :ensure t
@@ -74,19 +96,13 @@
 
 (setq backup-directory-alist `(("." . "~/.config/emacs/saves/")))
 
-(set-face-attribute 'default nil :font "DejaVu Sans Mono" :height 200 :weight 'regular)
-(set-face-attribute 'fixed-pitch nil :family "DejaVu Sans Mono" :height 200 )
-(set-face-attribute 'variable-pitch nil :family "Iosevka Etoile" :height 200 )
+;; (set-face-attribute 'default nil :font "DejaVu Sans Mono" :height 200 :weight 'regular)
+;; (set-face-attribute 'fixed-pitch nil :family "DejaVu Sans Mono" :height 200 )
 
-;; (use-package color-theme-sanityinc-tomorrow
-;;   :config
-;;   (load-theme 'sanityinc-tomorrow-night t))
-;; (set-face-attribute 'font-lock-string-face nil :foreground "#8ABEB7")
-;; (set-face-attribute 'font-lock-keyword-face nil :foreground "#81A2BE")
-;; (set-face-attribute 'font-lock-function-name-face nil :foreground "#DE935F")
-;; (set-face-attribute 'fringe nil :background "#000000")
-;; (set-face-attribute 'font-lock-variable-name-face nil :foreground "#C5C8C6")
-;; (set-face-attribute 'default nil :background "#000000")
+(set-face-attribute 'default nil :font "Menlo" :height 200 :weight 'regular)
+(set-face-attribute 'fixed-pitch nil :family "Menlo" :height 200 )
+
+(set-face-attribute 'variable-pitch nil :family "Iosevka Etoile" :height 200 )
 
 (setq compile-command "")
 (global-set-key [escape] 'keyboard-escape-quit)
@@ -271,6 +287,7 @@
 
 ;; C/C++
 (defun my-c-style ()
+  (c-set-style "linux")
   (setq indent-tabs-mode nil)
   (setq tab-width 2)
   (setq c-basic-offset 2)
@@ -294,7 +311,10 @@
 (use-package python
   :ensure nil
   :mode ("\\.py\\'" . python-mode)
-  :hook (python-mode . eglot-ensure))
+  :hook (python-mode . eglot-ensure)
+  :custom
+  (python-indent-offset 4)
+  (python-indent-guess-indent-offset nil))
 
 ;; Haskell
 (use-package haskell-mode
