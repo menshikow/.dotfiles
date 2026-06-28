@@ -56,6 +56,10 @@
 (setq initial-buffer-choice nil)
 (add-hook 'after-init-hook #'dired-jump)
 
+;; theme (shut out jon blow)
+(add-to-list 'custom-theme-load-path (expand-file-name "themes" user-emacs-directory))
+(load-theme 'jblow-nostalgia t)
+
 (defun my/smart-return ()
   "Press RET between an empty pair like `{|}`, `(|)`, or `[|]` and
 get the pair split onto two lines with the cursor properly indented
@@ -71,7 +75,7 @@ line below. Otherwise behaves like a normal `newline`."
             (newline)
             (indent-according-to-mode))
           (indent-according-to-mode))
-      (newline))))
+      (newline-and-indent))))
 
 (define-key prog-mode-map (kbd "RET") #'my/smart-return)
 
@@ -119,10 +123,10 @@ line below. Otherwise behaves like a normal `newline`."
   :init
   (setq evil-want-integration t evil-want-keybinding nil)
   :config
-  (setq evil-insert-state-cursor '(box)
-        evil-normal-state-cursor '(box)
-        evil-visual-state-cursor '(box)
-        evil-replace-state-cursor '(box))
+  (setq evil-insert-state-cursor '("#90C090" box)
+        evil-normal-state-cursor '("#90C090" box)
+        evil-visual-state-cursor '("#90C090" box)
+        evil-replace-state-cursor '("#90C090" box))
   (evil-mode 1))
 
 (use-package evil-collection
@@ -319,8 +323,11 @@ line below. Otherwise behaves like a normal `newline`."
 ;; python
 (use-package python
   :mode ("\\.py\\'" . python-mode)
-  :hook ((python-mode . eglot-ensure)
-         (python-ts-mode . eglot-ensure)))
+  :hook ((python-mode . (lambda () (when (buffer-file-name) (eglot-ensure))))
+         (python-ts-mode . (lambda () (when (buffer-file-name) (eglot-ensure)))))
+  :custom
+  (python-indent-offset 4)
+  (python-indent-guess-indent-offset nil))
 
 ;; Haskell
 (use-package haskell-mode
@@ -351,3 +358,4 @@ line below. Otherwise behaves like a normal `newline`."
 (when (file-exists-p custom-file) (load custom-file))
 (provide 'init)
 (put 'downcase-region 'disabled nil)
+(put 'dired-find-alternate-file 'disabled nil)
