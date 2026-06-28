@@ -36,7 +36,9 @@
 (when (eq system-type 'darwin)
   (add-to-list 'exec-path "/opt/homebrew/bin")
   (add-to-list 'exec-path (expand-file-name "~/.pyenv/shims"))
+  (add-to-list 'exec-path (expand-file-name "~/.ghcup/bin"))
   (setenv "PATH" (concat (expand-file-name "~/.pyenv/shims") ":"
+                         (expand-file-name "~/.ghcup/bin") ":"
                          "/opt/homebrew/bin:"
                          (getenv "PATH"))))
 
@@ -44,7 +46,7 @@
 ;; Ui and defaults
 ;; ==============================================================================
 (setq-default cursor-type 'box)
-(setq inhibit-startup-message nil)
+(setq inhibit-startup-message 1)
 (scroll-bar-mode -1)
 (tool-bar-mode -1)
 (menu-bar-mode -1)
@@ -52,6 +54,7 @@
 (electric-pair-mode 1)
 (setq backward-delete-char-untabify-method 'hungry)
 (setq initial-buffer-choice nil)
+(add-hook 'after-init-hook #'dired-jump)
 
 (defun my/smart-return ()
   "Press RET between an empty pair like `{|}`, `(|)`, or `[|]` and
@@ -73,7 +76,6 @@ line below. Otherwise behaves like a normal `newline`."
 (define-key prog-mode-map (kbd "RET") #'my/smart-return)
 
 (use-package avy
-  :ensure t
   :bind ("C--" . avy-goto-char-timer))
 
 (setq frame-resize-pixelwise t
@@ -96,13 +98,7 @@ line below. Otherwise behaves like a normal `newline`."
 
 (setq backup-directory-alist `(("." . "~/.config/emacs/saves/")))
 
-;; (set-face-attribute 'default nil :font "DejaVu Sans Mono" :height 200 :weight 'regular)
-;; (set-face-attribute 'fixed-pitch nil :family "DejaVu Sans Mono" :height 200 )
-
-(set-face-attribute 'default nil :font "Menlo" :height 200 :weight 'regular)
-(set-face-attribute 'fixed-pitch nil :family "Menlo" :height 200 )
-
-(set-face-attribute 'variable-pitch nil :family "Iosevka Etoile" :height 200 )
+(set-face-attribute 'default nil :font "Liberation Mono" :height 170 :weight 'regular)
 
 (setq compile-command "")
 (global-set-key [escape] 'keyboard-escape-quit)
@@ -161,12 +157,13 @@ line below. Otherwise behaves like a normal `newline`."
 ;; ==============================================================================
 (use-package eglot
   :ensure nil
-  :custom (eglot-sync-connect nil)
+  :custom
+  (eglot-sync-connect nil)
   :config
   (fset #'jsonrpc--log-event #'ignore)
-  (setq eglot-events-buffer-config '(:size 0 :format full))
+  ;; Prefer pyright for Python over pylsp
   (add-to-list 'eglot-server-programs
-               '(python-mode . ("basedpyright-langserver" "--stdio"))))
+               '((python-mode python-ts-mode) . ("pyright-langserver" "--stdio"))))
 
 (use-package eglot-booster
   :vc (:url "https://github.com/jdtsmith/eglot-booster")
@@ -179,7 +176,7 @@ line below. Otherwise behaves like a normal `newline`."
 (use-package flycheck
   :init (global-flycheck-mode)
   :config
-  (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc emacs-lisp-package-lint org-lint)))
+  (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc emacs-lisp-package-lint org-lint python-mypy)))
 
 (use-package flycheck-eglot
   :after (flycheck eglot)
@@ -189,7 +186,7 @@ line below. Otherwise behaves like a normal `newline`."
 ;; ==============================================================================
 ;; Completion and tools
 ;; ==============================================================================
-(use-package vertico :init (vertico-mode))
+(use-package vertico :config (vertico-mode))
 (use-package savehist :init (savehist-mode))
 (use-package marginalia :init (marginalia-mode))
 (use-package orderless
@@ -229,6 +226,16 @@ line below. Otherwise behaves like a normal `newline`."
   :config 
   (apheleia-global-mode +1)
   (setf (alist-get 'python-mode apheleia-mode-alist) '(ruff)))
+
+;; hl-todo
+(use-package hl-todo
+  :ensure t
+  :config
+  (global-hl-todo-mode 1)
+  (keymap-set hl-todo-mode-map "C-c p" #'hl-todo-previous)
+  (keymap-set hl-todo-mode-map "C-c n" #'hl-todo-next)
+  (keymap-set hl-todo-mode-map "C-c o" #'hl-todo-occur)
+  (keymap-set hl-todo-mode-map "C-c i" #'hl-todo-insert))
 
 ;; ==============================================================================
 ;; org-mode and latex
@@ -285,6 +292,7 @@ line below. Otherwise behaves like a normal `newline`."
 ;; ==============================================================================
 (setq-default tab-width 4 indent-tabs-mode nil)
 
+;; TODO c-basic offset problem
 ;; C/C++
 (defun my-c-style ()
   (c-set-style "linux")
@@ -308,13 +316,11 @@ line below. Otherwise behaves like a normal `newline`."
          (c-mode-common . my-c-style)))
 
 ;; Python
+;; python
 (use-package python
-  :ensure nil
   :mode ("\\.py\\'" . python-mode)
-  :hook (python-mode . eglot-ensure)
-  :custom
-  (python-indent-offset 4)
-  (python-indent-guess-indent-offset nil))
+  :hook ((python-mode . eglot-ensure)
+         (python-ts-mode . eglot-ensure)))
 
 ;; Haskell
 (use-package haskell-mode
@@ -327,8 +333,20 @@ line below. Otherwise behaves like a normal `newline`."
   :mode ("\\.ml[ily]?\\'" . tuareg-mode)
   :hook (tuareg-mode . eglot-ensure))
 
+;; Rust
+(use-package rust-mode
+  :mode ("\\.rs\\'" . rust-mode)
+  :hook (rust-mode . eglot-ensure))
+
 ;; Mark
 (use-package markdown-mode :mode ("\\.md\\'" . markdown-mode))
+
+;; Fix nil foreground faces from themes (Emacs 31 compat)
+(defun my/fix-nil-faces ()
+  (dolist (face '(error trailing-whitespace highlight region))
+    (when (and (facep face) (not (face-attribute face :foreground nil t)))
+      (set-face-attribute face nil :foreground 'unspecified))))
+(add-hook 'after-init-hook #'my/fix-nil-faces)
 
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (when (file-exists-p custom-file) (load custom-file))
