@@ -341,7 +341,6 @@ line below. Otherwise behaves like a normal `newline`."
 ;; Mark
 (use-package markdown-mode :mode ("\\.md\\'" . markdown-mode))
 
-;; Fix nil foreground faces from themes (Emacs 31 compat)
 (defun my/fix-nil-faces ()
   (dolist (face '(error trailing-whitespace highlight region))
     (when (and (facep face) (not (face-attribute face :foreground nil t)))
