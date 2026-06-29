@@ -126,7 +126,7 @@ line below. Otherwise behaves like a normal `newline`."
   :init
   (setq evil-want-integration t evil-want-keybinding nil)
   :config
-  (setq evil-insert-state-cursor '("#90C090" box)
+  (setq evil-insert-state-cursor '("#90C090" bar)
         evil-normal-state-cursor '("#90C090" box)
         evil-visual-state-cursor '("#90C090" box)
         evil-replace-state-cursor '("#90C090" box))
@@ -220,7 +220,9 @@ line below. Otherwise behaves like a normal `newline`."
          ("C-x b" . consult-buffer)
          ("M-s" . consult-ripgrep)
          ("M-y" . consult-yank-pop)
-         ("M-g g" . consult-goto-line)))
+         ("M-g g" . consult-goto-line))
+  :custom
+  (consult-project-root-function #'project-root))
 
 (use-package embark
   :ensure t
@@ -235,6 +237,9 @@ line below. Otherwise behaves like a normal `newline`."
   :after (embark consult)
   :hook
   (embark-collect-mode . consult-preview-at-point-mode))
+
+(use-package project
+  :custom (project-list-file "~/.config/emacs/projects"))
 
 (use-package dired
   :bind ("M-d" . dired-jump)
