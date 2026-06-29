@@ -102,7 +102,7 @@ line below. Otherwise behaves like a normal `newline`."
 
 (setq backup-directory-alist `(("." . "~/.config/emacs/saves/")))
 
-(set-face-attribute 'default nil :font "Liberation Mono" :height 170 :weight 'regular)
+(set-face-attribute 'default nil :font "Liberation Mono" :height 160 :weight 'regular)
 
 (setq compile-command "")
 (global-set-key [escape] 'keyboard-escape-quit)
@@ -179,6 +179,8 @@ line below. Otherwise behaves like a normal `newline`."
 
 (use-package flycheck
   :init (global-flycheck-mode)
+  :custom
+  (flycheck-indication-mode nil)
   :config
   (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc emacs-lisp-package-lint org-lint python-mypy)))
 
