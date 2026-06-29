@@ -24,7 +24,7 @@
 (unless (package-installed-p 'use-package)
   (package-install 'use-package))
 
-(setq use-package-always-ensure t)
+(setq use-package-always-ensure nil)
 
 ;; ==============================================================================
 ;; macos and german keyboard
@@ -55,6 +55,7 @@
 (setq backward-delete-char-untabify-method 'hungry)
 (setq initial-buffer-choice nil)
 (add-hook 'after-init-hook #'dired-jump)
+(save-place-mode 1)
 
 ;; theme (shut out jon blow)
 (add-to-list 'custom-theme-load-path (expand-file-name "themes" user-emacs-directory))
@@ -80,6 +81,7 @@ line below. Otherwise behaves like a normal `newline`."
 (define-key prog-mode-map (kbd "RET") #'my/smart-return)
 
 (use-package avy
+  :ensure t
   :bind ("C--" . avy-goto-char-timer))
 
 (setq frame-resize-pixelwise t
@@ -120,6 +122,7 @@ line below. Otherwise behaves like a normal `newline`."
 ;; Evil
 ;; ==============================================================================
 (use-package evil
+  :ensure t
   :init
   (setq evil-want-integration t evil-want-keybinding nil)
   :config
@@ -130,17 +133,21 @@ line below. Otherwise behaves like a normal `newline`."
   (evil-mode 1))
 
 (use-package evil-collection
+  :ensure t
   :after evil
   :config (evil-collection-init))
 
 (use-package evil-surround
+  :ensure t
   :config (global-evil-surround-mode 1))
 
 (use-package evil-commentary
+  :ensure t
   :after evil
   :config (evil-commentary-mode))
 
 (use-package evil-mc
+  :ensure t
   :after evil
   :config
   (global-evil-mc-mode 1)
@@ -160,7 +167,6 @@ line below. Otherwise behaves like a normal `newline`."
 ;; Lsp
 ;; ==============================================================================
 (use-package eglot
-  :ensure nil
   :custom
   (eglot-sync-connect nil)
   :config
@@ -178,6 +184,7 @@ line below. Otherwise behaves like a normal `newline`."
 (setq eldoc-idle-delay 0.2)
 
 (use-package flycheck
+  :ensure t
   :init (global-flycheck-mode)
   :custom
   (flycheck-indication-mode nil)
@@ -185,6 +192,7 @@ line below. Otherwise behaves like a normal `newline`."
   (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc emacs-lisp-package-lint org-lint python-mypy)))
 
 (use-package flycheck-eglot
+  :ensure t
   :after (flycheck eglot)
   :custom (flycheck-eglot-exclusive t)
   :config (global-flycheck-eglot-mode 1))
@@ -192,17 +200,43 @@ line below. Otherwise behaves like a normal `newline`."
 ;; ==============================================================================
 ;; Completion and tools
 ;; ==============================================================================
-(use-package vertico :config (vertico-mode))
+(use-package vertico
+  :ensure t
+  :config (vertico-mode))
 (use-package savehist :init (savehist-mode))
-(use-package marginalia :init (marginalia-mode))
+(use-package marginalia
+  :ensure t
+  :init (marginalia-mode))
 (use-package orderless
+  :ensure t
   :custom
   (completion-styles '(orderless basic))
   (completion-category-defaults nil)
   (completion-category-overrides '((file (styles partial-completion)))))
 
+(use-package consult
+  :ensure t
+  :bind (("C-s" . consult-line)
+         ("C-x b" . consult-buffer)
+         ("M-s" . consult-ripgrep)
+         ("M-y" . consult-yank-pop)
+         ("M-g g" . consult-goto-line)))
+
+(use-package embark
+  :ensure t
+  :bind (("C-." . embark-act)
+         ("C-;" . embark-dwim)
+         ("C-h B" . embark-bindings))
+  :config
+  (setq embark-help-key "?"))
+
+(use-package embark-consult
+  :ensure t
+  :after (embark consult)
+  :hook
+  (embark-collect-mode . consult-preview-at-point-mode))
+
 (use-package dired
-  :ensure nil
   :bind ("M-d" . dired-jump)
   :custom (dired-listing-switches "-algh")
   :config
@@ -215,6 +249,7 @@ line below. Otherwise behaves like a normal `newline`."
     (define-key dired-mode-map (kbd "q") 'quit-window)))
 
 (use-package corfu
+  :ensure t
   :custom
   (corfu-auto nil)
   (corfu-quit-no-match t)
@@ -226,9 +261,12 @@ line below. Otherwise behaves like a normal `newline`."
 ;; ==============================================================================
 ;; Magit
 ;; ==============================================================================
-(use-package magit :bind ("C-x g" . magit-status))
+(use-package magit
+  :ensure t
+  :bind ("C-x g" . magit-status))
 
-(use-package apheleia 
+(use-package apheleia
+  :ensure t
   :config 
   (apheleia-global-mode +1)
   (setf (alist-get 'python-mode apheleia-mode-alist) '(ruff)))
@@ -247,7 +285,6 @@ line below. Otherwise behaves like a normal `newline`."
 ;; org-mode and latex
 ;; ==============================================================================
 (use-package org
-  :ensure nil
   :custom
   (org-hide-emphasis-markers t)
   (org-startup-indented t)
@@ -268,7 +305,10 @@ line below. Otherwise behaves like a normal `newline`."
   (setq org-format-latex-options (plist-put org-format-latex-options :scale 1))
   (define-key org-mode-map (kbd "C-c C-d") #'my-org-clean-latex-trash))
 
-(use-package org-download :after org :config (org-download-enable))
+(use-package org-download
+  :ensure t
+  :after org
+  :config (org-download-enable))
 
 (defun my-org-clean-latex-trash ()
   (interactive)
@@ -290,8 +330,8 @@ line below. Otherwise behaves like a normal `newline`."
   :hook ((LaTeX-mode . turn-on-reftex) (LaTeX-mode . flyspell-mode) (LaTeX-mode . LaTeX-math-mode)))
 
 (use-package cdlatex :ensure t :hook ((LaTeX-mode . turn-on-cdlatex) (org-mode . turn-on-org-cdlatex)))
-(use-package reftex :ensure nil :custom (reftex-plug-into-AUCTeX t))
-(use-package ox-latex :ensure nil :custom (org-latex-pdf-process '("latexmk -f -pdf -synctex=1 -interaction=nonstopmode -output-directory=%o %f")))
+(use-package reftex :custom (reftex-plug-into-AUCTeX t))
+(use-package ox-latex :custom (org-latex-pdf-process '("latexmk -f -pdf -synctex=1 -interaction=nonstopmode -output-directory=%o %f")))
 
 ;; ==============================================================================
 ;; language settings
@@ -310,7 +350,6 @@ line below. Otherwise behaves like a normal `newline`."
   (c-set-offset 'case-label '+))
 
 (use-package cc-mode
-  :ensure nil
   :mode (("\\.c\\'"   . c-mode)
          ("\\.cpp\\'" . c++-mode)
          ("\\.cc\\'"  . c++-mode)
@@ -333,22 +372,27 @@ line below. Otherwise behaves like a normal `newline`."
 
 ;; Haskell
 (use-package haskell-mode
+  :ensure t
   :mode ("\\.hs\\'" . haskell-mode)
   :hook (haskell-mode . eglot-ensure)
   :custom (haskell-indentation-stylish t) (haskell-indent-spaces 2))
 
 ;; OCaml
 (use-package tuareg
+  :ensure t
   :mode ("\\.ml[ily]?\\'" . tuareg-mode)
   :hook (tuareg-mode . eglot-ensure))
 
 ;; Rust
 (use-package rust-mode
+  :ensure t
   :mode ("\\.rs\\'" . rust-mode)
   :hook (rust-mode . eglot-ensure))
 
 ;; Mark
-(use-package markdown-mode :mode ("\\.md\\'" . markdown-mode))
+(use-package markdown-mode
+  :ensure t
+  :mode ("\\.md\\'" . markdown-mode))
 
 (defun my/fix-nil-faces ()
   (dolist (face '(error trailing-whitespace highlight region))
