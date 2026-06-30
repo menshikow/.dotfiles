@@ -57,9 +57,9 @@
 (add-hook 'after-init-hook #'dired-jump)
 (save-place-mode 1)
 
-;; theme (shut out jon blow)
+;; theme
 (add-to-list 'custom-theme-load-path (expand-file-name "themes" user-emacs-directory))
-(load-theme 'jblow-nostalgia t)
+(load-theme 'naysayer t)
 
 (defun my/smart-return ()
   "Press RET between an empty pair like `{|}`, `(|)`, or `[|]` and
@@ -83,6 +83,14 @@ line below. Otherwise behaves like a normal `newline`."
 (use-package avy
   :ensure t
   :bind ("C--" . avy-goto-char-timer))
+
+(use-package ace-link
+  :ensure t
+  :after (org info)
+  :config
+  (ace-link-setup-default)
+  :bind
+  (:map org-mode-map ("C-c o" . ace-link-org)))
 
 (setq frame-resize-pixelwise t
       window-resize-pixelwise t)
@@ -274,7 +282,11 @@ line below. Otherwise behaves like a normal `newline`."
   :ensure t
   :config 
   (apheleia-global-mode +1)
-  (setf (alist-get 'python-mode apheleia-mode-alist) '(ruff)))
+  (setf (alist-get 'python-mode apheleia-mode-alist) '(ruff))
+  (setf (alist-get 'c-mode apheleia-mode-alist) '(clang-format))
+  (setf (alist-get 'c++-mode apheleia-mode-alist) '(clang-format))
+  (setf (alist-get 'c-ts-mode apheleia-mode-alist) '(clang-format))
+  (setf (alist-get 'c++-ts-mode apheleia-mode-alist) '(clang-format)))
 
 ;; hl-todo
 (use-package hl-todo
@@ -343,27 +355,22 @@ line below. Otherwise behaves like a normal `newline`."
 ;; ==============================================================================
 (setq-default tab-width 4 indent-tabs-mode nil)
 
-;; TODO c-basic offset problem
 ;; C/C++
-(defun my-c-style ()
-  (c-set-style "linux")
-  (setq indent-tabs-mode nil)
-  (setq tab-width 2)
-  (setq c-basic-offset 2)
-  (c-set-offset 'innamespace 0)
-  (c-set-offset 'access-label '-)
-  (c-set-offset 'case-label '+))
-
 (use-package cc-mode
-  :mode (("\\.c\\'"   . c-mode)
-         ("\\.cpp\\'" . c++-mode)
-         ("\\.cc\\'"  . c++-mode)
-         ("\\.cxx\\'" . c++-mode)
-         ("\\.hpp\\'" . c++-mode)
-         ("\\.hh\\'"  . c++-mode))
-  :hook ((c-mode . eglot-ensure)
-         (c++-mode . eglot-ensure)
-         (c-mode-common . my-c-style)))
+  :mode (("\\.c\\'"   . c-ts-mode)
+         ("\\.cpp\\'" . c++-ts-mode)
+         ("\\.cc\\'"  . c++-ts-mode)
+         ("\\.cxx\\'" . c++-ts-mode)
+         ("\\.h\\'"   . c-ts-mode)
+         ("\\.hpp\\'" . c++-ts-mode)
+         ("\\.hh\\'"  . c++-ts-mode))
+  :hook ((c-ts-mode . eglot-ensure)
+         (c++-ts-mode . eglot-ensure)
+         (c-ts-mode . (lambda () (setq indent-tabs-mode nil tab-width 2)))
+         (c++-ts-mode . (lambda () (setq indent-tabs-mode nil tab-width 2)))))
+
+(define-key c-ts-mode-map (kbd "C-c h") #'ff-find-other-file)
+(define-key c++-ts-mode-map (kbd "C-c h") #'ff-find-other-file)
 
 ;; Python
 ;; python
@@ -388,25 +395,34 @@ line below. Otherwise behaves like a normal `newline`."
   :mode ("\\.ml[ily]?\\'" . tuareg-mode)
   :hook (tuareg-mode . eglot-ensure))
 
-;; Rust
-(use-package rust-mode
+;; Racket
+(use-package racket-mode
   :ensure t
-  :mode ("\\.rs\\'" . rust-mode)
-  :hook (rust-mode . eglot-ensure))
+  :mode ("\\.rkt\\'" . racket-mode)
+  :hook (racket-mode . eglot-ensure)
+  :config
+  (define-key racket-mode-map (kbd "C-c C-z") #'racket-repl)
+  (define-key racket-repl-mode-map (kbd "C-c C-z") #'racket-repl)
 
-;; Mark
-(use-package markdown-mode
-  :ensure t
-  :mode ("\\.md\\'" . markdown-mode))
+  ;; Rust
+  (use-package rust-mode
+    :ensure t
+    :mode ("\\.rs\\'" . rust-mode)
+    :hook (rust-mode . eglot-ensure))
 
-(defun my/fix-nil-faces ()
-  (dolist (face '(error trailing-whitespace highlight region))
-    (when (and (facep face) (not (face-attribute face :foreground nil t)))
-      (set-face-attribute face nil :foreground 'unspecified))))
-(add-hook 'after-init-hook #'my/fix-nil-faces)
+  ;; Mark
+  (use-package markdown-mode
+    :ensure t
+    :mode ("\\.md\\'" . markdown-mode))
 
-(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
-(when (file-exists-p custom-file) (load custom-file))
-(provide 'init)
-(put 'downcase-region 'disabled nil)
-(put 'dired-find-alternate-file 'disabled nil)
+  (defun my/fix-nil-faces ()
+    (dolist (face '(error trailing-whitespace highlight region))
+      (when (and (facep face) (not (face-attribute face :foreground nil t)))
+        (set-face-attribute face nil :foreground 'unspecified))))
+  (add-hook 'after-init-hook #'my/fix-nil-faces)
+
+  (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+  (when (file-exists-p custom-file) (load custom-file))
+  (provide 'init)
+  (put 'downcase-region 'disabled nil)
+  (put 'dired-find-alternate-file 'disabled nil)
