@@ -56,6 +56,8 @@
 (setq initial-buffer-choice nil)
 (add-hook 'after-init-hook #'dired-jump)
 (save-place-mode 1)
+(repeat-mode 1)
+(global-auto-revert-mode 1)
 
 ;; theme
 (add-to-list 'custom-theme-load-path (expand-file-name "themes" user-emacs-directory))
@@ -170,6 +172,7 @@ line below. Otherwise behaves like a normal `newline`."
 (global-set-key (kbd "M-n") 'flycheck-next-error)
 (global-set-key (kbd "M-p") 'flycheck-previous-error)
 (recentf-mode 1)
+(global-set-key (kbd "C-c r") #'recentf-open-files)
 
 ;; ==============================================================================
 ;; Lsp
@@ -366,11 +369,12 @@ line below. Otherwise behaves like a normal `newline`."
          ("\\.hh\\'"  . c++-ts-mode))
   :hook ((c-ts-mode . eglot-ensure)
          (c++-ts-mode . eglot-ensure)
-         (c-ts-mode . (lambda () (setq indent-tabs-mode nil tab-width 2)))
-         (c++-ts-mode . (lambda () (setq indent-tabs-mode nil tab-width 2)))))
-
-(define-key c-ts-mode-map (kbd "C-c h") #'ff-find-other-file)
-(define-key c++-ts-mode-map (kbd "C-c h") #'ff-find-other-file)
+         (c-ts-mode . (lambda ()
+                        (setq indent-tabs-mode nil tab-width 2)
+                        (local-set-key (kbd "C-c h") #'ff-find-other-file)))
+         (c++-ts-mode . (lambda ()
+                          (setq indent-tabs-mode nil tab-width 2)
+                          (local-set-key (kbd "C-c h") #'ff-find-other-file)))))
 
 ;; Python
 ;; python
