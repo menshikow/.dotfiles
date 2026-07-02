@@ -60,8 +60,8 @@
 (global-auto-revert-mode 1)
 
 ;; theme
-;; (add-to-list 'custom-theme-load-path (expand-file-name "themes" user-emacs-directory))
-;; (load-theme 'naysayer t)
+(add-to-list 'custom-theme-load-path (expand-file-name "themes" user-emacs-directory))
+(load-theme 'void t)
 
 (defun my/smart-return ()
   "Press RET between an empty pair like `{|}`, `(|)`, or `[|]` and
@@ -136,10 +136,10 @@ line below. Otherwise behaves like a normal `newline`."
   :init
   (setq evil-want-integration t evil-want-keybinding nil)
   :config
-  (setq evil-insert-state-cursor '(bar)
-        evil-normal-state-cursor '(box)
-        evil-visual-state-cursor '(box)
-        evil-replace-state-cursor '(box))
+  (setq evil-insert-state-cursor '("#ffffff" box) 
+        evil-normal-state-cursor '("#ffffff" box) 
+        evil-visual-state-cursor '("#ffffff" box) 
+        evil-replace-state-cursor'("#ffffff" box))
   (evil-mode 1))
 
 (use-package evil-collection
