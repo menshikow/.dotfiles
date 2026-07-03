@@ -1,64 +1,63 @@
-;;; void-theme.el --- color theme  -*- lexical-binding: t; -*-
+;;; naysayer-theme.el --- The naysayer color theme
 
-;; Author: Adrian Menschikow <github.com/menshikow>
-;; Version: 0.1
-;; Filename: void-theme.el
+;; Author: Nick Aversano <nickav@users.noreply.github.com>
+;; Version: 0.34
+;; Filename: naysayer-theme.el
 ;; Package-Requires: ((emacs "24"))
-;; URL: https://github.com/
-;; License: MIT
+;; URL: https://github.com/nickav/naysayer-theme.el
+;; License: GPL-3+
 
 ;;; Commentary:
 
-;; Dark monochrome colorscheme.  Based on <https://github.com/nickav/naysayer-theme.el>
+;; Dark green blue color scheme with tan colors. Inspired by Jonathan Blow's compiler livestreams.
 
 ;;; Code:
 
 (unless (>= emacs-major-version 24)
-  (error "The void theme requires Emacs 24 or later!"))
+  (error "The naysayer theme requires Emacs 24 or later!"))
 
-(deftheme void "The void color theme")
+(deftheme naysayer "The naysayer color theme")
 
-;; Grayscale accent colors ordered lightest to darkest
-(defcustom -voidtheme-gray-1 "#f5f5f5" "Accent colors - lightest gray" :type 'string :group 'monokai)
-(defcustom -voidtheme-gray-2 "#d9d9d9" "Accent colors - light gray" :type 'string :group 'monokai)
-(defcustom -voidtheme-gray-3 "#bfbfbf" "Accent colors - light-medium gray" :type 'string :group 'monokai)
-(defcustom -voidtheme-gray-4 "#a6a6a6" "Accent colors - medium gray" :type 'string :group 'monokai)
-(defcustom -voidtheme-gray-5 "#8c8c8c" "Accent colors - medium-dark gray" :type 'string :group 'monokai)
-(defcustom -voidtheme-gray-6 "#737373" "Accent colors - dark-medium gray" :type 'string :group 'monokai)
-(defcustom -voidtheme-gray-7 "#595959" "Accent colors - dark gray" :type 'string :group 'monokai)
-(defcustom -voidtheme-gray-8 "#404040" "Accent colors - darkest gray" :type 'string :group 'monokai)
+;; Monokai colors
+(defcustom naysayer-theme-yellow "#E6DB74" "Primary colors - yellow" :type 'string :group 'monokai)
+(defcustom naysayer-theme-orange "#FD971F" "Primary colors - orange" :type 'string :group 'monokai)
+(defcustom naysayer-theme-red "#F92672" "Primary colors - red" :type 'string :group 'monokai)
+(defcustom naysayer-theme-magenta "#FD5FF0" "Primary colors - magenta" :type 'string :group 'monokai)
+(defcustom naysayer-theme-blue "#66D9EF" "Primary colors - blue" :type 'string :group 'monokai)
+(defcustom naysayer-theme-green "#A6E22E" "Primary colors - green" :type 'string :group 'monokai)
+(defcustom naysayer-theme-cyan "#A1EFE4" "Primary colors - cyan" :type 'string :group 'monokai)
+(defcustom naysayer-theme-violet "#AE81FF" "Primary colors - violet" :type 'string :group 'monokai)
 
-(let ((background "#0d0d0d")
-      (gutters    "#141414")
-      (gutter-fg  "#141414")
-      (gutters-active "#141414")
+(let ((background "#062329")
+      (gutters    "#062329")
+      (gutter-fg  "#062329")
+      (gutters-active "#062329")
       (builtin      "#ffffff")
-      (selection  "#2b3a4a")
-      (text       "#ffffff")
+      (selection  "#0000ff")
+      (text       "#d1b897")
       (comments   "#44b340")
-      (punctuation "#a6a6a6")
-      (keywords "##ffffff")
-      (variables "#ffffff")
+      (punctuation "#8cde94")
+      (keywords "#ffffff")
+      (variables "#c1d1e3")
       (functions "#ffffff")
-      (methods    "#ffffff")
-      (strings    "#a3a3a3")
-      (constants "#ebebeb")
-      (macros "#d9d9d9")
-      (numbers "#ffffff")
+      (methods    "#c1d1e3")
+      (strings    "#2ec09c")
+      (constants "#7ad0c6")
+      (macros "#8cde94")
+      (numbers "#7ad0c6")
       (white     "#ffffff")
-      (error      "#ff0000")
-      (success    "#00ff00")
-      (warning "#ffea00")
-      (highlight-line "#1c1c1c")
-      (line-fg "#4d4d4d"))
+      (error "#ff0000")
+      (warning "#ffaa00")
+      (highlight-line "#0b3335")
+      (line-fg "#126367"))
 
   (custom-theme-set-faces
-   'void
+   'naysayer
 
    ;; Default colors
    ;; *****************************************************************************
 
-   `(default                          ((t (:foreground ,text :background ,background :weight normal))))
+   `(default                          ((t (:foreground ,text :background ,background, :weight normal))))
    `(region                           ((t (:foreground nil :background ,selection))))
    `(cursor                           ((t (:background ,white                        ))))
    `(fringe                           ((t (:background ,background   :foreground ,white))))
@@ -77,10 +76,10 @@
    `(font-lock-comment-face           ((t (:foreground ,comments))))
    `(font-lock-comment-delimiter-face ((t (:foreground ,comments))))
    `(font-lock-doc-face               ((t (:foreground ,comments))))
-   `(font-lock-function-name-face     ((t (:foreground ,functions :weight bold))))
+   `(font-lock-function-name-face     ((t (:foreground ,functions))))
    `(font-lock-doc-string-face        ((t (:foreground ,strings))))
    `(font-lock-preprocessor-face      ((t (:foreground ,macros))))
-   `(font-lock-warning-face           ((t (:foreground ,warning :weight bold ))))
+   `(font-lock-warning-face           ((t (:foreground ,warning))))
 
    ;; Plugins
    ;; *****************************************************************************
@@ -93,17 +92,16 @@
    `(line-number-current-line ((t (:foreground ,white :background ,background))))
 
    ;; compilation
-   `(compilation-info ((t ,(list :foreground -voidtheme-gray-1
+   `(compilation-info ((t ,(list :foreground naysayer-theme-green
                                  :inherit 'unspecified))))
-   `(compilation-warning ((t ,(list :foreground -voidtheme-gray-2
+   `(compilation-warning ((t ,(list :foreground naysayer-theme-yellow
                                     :bold t
                                     :inherit 'unspecified))))
-   `(compilation-error ((t (:foreground ,error :weight bold ))))
+   `(compilation-error ((t (:foreground, error))))
    `(compilation-mode-line-fail ((t ,(list :foreground error
                                            :weight 'bold
-
                                            :inherit 'unspecified))))
-   `(compilation-mode-line-exit ((t ,(list :foreground -voidtheme-gray-1
+   `(compilation-mode-line-exit ((t ,(list :foreground naysayer-theme-green
                                            :weight 'bold
                                            :inherit 'unspecified))))
 
@@ -111,29 +109,29 @@
    `(hl-line ((t (:background ,highlight-line))))
    `(hl-line-face ((t (:background ,highlight-line))))
 
-   ;; rainbow-delimiters (grayscale, cycling lightest to darkest)
-   `(rainbow-delimiters-depth-1-face ((t (:foreground ,-voidtheme-gray-1))))
-   `(rainbow-delimiters-depth-2-face ((t (:foreground ,-voidtheme-gray-2))))
-   `(rainbow-delimiters-depth-3-face ((t (:foreground ,-voidtheme-gray-3))))
-   `(rainbow-delimiters-depth-4-face ((t (:foreground ,-voidtheme-gray-4))))
-   `(rainbow-delimiters-depth-5-face ((t (:foreground ,-voidtheme-gray-5))))
-   `(rainbow-delimiters-depth-6-face ((t (:foreground ,-voidtheme-gray-6))))
-   `(rainbow-delimiters-depth-7-face ((t (:foreground ,-voidtheme-gray-7))))
-   `(rainbow-delimiters-depth-8-face ((t (:foreground ,-voidtheme-gray-8))))
-   `(rainbow-delimiters-depth-9-face ((t (:foreground ,-voidtheme-gray-1))))
-   `(rainbow-delimiters-depth-10-face ((t (:foreground ,-voidtheme-gray-2))))
-   `(rainbow-delimiters-depth-11-face ((t (:foreground ,-voidtheme-gray-3))))
-   `(rainbow-delimiters-depth-12-face ((t (:foreground ,-voidtheme-gray-4))))
+   ;; rainbow-delimiters
+   `(rainbow-delimiters-depth-1-face ((t (:foreground ,naysayer-theme-violet))))
+   `(rainbow-delimiters-depth-2-face ((t (:foreground ,naysayer-theme-blue))))
+   `(rainbow-delimiters-depth-3-face ((t (:foreground ,naysayer-theme-green))))
+   `(rainbow-delimiters-depth-4-face ((t (:foreground ,naysayer-theme-yellow))))
+   `(rainbow-delimiters-depth-5-face ((t (:foreground ,naysayer-theme-orange))))
+   `(rainbow-delimiters-depth-6-face ((t (:foreground ,naysayer-theme-red))))
+   `(rainbow-delimiters-depth-7-face ((t (:foreground ,naysayer-theme-violet))))
+   `(rainbow-delimiters-depth-8-face ((t (:foreground ,naysayer-theme-blue))))
+   `(rainbow-delimiters-depth-9-face ((t (:foreground ,naysayer-theme-green))))
+   `(rainbow-delimiters-depth-10-face ((t (:foreground ,naysayer-theme-yellow))))
+   `(rainbow-delimiters-depth-11-face ((t (:foreground ,naysayer-theme-orange))))
+   `(rainbow-delimiters-depth-12-face ((t (:foreground ,naysayer-theme-red))))
 
    ;; which-func
    `(which-func ((t (:inverse-video unspecified
                                     :underline unspecified
-                                    :foreground ,text
+                                    :foreground ,background
                                     :weight bold
                                     :box nil))))
 
    ;; mode-line and powerline
-   `(mode-line-buffer-id ((t (:foreground ,background :distant-foreground ,text :weight bold))))
+   `(mode-line-buffer-id ((t (:foreground ,background :distant-foreground ,text :text ,text :weight bold))))
    `(mode-line ((t (:inverse-video unspecified
                                    :underline unspecified
                                    :foreground ,background
@@ -145,10 +143,25 @@
    `(mode-line-inactive ((t (:inverse-video unspecified
                                             :underline unspecified
                                             :foreground ,text
-                                            :background ,-voidtheme-gray-8
+                                            :background ,background
                                             :box nil))))
    `(powerline-inactive1 ((t (:background ,background :foreground ,text))))
    `(powerline-inactive2 ((t (:background ,background :foreground ,text))))
+
+   ;; better compatibility with default DOOM mode-line
+   `(error ((t (:foreground nil :weight normal))))
+   `(doom-modeline-project-dir ((t (:foreground nil :weight bold))))
+   
+   ;; js2-mode
+   `(js2-function-call ((t (:inherit (font-lock-function-name-face)))))
+   `(js2-function-param ((t (:foreground ,text))))
+   `(js2-jsdoc-tag ((t (:foreground ,keywords))))
+   `(js2-jsdoc-type ((t (:foreground ,constants))))
+   `(js2-jsdoc-value((t (:foreground ,text))))
+   `(js2-object-property ((t (:foreground ,text))))
+   `(js2-external-variable ((t (:foreground ,constants))))
+   `(js2-error ((t (:foreground ,error))))
+   `(js2-warning ((t (:foreground ,warning))))
 
    ;; highlight numbers
    `(highlight-numbers-number ((t (:foreground ,numbers))))
@@ -160,7 +173,7 @@
    )
 
   (custom-theme-set-variables
-   'void
+   'naysayer
    '(linum-format " %5i ")
    )
   )
@@ -172,12 +185,12 @@
 
 ;; *****************************************************************************
 
-(provide-theme 'void)
+(provide-theme 'naysayer)
 
 ;; Local Variables:
 ;; no-byte-compile: t
 ;; End:
 
-(provide 'void-theme)
+(provide 'naysayer-theme)
 
-;;; void-theme.el ends here
+;;; naysayer-theme.el ends here

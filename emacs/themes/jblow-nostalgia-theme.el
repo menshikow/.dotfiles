@@ -34,7 +34,7 @@
       (builtin         "#FFFFFF")
       (selection       "#0000FF")
       (text            "#D3B58D")
-      (comments        "#FFFF00")
+      (comments        "#44b340")
       (punctuation     "#D3B58D")
       (type            "#98FB98")
       (keywords        "#FFFFFF")
@@ -151,7 +151,7 @@
    `(powerline-inactive1 ((t (:background ,background :foreground ,text))))
    `(powerline-inactive2 ((t (:background ,background :foreground ,text))))
 
-    ;; better compatibility with default DOOM mode-line
+   ;; better compatibility with default DOOM mode-line
    `(error ((t (:foreground nil :weight normal))))
    `(doom-modeline-project-dir ((t (:foreground nil :weight bold))))
    
@@ -173,13 +173,13 @@
    `(tab-bar ((t (:inherit modeline))))
    `(tab-bar-tab ((t (:foreground ,background :background ,text))))
    `(tab-bar-tab-inactive ((t (:foreground ,text :background ,background))))
-  )
+   )
 
   (custom-theme-set-variables
-    'jblow-nostalgia
-    '(linum-format " %5i ")
+   'jblow-nostalgia
+   '(linum-format " %5i ")
+   )
   )
-)
 
 ;;;###autoload
 (when (and (boundp 'custom-theme-load-path) load-file-name)

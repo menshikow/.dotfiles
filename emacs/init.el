@@ -33,12 +33,22 @@
 (setq ns-option-modifier 'none)
 (setq ns-right-alternate-modifier 'none)
 
+(use-package exec-path-from-shell
+  :ensure t
+  :config
+  (when (memq window-system '(mac ns x))
+    (exec-path-from-shell-initialize)))
+
 (when (eq system-type 'darwin)
   (add-to-list 'exec-path "/opt/homebrew/bin")
   (add-to-list 'exec-path (expand-file-name "~/.pyenv/shims"))
   (add-to-list 'exec-path (expand-file-name "~/.ghcup/bin"))
+  (add-to-list 'exec-path (expand-file-name "~/go/bin"))
+  (add-to-list 'exec-path (expand-file-name "~/.cargo/bin"))
   (setenv "PATH" (concat (expand-file-name "~/.pyenv/shims") ":"
                          (expand-file-name "~/.ghcup/bin") ":"
+                         (expand-file-name "~/go/bin") ":"
+                         (expand-file-name "~/.cargo/bin") ":"
                          "/opt/homebrew/bin:"
                          (getenv "PATH"))))
 
@@ -63,11 +73,9 @@
 (add-to-list 'custom-theme-load-path (expand-file-name "themes" user-emacs-directory))
 (load-theme 'void t)
 
+
+;; function to indent with pressing enter
 (defun my/smart-return ()
-  "Press RET between an empty pair like `{|}`, `(|)`, or `[|]` and
-get the pair split onto two lines with the cursor properly indented
-on the blank line, and the closing delimiter on its own indented
-line below. Otherwise behaves like a normal `newline`."
   (interactive)
   (let* ((pairs '((?\{ . ?\}) (?\( . ?\)) (?\[ . ?\])))
          (match (assq (char-before) pairs)))
@@ -114,7 +122,7 @@ line below. Otherwise behaves like a normal `newline`."
 
 (setq backup-directory-alist `(("." . "~/.config/emacs/saves/")))
 
-(set-face-attribute 'default nil :font "Liberation Mono" :height 160 :weight 'regular)
+(set-face-attribute 'default nil :font "Liberation Mono" :height 155 :weight 'regular)
 
 (setq compile-command "")
 (global-set-key [escape] 'keyboard-escape-quit)
@@ -125,8 +133,12 @@ line below. Otherwise behaves like a normal `newline`."
       mouse-wheel-progressive-speed nil
       mouse-wheel-follow-mouse 't)
 
+;; better scrolling + turn off the mac version warnings
 (pixel-scroll-precision-mode 1)
 (add-to-list 'display-buffer-alist '("\\*warnings\\*" (display-buffer-no-window)))
+
+;; pasting in the minibuffer with C-z (fucking german keyboard)
+(global-set-key (kbd "C-z") #'yank)
 
 ;; ==============================================================================
 ;; Evil
@@ -136,7 +148,7 @@ line below. Otherwise behaves like a normal `newline`."
   :init
   (setq evil-want-integration t evil-want-keybinding nil)
   :config
-  (setq evil-insert-state-cursor '("#ffffff" box) 
+  (setq evil-insert-state-cursor '("#ffffff" bar) 
         evil-normal-state-cursor '("#ffffff" box) 
         evil-visual-state-cursor '("#ffffff" box) 
         evil-replace-state-cursor'("#ffffff" box))
@@ -164,6 +176,10 @@ line below. Otherwise behaves like a normal `newline`."
   (define-key evil-normal-state-map (kbd "C-n") 'evil-mc-make-and-goto-next-match)
   (define-key evil-visual-state-map (kbd "C-n") 'evil-mc-make-and-goto-next-match)
   (define-key evil-normal-state-map (kbd "<escape>") 'evil-mc-undo-all-cursors))
+
+(with-eval-after-load 'evil
+  (define-key evil-normal-state-map (kbd "/") 'consult-line)
+  (define-key evil-motion-state-map (kbd "/") 'consult-line))
 
 (global-set-key (kbd "M-+") 'text-scale-increase)
 (global-set-key (kbd "M--") 'text-scale-decrease)
@@ -231,7 +247,7 @@ line below. Otherwise behaves like a normal `newline`."
          ("C-x b" . consult-buffer)
          ("M-s" . consult-ripgrep)
          ("M-y" . consult-yank-pop)
-         ("M-g g" . consult-goto-line))
+         ("M-g" . consult-goto-line))
   :custom
   (consult-project-root-function #'project-root))
 
@@ -283,13 +299,15 @@ line below. Otherwise behaves like a normal `newline`."
 
 (use-package apheleia
   :ensure t
-  :config 
+  :config
   (apheleia-global-mode +1)
-  (setf (alist-get 'python-mode apheleia-mode-alist) '(ruff))
-  (setf (alist-get 'c-mode apheleia-mode-alist) '(clang-format))
-  (setf (alist-get 'c++-mode apheleia-mode-alist) '(clang-format))
-  (setf (alist-get 'c-ts-mode apheleia-mode-alist) '(clang-format))
-  (setf (alist-get 'c++-ts-mode apheleia-mode-alist) '(clang-format)))
+
+  (setf (alist-get 'python-mode apheleia-mode-alist) 'ruff)
+  (setf (alist-get 'c-mode apheleia-mode-alist) 'clang-format)
+  (setf (alist-get 'c++-mode apheleia-mode-alist) 'clang-format)
+  (setf (alist-get 'c-ts-mode apheleia-mode-alist) 'clang-format)
+  (setf (alist-get 'c++-ts-mode apheleia-mode-alist) 'clang-format)
+  (setf (alist-get 'kotlin-mode apheleia-mode-alist) 'ktlint))
 
 ;; hl-todo
 (use-package hl-todo
@@ -306,7 +324,7 @@ line below. Otherwise behaves like a normal `newline`."
 ;; ==============================================================================
 (use-package org
   :custom
-  (org-hide-emphasis-markers t)
+  (org-hide-emphasis-markers -1)
   (org-startup-indented t)
   (org-startup-with-inline-images t)
   (org-image-actual-width nil)
@@ -406,27 +424,45 @@ line below. Otherwise behaves like a normal `newline`."
   :hook (racket-mode . eglot-ensure)
   :config
   (define-key racket-mode-map (kbd "C-c C-z") #'racket-repl)
-  (define-key racket-repl-mode-map (kbd "C-c C-z") #'racket-repl)
+  (define-key racket-repl-mode-map (kbd "C-c C-z") #'racket-repl))
 
-  ;; Rust
-  (use-package rust-mode
-    :ensure t
-    :mode ("\\.rs\\'" . rust-mode)
-    :hook (rust-mode . eglot-ensure))
+;; Rust
+(use-package rust-mode
+  :ensure t
+  :mode ("\\.rs\\'" . rust-mode)
+  :hook (rust-mode . eglot-ensure))
 
-  ;; Mark
-  (use-package markdown-mode
-    :ensure t
-    :mode ("\\.md\\'" . markdown-mode))
+;; Kotlin
+(use-package kotlin-mode
+  :ensure t
+  :mode ("\\.kt\\'" . kotlin-mode)
+  :hook (kotlin-mode . eglot-ensure))
 
-  (defun my/fix-nil-faces ()
-    (dolist (face '(error trailing-whitespace highlight region))
-      (when (and (facep face) (not (face-attribute face :foreground nil t)))
-        (set-face-attribute face nil :foreground 'unspecified))))
-  (add-hook 'after-init-hook #'my/fix-nil-faces)
+(with-eval-after-load 'eglot
+  (add-to-list 'eglot-server-programs
+               '(kotlin-mode . ("kotlin-lsp"))))
 
-  (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
-  (when (file-exists-p custom-file) (load custom-file))
-  (provide 'init)
-  (put 'downcase-region 'disabled nil)
-  (put 'dired-find-alternate-file 'disabled nil)
+;; Go
+(use-package go-ts-mode
+  :ensure t
+  :mode ("\\.go\\'" . go-ts-mode)
+  :hook (go-ts-mode . eglot-ensure))
+
+
+
+;; Mark
+(use-package markdown-mode
+  :ensure t
+  :mode ("\\.md\\'" . markdown-mode))
+
+(defun my/fix-nil-faces ()
+  (dolist (face '(error trailing-whitespace highlight region))
+    (when (and (facep face) (not (face-attribute face :foreground nil t)))
+      (set-face-attribute face nil :foreground 'unspecified))))
+(add-hook 'after-init-hook #'my/fix-nil-faces)
+
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+(when (file-exists-p custom-file) (load custom-file))
+(provide 'init)
+(put 'downcase-region 'disabled nil)
+(put 'dired-find-alternate-file 'disabled nil)
