@@ -68,13 +68,13 @@
 (save-place-mode 1)
 (repeat-mode 1)
 (global-auto-revert-mode 1)
+(winner-mode 1)
 
 ;; theme
 (add-to-list 'custom-theme-load-path (expand-file-name "themes" user-emacs-directory))
-(load-theme 'void t)
+;; (load-theme 'naysayer t)
 
-
-;; function to indent with pressing enter
+;; correct indentation
 (defun my/smart-return ()
   (interactive)
   (let* ((pairs '((?\{ . ?\}) (?\( . ?\)) (?\[ . ?\])))
@@ -90,6 +90,23 @@
 
 (define-key prog-mode-map (kbd "RET") #'my/smart-return)
 
+;; splits-settings 
+(global-set-key (kbd "C-c z") #'delete-other-windows)
+(global-set-key (kbd "C-c u") #'winner-undo)
+
+(defvar my/window-toggle nil)
+(defun my/toggle-maximize-window ()
+  (interactive)
+  (if (= (count-windows) 1)
+      (winner-undo)
+    (progn
+      (setq my/window-toggle t)
+      (delete-other-windows))))
+
+
+(global-set-key (kbd "C-x 9") #'my/toggle-maximize-window)
+
+;; pakages
 (use-package avy
   :ensure t
   :bind ("C--" . avy-goto-char-timer))
@@ -122,7 +139,7 @@
 
 (setq backup-directory-alist `(("." . "~/.config/emacs/saves/")))
 
-(set-face-attribute 'default nil :font "Liberation Mono" :height 155 :weight 'regular)
+(set-face-attribute 'default nil :font "Liberation Mono" :height 150 :weight 'regular)
 
 (setq compile-command "")
 (global-set-key [escape] 'keyboard-escape-quit)
@@ -138,20 +155,26 @@
 (add-to-list 'display-buffer-alist '("\\*warnings\\*" (display-buffer-no-window)))
 
 ;; pasting in the minibuffer with C-z (fucking german keyboard)
-(global-set-key (kbd "C-z") #'yank)
+(global-set-key (kbd "C-z") #'Evil)
+(dolist (map (list minibuffer-local-map
+                   minibuffer-local-completion-map
+                   minibuffer-local-must-match-map
+                   minibuffer-local-filename-completion-map
+                   minibuffer-local-isearch-map))
+  (define-key map (kbd "C-z") #'yank))
 
 ;; ==============================================================================
-;; Evil
+;; Evil-mode
 ;; ==============================================================================
 (use-package evil
   :ensure t
   :init
   (setq evil-want-integration t evil-want-keybinding nil)
   :config
-  (setq evil-insert-state-cursor '("#ffffff" bar) 
-        evil-normal-state-cursor '("#ffffff" box) 
-        evil-visual-state-cursor '("#ffffff" box) 
-        evil-replace-state-cursor'("#ffffff" box))
+  (setq evil-insert-state-cursor '(bar) 
+        evil-normal-state-cursor '(box) 
+        evil-visual-state-cursor '(box) 
+        evil-replace-state-cursor'(box))
   (evil-mode 1))
 
 (use-package evil-collection
@@ -196,6 +219,7 @@
 (use-package eglot
   :custom
   (eglot-sync-connect nil)
+  (eglot-ignored-server-capabilities '(:codeActionProvider :codeActionResolve))
   :config
   (fset #'jsonrpc--log-event #'ignore)
   ;; Prefer pyright for Python over pylsp
@@ -210,6 +234,7 @@
 (setq read-process-output-max (* 1024 1024))
 (setq eldoc-idle-delay 0.2)
 
+;; linting 
 (use-package flycheck
   :ensure t
   :init (global-flycheck-mode)
@@ -297,6 +322,7 @@
   :ensure t
   :bind ("C-x g" . magit-status))
 
+;; formatter (auto on save for all languages except Java)
 (use-package apheleia
   :ensure t
   :config
@@ -307,7 +333,9 @@
   (setf (alist-get 'c++-mode apheleia-mode-alist) 'clang-format)
   (setf (alist-get 'c-ts-mode apheleia-mode-alist) 'clang-format)
   (setf (alist-get 'c++-ts-mode apheleia-mode-alist) 'clang-format)
-  (setf (alist-get 'kotlin-mode apheleia-mode-alist) 'ktlint))
+  (setf (alist-get 'kotlin-mode apheleia-mode-alist) 'ktlint)
+  ;; disable apheleia for Java
+  (add-hook 'java-mode-hook #'apheleia-mode -1))
 
 ;; hl-todo
 (use-package hl-todo
@@ -442,13 +470,24 @@
   (add-to-list 'eglot-server-programs
                '(kotlin-mode . ("kotlin-lsp"))))
 
+;; Java
+(use-package java-mode
+  :ensure nil
+  :mode ("\\.java\\'" . java-mode)
+  :hook (java-mode . eglot-ensure))
+(with-eval-after-load 'eglot
+  (add-to-list 'eglot-server-programs
+               '(java-mode . ("jdtls"))))
+
+
 ;; Go
 (use-package go-ts-mode
   :ensure t
   :mode ("\\.go\\'" . go-ts-mode)
-  :hook (go-ts-mode . eglot-ensure))
-
-
+  :hook (go-ts-mode . eglot-ensure)
+  :config
+  :config
+  (add-hook 'go-ts-mode-hook (lambda () (setq go-ts-mode-indent-offset 4))))
 
 ;; Mark
 (use-package markdown-mode

@@ -27,7 +27,7 @@
 (defcustom jblow-nostalgia-theme-cyan "#A1EFE4" "Primary colors - cyan" :type 'string :group 'monokai)
 (defcustom jblow-nostalgia-theme-violet "#AE81FF" "Primary colors - violet" :type 'string :group 'monokai)
 
-(let ((background      "#292929")
+(let ((background      "#000000")
       (gutters         "#292929")
       (gutter-fg       "#292929")
       (gutters-active  "#292929")
