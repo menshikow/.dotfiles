@@ -141,7 +141,7 @@
 
 (setq backup-directory-alist `(("." . "~/.config/emacs/saves/")))
 
-(set-face-attribute 'default nil :family "Terminus (TTF)" :height 140 :weight 'normal :slant 'normal)
+(set-face-attribute 'default nil :font "TerminusTTF" :height 140 :weight 'normal :slant 'normal)
 
 (setq compile-command "")
 (global-set-key [escape] 'keyboard-escape-quit)
