@@ -7,7 +7,8 @@ mouse-hide-while-typing = true
 
 font-feature = -calt, -liga, -dlig
 font-size = 15
-font-family = "Liberation Mono"
+font-family = "TerminusTTF"
+font-weight = 700
 
 unfocused-split-opacity = 1.0
 
