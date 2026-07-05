@@ -223,13 +223,13 @@
 (with-eval-after-load 'evil
   ;; ── wrapper commands for jump-to-char ──
   (defun my/evil-find-char-forward-curly (count)
-    (interactive "p") (evil-find-char count t ?{))
+    (interactive "p") (evil-find-char count t ?\{))
   (defun my/evil-find-char-backward-curly (count)
-    (interactive "p") (evil-find-char count nil ?{))
+    (interactive "p") (evil-find-char count nil ?\{))
   (defun my/evil-find-char-forward-bracket (count)
-    (interactive "p") (evil-find-char count t ?[))
-    (defun my/evil-find-char-backward-bracket (count)
-      (interactive "p") (evil-find-char count nil ?[))
+    (interactive "p") (evil-find-char count t ?\[))
+  (defun my/evil-find-char-backward-bracket (count)
+    (interactive "p") (evil-find-char count nil ?\[))
 
       ;; ── / = evil search, C-s = consult-line ──
       (define-key evil-normal-state-map (kbd "C-s") 'consult-line)
