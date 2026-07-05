@@ -7,7 +7,7 @@ mouse-hide-while-typing = true
 
 font-feature = -calt, -liga, -dlig
 font-size = 15
-font-family = "TerminusTTF"
+font-family = "Terminus (TTF)"
 font-weight = 700
 
 unfocused-split-opacity = 1.0
