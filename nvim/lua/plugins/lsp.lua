@@ -26,7 +26,6 @@ return {
 				"python",
 				"ocaml",
 				"ocaml_interface",
-				"racket",
 				"java",
 			}
 
@@ -59,6 +58,7 @@ return {
 
 	{
 		"nvim-treesitter/nvim-treesitter-textobjects",
+		branch = "main",
 		dependencies = { "nvim-treesitter/nvim-treesitter" },
 	},
 
@@ -87,7 +87,6 @@ return {
 					init_options = { fallbackFlags = { "-std=c++23" } },
 				},
 				hls = {},
-				jdtls = {},
 				lua_ls = {},
 				ocamllsp = {},
 				rust_analyzer = {

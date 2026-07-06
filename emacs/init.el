@@ -141,7 +141,7 @@
 
 (setq backup-directory-alist `(("." . "~/.config/emacs/saves/")))
 
-(set-face-attribute 'default nil :font (font-spec :family "Terminus (TTF)" :size 14.0) :weight 'normal)
+(set-face-attribute 'default nil :font (font-spec :family "Terminus (TTF)" :size 16.0) :weight 'normal)
 
 (setq compile-command "")
 (global-set-key [escape] 'keyboard-escape-quit)
@@ -273,7 +273,7 @@
   :custom
   (flycheck-indication-mode nil)
   :config
-  (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc emacs-lisp-package-lint org-lint python-mypy)))
+  (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc emacs-lisp-package-lint org-lint python-mypy python-ruff)))
 
 (use-package flycheck-eglot
   :ensure t
@@ -322,6 +322,32 @@
   :after (embark consult)
   :hook
   (embark-collect-mode . consult-preview-at-point-mode))
+
+;; autocompletion
+(use-package corfu
+  :ensure t
+  :custom
+  (corfu-auto t)
+  (corfu-auto-delay 0)
+  (corfu-auto-prefix 2)
+  (corfu-count 8)
+  (corfu-min-width 30)
+  (corfu-max-width 100)
+  (corfu-on-exact-match nil)
+  (corfu-scroll-margin 4)
+  :init
+  (global-corfu-mode)
+  (corfu-history-mode)
+  :config
+  (set-face-attribute 'corfu-default nil
+                      :background "#1e1e1e"
+                      :foreground "#d4d4d4")
+  (set-face-attribute 'corfu-current nil
+                      :background "#3a3a3a"
+                      :foreground "#ffffff")
+  (set-face-attribute 'corfu-border nil
+                      :background "#333333"
+                      :foreground "#333333"))
 
 (use-package project
   :custom (project-list-file "~/.config/emacs/projects"))
