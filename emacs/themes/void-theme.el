@@ -39,7 +39,8 @@
       (error "#ff4444")
       (warning "#cccccc")
       (highlight-line "#1a1a1a")
-      (line-fg "#4d4d4d"))
+      (line-fg "#4d4d4d")
+      (green "#6b9f6b"))
 
   (custom-theme-set-faces
    'void
@@ -82,11 +83,11 @@
    `(line-number-current-line ((t (:foreground ,white :background ,background))))
 
    ;; compilation
-   `(compilation-info ((t (:foreground "#ffffff" :weight bold))))
+   `(compilation-info ((t (:foreground ,green :weight bold))))
    `(compilation-warning ((t (:foreground "#cccccc" :weight bold))))
    `(compilation-error ((t (:foreground ,error :weight bold :underline t))))
    `(compilation-mode-line-fail ((t (:foreground ,error :weight bold :underline t))))
-   `(compilation-mode-line-exit ((t (:foreground "#ffffff" :weight bold))))
+   `(compilation-mode-line-exit ((t (:foreground ,green :weight bold))))
 
    ;; hl-line-mode
    `(hl-line ((t (:background ,highlight-line))))
