@@ -40,7 +40,7 @@
       (warning "#cccccc")
       (highlight-line "#1a1a1a")
       (line-fg "#4d4d4d")
-      (green "#6b9f6b"))
+      (green "#8fdf8f"))
 
   (custom-theme-set-faces
    'void
