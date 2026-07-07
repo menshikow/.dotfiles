@@ -368,9 +368,6 @@
   (add-to-list 'eglot-server-programs
                '(java-mode . ("jdtls"))))
 
-
-
-
 ;; Go
 (use-package go-ts-mode
   :ensure t
@@ -379,6 +376,27 @@
   :config
   :config
   (add-hook 'go-ts-mode-hook (lambda () (setq go-ts-mode-indent-offset 4))))
+
+;; Rust
+(use-package rust-ts-mode
+  :mode ("\\.rs\\'" . rust-ts-mode)
+  :hook (rust-ts-mode . eglot-ensure)
+  :config
+  ;; Use clippy instead of cargo check
+  (add-hook 'rust-ts-mode-hook
+            (lambda ()
+              (setq-local eglot-workspace-configuration
+                '(:rust-analyzer
+                   (:checkOnSave (:command "clippy")
+                    :rustfmt (:extraArgs ["--edition" "2021"]))))))
+  ;; Format on save with rustfmt via eglot
+  (add-hook 'rust-ts-mode-hook
+            (lambda ()
+              (add-hook 'before-save-hook #'eglot-format nil t))))
+
+(use-package cargo
+  :ensure t
+  :hook (rust-ts-mode . cargo-minor-mode))
 
 ;; Common Lisp
 (use-package sly
