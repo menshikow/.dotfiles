@@ -114,10 +114,9 @@ return {
 						},
 					},
 				},
-				zls = {},
-				racket_langserver = {},
+			zls = {},
 
-				texlab = {
+			texlab = {
 					settings = {
 						texlab = {
 							build = {
