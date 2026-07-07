@@ -46,6 +46,7 @@ abbr -a e "eza -l -a"
 abbr -a c "code --reuse-window"
 abbr -a e "eza -l -a"
 abbr -a .. "cd .."
+abbr -a ... "cd ../.."
 abbr -a reload "source ~/.config/fish/config.fish"
 
 # Git
@@ -75,6 +76,9 @@ end
 # Bun
 set -gx BUN_INSTALL $HOME/.bun
 set -gx PATH $BUN_INSTALL/bin $PATH
+
+# Rust / Cargo
+fish_add_path $HOME/.cargo/bin
 
 # GHCup
 fish_add_path $HOME/.cabal/bin $HOME/.ghcup/bin
