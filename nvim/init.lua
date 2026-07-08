@@ -2,6 +2,24 @@ vim.env.PATH = vim.env.PATH .. ":/opt/homebrew/bin"
 
 -- Workaround for Neovim 0.12.x treesitter `range` nil error
 -- when processing `conceal_lines` in markdown LSP floating previews.
+if vim.tbl_flatten then
+	vim.tbl_flatten = function(t)
+		local r, i = {}, 1
+		local function f(x)
+			if type(x) == "table" then
+				for _, v in ipairs(x) do
+					f(v)
+				end
+			else
+				r[i] = x
+				i = i + 1
+			end
+		end
+		f(t)
+		return r
+	end
+end
+
 local get_range = vim.treesitter.get_range
 vim.treesitter.get_range = function(node, source, metadata)
 	if node then
@@ -14,7 +32,7 @@ require("config.lazy")
 require("config.settings")
 require("config.keymaps")
 
-vim.cmd.colorscheme("void")
+vim.cmd.colorscheme("gruvbuddy")
 
 local node_bin = vim.fn.trim(vim.fn.system("which node 2>/dev/null"))
 if node_bin ~= "" then

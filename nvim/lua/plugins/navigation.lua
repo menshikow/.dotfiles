@@ -70,6 +70,14 @@ return {
 			vim.keymap.set("n", "<leader>;", custom_buffer_search, { desc = "Find buffers (custom)" })
 			vim.keymap.set("n", "<leader>fb", custom_buffer_search, { desc = "[F]ind [B]uffers" })
 
+			-- File search with C-x C-f
+			vim.keymap.set({ "n", "i" }, "<C-x><C-f>", function()
+				if vim.fn.mode() == "i" then
+					vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-c>", true, false, true), "n", false)
+				end
+				fzf.files({ hidden = false })
+			end, { desc = "[F]ind [F]iles (C-x C-f)" })
+
 			-- ported keymaps form telescope
 
 			-- Files & Search
