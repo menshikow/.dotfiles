@@ -254,6 +254,7 @@
   :custom
   (eglot-sync-connect nil)
   (eglot-ignored-server-capabilities '(:codeActionProvider :codeActionResolve))
+  :hook ((python-ts-mode python-mode) . eglot-ensure)
   :config
   (fset #'jsonrpc--log-event #'ignore)
   ;; Prefer pyright for Python over pylsp
@@ -376,7 +377,6 @@
   :mode ("\\.go\\'" . go-ts-mode)
   :hook (go-ts-mode . eglot-ensure)
   :config
-  :config
   (add-hook 'go-ts-mode-hook (lambda () (setq go-ts-mode-indent-offset 4))))
 
 ;; Rust
@@ -395,6 +395,11 @@
   (add-hook 'rust-ts-mode-hook
             (lambda ()
               (add-hook 'before-save-hook #'eglot-format nil t))))
+
+;; Format on save with eglot (safe even before eglot connects — no-op if not managed)
+(defun my/eglot-format-on-save ()
+  (add-hook 'before-save-hook #'eglot-format nil t))
+(add-hook 'prog-mode-hook #'my/eglot-format-on-save)
 
 (use-package cargo
   :ensure t

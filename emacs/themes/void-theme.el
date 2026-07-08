@@ -31,7 +31,7 @@
       (variables "#888888")
       (functions "#e8e8e8")
       (methods    "#b8b8b8")
-      (strings    "#707070")
+      (strings    "#b08f5a")
       (constants "#888888")
       (macros "#888888")
       (numbers "#888888")
