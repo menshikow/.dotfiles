@@ -263,7 +263,7 @@
                '((python-mode python-ts-mode) . ("pyright-langserver" "--stdio")))
   ;; jdtls for Java
   (add-to-list 'eglot-server-programs
-               '(java-mode . ("jdtls"))))
+               '((java-mode java-ts-mode) . ("jdtls"))))
 
 (add-hook 'java-ts-mode-hook (lambda () (setq java-ts-mode-indent-offset 4)))
 (add-hook 'java-mode-hook (lambda () (setq c-basic-offset 4)))
@@ -393,15 +393,13 @@
               (setq-local eglot-workspace-configuration
                 '(:rust-analyzer
                    (:checkOnSave (:command "clippy")
-                    :rustfmt (:extraArgs ["--edition" "2021"]))))))
-  ;; Format on save with rustfmt via eglot
-  (add-hook 'rust-ts-mode-hook
-            (lambda ()
-              (add-hook 'before-save-hook #'eglot-format nil t))))
+                    :rustfmt (:extraArgs ["--edition" "2021"])))))))
 
-;; Format on save with eglot (safe even before eglot connects — no-op if not managed)
+;; Format on save with eglot
 (defun my/eglot-format-on-save ()
-  (add-hook 'before-save-hook #'eglot-format nil t))
+  (add-hook 'before-save-hook
+            (lambda () (ignore-errors (eglot-format-buffer)))
+            nil t))
 (add-hook 'prog-mode-hook #'my/eglot-format-on-save)
 
 (use-package cargo
