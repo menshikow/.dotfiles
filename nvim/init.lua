@@ -34,6 +34,20 @@ require("config.keymaps")
 
 vim.cmd.colorscheme("gruvbuddy")
 
+local no_italic = { italic = false }
+for _, g in ipairs({
+	"Comment", "@comment",
+	"Conceal",
+	"Type", "@type", "@type.builtin",
+	"markdownH1", "markdownH2", "markdownH3",
+	"htmlH1", "htmlh1",
+	"@markup.strong", "@markup.italic", "@markup.link",
+	"@string", "@string.documentation", "@string.escape", "@string.regexp", "@string.special",
+	"HelpDoc", "HelpIgnore",
+}) do
+	pcall(vim.api.nvim_set_hl, 0, g, no_italic)
+end
+
 local node_bin = vim.fn.trim(vim.fn.system("which node 2>/dev/null"))
 if node_bin ~= "" then
 	local node_dir = vim.fn.fnamemodify(node_bin, ":h")
