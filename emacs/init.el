@@ -400,7 +400,9 @@
   :ensure t
   :config
   (apheleia-global-mode +1)
-  ;; Java via google-java-format
+  ;; Java via google-java-format (AOSP style = 4 spaces)
+  (setf (alist-get 'google-java-format apheleia-formatters)
+        '("google-java-format" "--aosp" "--replace" file))
   (add-to-list 'apheleia-mode-alist '(java-mode . google-java-format))
   (add-to-list 'apheleia-mode-alist '(java-ts-mode . google-java-format)))
 
