@@ -255,11 +255,15 @@
   (eglot-sync-connect nil)
   (eglot-ignored-server-capabilities '(:codeActionProvider :codeActionResolve))
   :hook ((python-ts-mode python-mode) . eglot-ensure)
+        ((java-mode java-ts-mode) . eglot-ensure)
   :config
   (fset #'jsonrpc--log-event #'ignore)
   ;; Prefer pyright for Python over pylsp
   (add-to-list 'eglot-server-programs
-               '((python-mode python-ts-mode) . ("pyright-langserver" "--stdio"))))
+               '((python-mode python-ts-mode) . ("pyright-langserver" "--stdio")))
+  ;; jdtls for Java
+  (add-to-list 'eglot-server-programs
+               '(java-mode . ("jdtls"))))
 
 (use-package eglot-booster
   :vc (:url "https://github.com/jdtsmith/eglot-booster")
@@ -366,10 +370,6 @@
     (define-key dired-mode-map (kbd "-") 'dired-up-directory)
     (define-key dired-mode-map (kbd "o") 'dired-find-file-other-window)
     (define-key dired-mode-map (kbd "q") 'quit-window)))
-
-(with-eval-after-load 'eglot
-  (add-to-list 'eglot-server-programs
-               '(java-mode . ("jdtls"))))
 
 ;; Go
 (use-package go-ts-mode
