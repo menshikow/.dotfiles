@@ -34,19 +34,35 @@ require("config.keymaps")
 
 vim.cmd.colorscheme("gruvbuddy")
 
-local no_italic = { italic = false }
 for _, g in ipairs({
-	"Comment", "@comment",
-	"Conceal",
-	"Type", "@type", "@type.builtin",
+	"Comment", "Conceal",
+	"Type",
 	"markdownH1", "markdownH2", "markdownH3",
 	"htmlH1", "htmlh1",
-	"@markup.strong", "@markup.italic", "@markup.link",
-	"@string", "@string.documentation", "@string.escape", "@string.regexp", "@string.special",
 	"HelpDoc", "HelpIgnore",
 }) do
-	pcall(vim.api.nvim_set_hl, 0, g, no_italic)
+	local ok, hl = pcall(vim.api.nvim_get_hl, 0, { name = g, link = false })
+	if ok and hl and not vim.tbl_isempty(hl) then
+		hl.italic = false
+		pcall(vim.api.nvim_set_hl, 0, g, hl)
+	end
 end
+
+-- re-link treesitter standard captures to their base groups
+vim.api.nvim_set_hl(0, "@comment", { link = "Comment" })
+vim.api.nvim_set_hl(0, "@type", { link = "Type" })
+vim.api.nvim_set_hl(0, "@type.builtin", { link = "Type" })
+vim.api.nvim_set_hl(0, "@string", { link = "String" })
+vim.api.nvim_set_hl(0, "@string.documentation", { link = "String" })
+vim.api.nvim_set_hl(0, "@string.escape", { link = "Special" })
+vim.api.nvim_set_hl(0, "@string.regexp", { link = "String" })
+vim.api.nvim_set_hl(0, "@string.special", { link = "Special" })
+vim.api.nvim_set_hl(0, "@markup.strong", { link = "Bold" })
+vim.api.nvim_set_hl(0, "@markup.italic", { link = "Italic" })
+vim.api.nvim_set_hl(0, "@markup.link", { link = "Underlined" })
+
+-- make comments a distinguished blue-gray
+vim.api.nvim_set_hl(0, "Comment", { fg = "#6b8faf" })
 
 local node_bin = vim.fn.trim(vim.fn.system("which node 2>/dev/null"))
 if node_bin ~= "" then
