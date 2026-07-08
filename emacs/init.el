@@ -141,7 +141,8 @@
 
 (setq backup-directory-alist `(("." . "~/.config/emacs/saves/")))
 
-(set-face-attribute 'default nil :font (font-spec :family "Terminus (TTF)" :size 16.0) :weight 'normal)
+;; (set-face-attribute 'default nil :font (font-spec :family "Terminus (TTF)" :size 16.0) :weight 'normal) 
+(set-face-attribute 'default nil :font (font-spec :family "UbuntuMono Nerd Font" :size 17.0) :weight 'normal)
 
 (setq compile-command "")
 (global-set-key [escape] 'keyboard-escape-quit)
@@ -174,7 +175,7 @@
   (setq evil-want-integration t evil-want-keybinding nil
         evil-want-C-u-scroll t)
   :config
-  (setq evil-insert-state-cursor '(bar) 
+  (setq evil-insert-state-cursor '(box) 
         evil-normal-state-cursor '(box) 
         evil-visual-state-cursor '(box) 
         evil-replace-state-cursor'(box))
