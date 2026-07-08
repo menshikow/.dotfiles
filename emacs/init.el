@@ -265,6 +265,9 @@
   (add-to-list 'eglot-server-programs
                '(java-mode . ("jdtls"))))
 
+(add-hook 'java-ts-mode-hook (lambda () (setq java-ts-mode-indent-offset 4)))
+(add-hook 'java-mode-hook (lambda () (setq c-basic-offset 4)))
+
 (use-package eglot-booster
   :vc (:url "https://github.com/jdtsmith/eglot-booster")
   :after eglot
