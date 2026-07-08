@@ -395,12 +395,14 @@
                    (:checkOnSave (:command "clippy")
                     :rustfmt (:extraArgs ["--edition" "2021"])))))))
 
-;; Format on save with eglot
-(defun my/eglot-format-on-save ()
-  (add-hook 'before-save-hook
-            (lambda () (ignore-errors (eglot-format-buffer)))
-            nil t))
-(add-hook 'prog-mode-hook #'my/eglot-format-on-save)
+;; Format on save with apheleia (async external formatters)
+(use-package apheleia
+  :ensure t
+  :config
+  (apheleia-global-mode +1)
+  ;; Java via google-java-format
+  (add-to-list 'apheleia-mode-alist '(java-mode . google-java-format))
+  (add-to-list 'apheleia-mode-alist '(java-ts-mode . google-java-format)))
 
 (use-package cargo
   :ensure t
