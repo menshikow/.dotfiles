@@ -400,11 +400,11 @@
   :ensure t
   :config
   (apheleia-global-mode +1)
-  ;; Java via google-java-format (AOSP style = 4 spaces)
-  (setf (alist-get 'google-java-format apheleia-formatters)
-        '("google-java-format" "--aosp" "--replace" file))
-  (add-to-list 'apheleia-mode-alist '(java-mode . google-java-format))
-  (add-to-list 'apheleia-mode-alist '(java-ts-mode . google-java-format)))
+  ;; Java via clang-format (4 spaces)
+  (setf (alist-get 'clang-format apheleia-formatters)
+        '("clang-format" "-assume-filename" file "--style={IndentWidth: 4, ColumnLimit: 100}"))
+  (add-to-list 'apheleia-mode-alist '(java-mode . clang-format))
+  (add-to-list 'apheleia-mode-alist '(java-ts-mode . clang-format)))
 
 (use-package cargo
   :ensure t
