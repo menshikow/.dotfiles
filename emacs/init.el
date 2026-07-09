@@ -8,10 +8,10 @@
       gc-cons-percentage 0.6
       native-comp-async-report-warnings-errors 'silent)
 
-(add-hook 'emacs-startup-hook
-          (lambda ()
-            (setq gc-cons-threshold 100000000
-                  gc-cons-percentage 0.1)))
+(add-hook' emacs-startup-hook
+	   (lambda ()
+	     (setq gc-cons-threshold 100000000
+		   gc-cons-percentage 0.1)))
 
 ;; ==============================================================================
 ;; packages
@@ -37,7 +37,14 @@
   :ensure t
   :config
   (when (memq window-system '(mac ns x))
-    (exec-path-from-shell-initialize)))
+      (exec-path-from-shell-initialize)))
+
+;; Locally installed tools (~/.local/bin, cargo, go, etc.)
+(dolist (dir (list (expand-file-name "~/.local/bin")
+                   (expand-file-name "~/.cargo/bin")
+                   (expand-file-name "~/go/bin")
+                   (expand-file-name "~/.local/go/bin")))
+  (add-to-list 'exec-path dir))
 
 (when (eq system-type 'darwin)
   (add-to-list 'exec-path "/opt/homebrew/bin")
@@ -108,7 +115,7 @@
 (global-set-key (kbd "C-x 9") #'my/toggle-maximize-window)
 (global-set-key (kbd "C-M-i") #'completion-at-point)
 
-;; pakages
+;; packages
 (use-package avy
   :ensure t
   :bind ("C--" . avy-goto-char-timer))
@@ -124,7 +131,7 @@
 (setq frame-resize-pixelwise t
       window-resize-pixelwise t)
 
-(add-to-list 'default-frame-alist '(fullscreen . maximized))
+;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
 (add-to-list 'default-frame-alist '(undecorated . t))
 
 (setq visible-bell t
@@ -142,8 +149,8 @@
 (setq backup-directory-alist `(("." . "~/.config/emacs/saves/")))
 
 ;; (set-face-attribute 'default nil :font (font-spec :family "Terminus (TTF)" :size 16.0) :weight 'normal) 
-;; (set-face-attribute 'default nil :font (font-spec :family "UbuntuMono Nerd Font" :size 17.0) :weight 'normal)
-(set-face-attribute 'default nil :font (font-spec :family "Iosevka Nerd Font Mono" :size 17.0) :weight 'normal)
+(set-face-attribute 'default nil :font (font-spec :family "UbuntuMono" :size 14.0) :weight 'normal)
+;; (set-face-attribute 'default nil :font (font-spec :family "Iosevka Nerd Font Mono" :size 17.0) :weight 'normal)
 
 (setq compile-command "")
 (global-set-key [escape] 'keyboard-escape-quit)
@@ -248,20 +255,18 @@
 (global-set-key (kbd "C-c r") #'recentf-open-files)
 
 ;; ==============================================================================
-;; Lsp
+;; Lsp, formatting & linting
 ;; ==============================================================================
 (use-package eglot
   :custom
   (eglot-sync-connect nil)
   (eglot-ignored-server-capabilities '(:codeActionProvider :codeActionResolve))
   :hook ((python-ts-mode python-mode) . eglot-ensure)
-        ((java-mode java-ts-mode) . eglot-ensure)
+  ((java-mode java-ts-mode) . eglot-ensure)
   :config
   (fset #'jsonrpc--log-event #'ignore)
-  ;; Prefer pyright for Python over pylsp
   (add-to-list 'eglot-server-programs
-               '((python-mode python-ts-mode) . ("pyright-langserver" "--stdio")))
-  ;; jdtls for Java
+               '((python-mode python-ts-mode) . ("ruff" "server")))
   (add-to-list 'eglot-server-programs
                '((java-mode java-ts-mode) . ("jdtls"))))
 
@@ -276,14 +281,38 @@
 (setq read-process-output-max (* 1024 1024))
 (setq eldoc-idle-delay 0.2)
 
-;; linting 
+(use-package apheleia
+  :ensure t
+  :config
+  (apheleia-global-mode +1)
+  ;; Python via ruff
+  (setf (alist-get 'ruff apheleia-formatters)
+        '("ruff" "format" "--stdin-filename" file "-"))
+  (add-to-list 'apheleia-mode-alist '(python-mode . ruff))
+  (add-to-list 'apheleia-mode-alist '(python-ts-mode . ruff))
+  ;; Go via gofmt
+  (setf (alist-get 'gofmt apheleia-formatters)
+        '("gofmt"))
+  (add-to-list 'apheleia-mode-alist '(go-mode . gofmt))
+  (add-to-list 'apheleia-mode-alist '(go-ts-mode . gofmt))
+  ;; Rust via rustfmt
+  (setf (alist-get 'rustfmt apheleia-formatters)
+        '("rustfmt" "--edition" "2021"))
+  (add-to-list 'apheleia-mode-alist '(rust-mode . rustfmt))
+  (add-to-list 'apheleia-mode-alist '(rust-ts-mode . rustfmt))
+  ;; Java via clang-format (4 spaces)
+  (setf (alist-get 'clang-format apheleia-formatters)
+        '("clang-format" "-assume-filename" file "--style={IndentWidth: 4, ColumnLimit: 100}"))
+  (add-to-list 'apheleia-mode-alist '(java-mode . clang-format))
+  (add-to-list 'apheleia-mode-alist '(java-ts-mode . clang-format)))
+
 (use-package flycheck
   :ensure t
   :init (global-flycheck-mode)
   :custom
   (flycheck-indication-mode nil)
   :config
-  (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc emacs-lisp-package-lint org-lint python-mypy python-ruff)))
+  (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc emacs-lisp-package-lint org-lint python-mypy)))
 
 (use-package flycheck-eglot
   :ensure t
@@ -391,20 +420,10 @@
   (add-hook 'rust-ts-mode-hook
             (lambda ()
               (setq-local eglot-workspace-configuration
-                '(:rust-analyzer
-                   (:checkOnSave (:command "clippy")
-                    :rustfmt (:extraArgs ["--edition" "2021"])))))))
+			  '(:rust-analyzer
+			    (:checkOnSave (:command "clippy")
+					  :rustfmt (:extraArgs ["--edition" "2021"])))))))
 
-;; Format on save with apheleia (async external formatters)
-(use-package apheleia
-  :ensure t
-  :config
-  (apheleia-global-mode +1)
-  ;; Java via clang-format (4 spaces)
-  (setf (alist-get 'clang-format apheleia-formatters)
-        '("clang-format" "-assume-filename" file "--style={IndentWidth: 4, ColumnLimit: 100}"))
-  (add-to-list 'apheleia-mode-alist '(java-mode . clang-format))
-  (add-to-list 'apheleia-mode-alist '(java-ts-mode . clang-format)))
 
 (use-package cargo
   :ensure t
@@ -417,6 +436,11 @@
   (setq inferior-lisp-program "sbcl")
   (setq sly-auto-start 'always)
   :hook ((lisp-mode . sly-editing-mode)))
+
+;; Magit
+(use-package magit
+  :ensure t
+  :bind ("C-x g" . magit-status))
 
 ;; Mark
 (use-package markdown-mode
