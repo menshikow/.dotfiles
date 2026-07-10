@@ -149,7 +149,7 @@
 (setq backup-directory-alist `(("." . "~/.config/emacs/saves/")))
 
 ;; (set-face-attribute 'default nil :font (font-spec :family "Terminus (TTF)" :size 16.0) :weight 'normal) 
-(set-face-attribute 'default nil :font (font-spec :family "UbuntuMono" :size 14.0) :weight 'normal)
+(set-face-attribute 'default nil :font (font-spec :family "Iosevka Extended" :size 15.0) :weight 'normal)
 ;; (set-face-attribute 'default nil :font (font-spec :family "Iosevka Nerd Font Mono" :size 17.0) :weight 'normal)
 
 (setq compile-command "")
