@@ -37,7 +37,7 @@
   :ensure t
   :config
   (when (memq window-system '(mac ns x))
-      (exec-path-from-shell-initialize)))
+    (exec-path-from-shell-initialize)))
 
 ;; Locally installed tools (~/.local/bin, cargo, go, etc.)
 (dolist (dir (list (expand-file-name "~/.local/bin")
@@ -77,6 +77,11 @@
 (global-auto-revert-mode 1)
 (winner-mode 1)
 (global-hl-line-mode -1)
+
+;; line numbers
+(global-display-line-numbers-mode)
+(setq display-line-numbers 'relative) 
+
 (set-face-attribute 'hl-line nil :background "#e0e0e0")
 
 ;; colorscheme
@@ -131,7 +136,7 @@
 (setq frame-resize-pixelwise t
       window-resize-pixelwise t)
 
-;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
 (add-to-list 'default-frame-alist '(undecorated . t))
 
 (setq visible-bell t
@@ -148,9 +153,9 @@
 
 (setq backup-directory-alist `(("." . "~/.config/emacs/saves/")))
 
+;; (set-face-attribute 'default nil :font (font-spec :family "Iosevka Nerd Font Mono" :size 17.0) :weight 'normal)
 ;; (set-face-attribute 'default nil :font (font-spec :family "Terminus (TTF)" :size 16.0) :weight 'normal) 
 (set-face-attribute 'default nil :font (font-spec :family "Iosevka Extended" :size 15.0) :weight 'normal)
-;; (set-face-attribute 'default nil :font (font-spec :family "Iosevka Nerd Font Mono" :size 17.0) :weight 'normal)
 
 (setq compile-command "")
 (global-set-key [escape] 'keyboard-escape-quit)
