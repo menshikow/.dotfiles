@@ -76,11 +76,11 @@
 (repeat-mode 1)
 (global-auto-revert-mode 1)
 (winner-mode 1)
-(global-hl-line-mode -1)
-
-;; line numbers
+(setq display-line-numbers-type 'visual
+      display-line-numbers-width 4)
 (global-display-line-numbers-mode)
-(setq display-line-numbers 'relative) 
+
+(global-hl-line-mode -1)
 
 (set-face-attribute 'hl-line nil :background "#e0e0e0")
 
@@ -153,9 +153,9 @@
 
 (setq backup-directory-alist `(("." . "~/.config/emacs/saves/")))
 
-;; (set-face-attribute 'default nil :font (font-spec :family "Iosevka Nerd Font Mono" :size 17.0) :weight 'normal)
 ;; (set-face-attribute 'default nil :font (font-spec :family "Terminus (TTF)" :size 16.0) :weight 'normal) 
 (set-face-attribute 'default nil :font (font-spec :family "Iosevka Extended" :size 15.0) :weight 'normal)
+;; (set-face-attribute 'default nil :font (font-spec :family "DejaVu Sans Mono" :size 15.0) :weight 'normal)
 
 (setq compile-command "")
 (global-set-key [escape] 'keyboard-escape-quit)
@@ -222,7 +222,7 @@
   (defun my/evil-find-char-forward-curly (count)
     (interactive "p") (evil-find-char count t ?\{))
   (defun my/evil-find-char-backward-curly (count)
-    (interactive "p") (evil-find-char count nil ?\{))
+    (interactive "p") (evil-find-char cunt nil ?\{))
   (defun my/evil-find-char-forward-bracket (count)
     (interactive "p") (evil-find-char count t ?\[))
   (defun my/evil-find-char-backward-bracket (count)
@@ -458,9 +458,25 @@
       (set-face-attribute face nil :foreground 'unspecified))))
 (add-hook 'after-init-hook #'my/fix-nil-faces)
 
-(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
-(when (file-exists-p custom-file) (load custom-file))
 (setq custom-enabled-themes nil) ;; we manage themes manually in init.el
 (provide 'init)
 (put 'downcase-region 'disabled nil)
 (put 'dired-find-alternate-file 'disabled nil)
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(custom-enabled-themes '(void-gruber))
+ '(custom-safe-themes
+   '("ef61d651d3d4b8c1ce24c10e8ce99de5eb8554161c7e7d923d18152f7528b7f2"
+     "d0fd069415ef23ccc21ccb0e54d93bdbb996a6cce48ffce7f810826bb243502c"
+     "3d39093437469a0ae165c1813d454351b16e4534473f62bc6e3df41bb00ae558"
+     "7833b86eaa71d72cddfd2ef1fb296f3d42e9e5e15d9fa26ab9a527b0d37ecdb0"
+     default)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
