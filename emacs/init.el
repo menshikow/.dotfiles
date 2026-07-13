@@ -14,6 +14,12 @@
 		   gc-cons-percentage 0.1)))
 
 ;; ==============================================================================
+;; custom file (keep Customize noise out of init.el)
+;; ==============================================================================
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+(load custom-file 'noerror)
+
+;; ==============================================================================
 ;; packages
 ;; ==============================================================================
 (require 'package)
@@ -84,6 +90,8 @@
 
 (set-face-attribute 'hl-line nil :background "#e0e0e0")
 
+(global-set-key (kbd "C-c w") #'toggle-truncate-lines)
+
 ;; colorscheme
 (add-to-list 'custom-theme-load-path (expand-file-name "themes" user-emacs-directory))
 
@@ -119,6 +127,16 @@
 
 (global-set-key (kbd "C-x 9") #'my/toggle-maximize-window)
 (global-set-key (kbd "C-M-i") #'completion-at-point)
+
+(defun my/toggle-word-wrap ()
+  (interactive)
+  (if truncate-lines
+      (progn
+        (setq-local truncate-lines nil)
+        (setq-local word-wrap t))
+    (setq-local truncate-lines t
+                word-wrap nil)))
+(global-set-key (kbd "C-c w") #'my/toggle-word-wrap)
 
 ;; packages
 (use-package avy
@@ -462,21 +480,4 @@
 (provide 'init)
 (put 'downcase-region 'disabled nil)
 (put 'dired-find-alternate-file 'disabled nil)
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(custom-enabled-themes '(void-gruber))
- '(custom-safe-themes
-   '("ef61d651d3d4b8c1ce24c10e8ce99de5eb8554161c7e7d923d18152f7528b7f2"
-     "d0fd069415ef23ccc21ccb0e54d93bdbb996a6cce48ffce7f810826bb243502c"
-     "3d39093437469a0ae165c1813d454351b16e4534473f62bc6e3df41bb00ae558"
-     "7833b86eaa71d72cddfd2ef1fb296f3d42e9e5e15d9fa26ab9a527b0d37ecdb0"
-     default)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
+
