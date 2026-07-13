@@ -73,7 +73,7 @@
 (scroll-bar-mode -1)
 (tool-bar-mode -1)
 (menu-bar-mode -1)
-(setq-default truncate-lines t)
+(setq-default truncate-lines nil)
 (electric-pair-mode 1)
 (setq backward-delete-char-untabify-method 'hungry)
 (setq initial-buffer-choice nil)
@@ -172,8 +172,8 @@
 (setq backup-directory-alist `(("." . "~/.config/emacs/saves/")))
 
 ;; (set-face-attribute 'default nil :font (font-spec :family "Terminus (TTF)" :size 16.0) :weight 'normal) 
-(set-face-attribute 'default nil :font (font-spec :family "Iosevka Extended" :size 15.0) :weight 'normal)
 ;; (set-face-attribute 'default nil :font (font-spec :family "DejaVu Sans Mono" :size 15.0) :weight 'normal)
+(set-face-attribute 'default nil :font (font-spec :family "Iosevka Extended" :size 14.0) :weight 'normal)
 
 (setq compile-command "")
 (global-set-key [escape] 'keyboard-escape-quit)
@@ -240,7 +240,7 @@
   (defun my/evil-find-char-forward-curly (count)
     (interactive "p") (evil-find-char count t ?\{))
   (defun my/evil-find-char-backward-curly (count)
-    (interactive "p") (evil-find-char cunt nil ?\{))
+    (interactive "p") (evil-find-char count nil ?\{))
   (defun my/evil-find-char-forward-bracket (count)
     (interactive "p") (evil-find-char count t ?\[))
   (defun my/evil-find-char-backward-bracket (count)
@@ -296,10 +296,19 @@
 (add-hook 'java-ts-mode-hook (lambda () (setq java-ts-mode-indent-offset 4)))
 (add-hook 'java-mode-hook (lambda () (setq c-basic-offset 4)))
 
-(use-package eglot-booster
-  :vc (:url "https://github.com/jdtsmith/eglot-booster")
-  :after eglot
-  :config (eglot-booster-mode))
+(defun my/lisp-indent-settings ()
+  (setq-local indent-tabs-mode nil
+              tab-width 2
+              electric-indent-inhibit t)
+  (electric-indent-local-mode -1))
+
+(add-hook 'emacs-lisp-mode-hook #'my/lisp-indent-settings)
+(add-hook 'lisp-mode-hook       #'my/lisp-indent-settings)
+
+;; (use-package eglot-booster
+;;   :ensure t
+;;   :after eglot
+;;   :config (eglot-booster-mode))
 
 (setq read-process-output-max (* 1024 1024))
 (setq eldoc-idle-delay 0.2)
@@ -327,7 +336,10 @@
   (setf (alist-get 'clang-format apheleia-formatters)
         '("clang-format" "-assume-filename" file "--style={IndentWidth: 4, ColumnLimit: 100}"))
   (add-to-list 'apheleia-mode-alist '(java-mode . clang-format))
-  (add-to-list 'apheleia-mode-alist '(java-ts-mode . clang-format)))
+  (add-to-list 'apheleia-mode-alist '(java-ts-mode . clang-format))
+  ;; Disable for Lisp (no formatter configured)
+  (add-to-list 'apheleia-mode-alist '(emacs-lisp-mode . nil))
+  (add-to-list 'apheleia-mode-alist '(lisp-mode . nil)))
 
 (use-package flycheck
   :ensure t
@@ -385,6 +397,17 @@
   :hook
   (embark-collect-mode . consult-preview-at-point-mode))
 
+;; magit
+(use-package magit
+  :ensure t
+  :bind ("C-x g" . magit-status))
+
+(setq magit-display-buffer-function
+      (lambda (buffer)
+	(display-buffer buffer
+			'(display-buffer-in-side-window
+			  (side . right) (window-width . 0.4)))))
+
 ;; autocompletion
 (use-package corfu
   :ensure t
@@ -402,14 +425,14 @@
   (corfu-history-mode)
   :config
   (set-face-attribute 'corfu-default nil
-                      :background "#1e1e1e"
-                      :foreground "#d4d4d4")
+		      :background "#1e1e1e"
+		      :foreground "#d4d4d4")
   (set-face-attribute 'corfu-current nil
-                      :background "#3a3a3a"
-                      :foreground "#ffffff")
+		      :background "#3a3a3a"
+		      :foreground "#ffffff")
   (set-face-attribute 'corfu-border nil
-                      :background "#333333"
-                      :foreground "#333333"))
+		      :background "#333333"
+		      :foreground "#333333"))
 
 (use-package project
   :custom (project-list-file "~/.config/emacs/projects"))
@@ -441,12 +464,11 @@
   :config
   ;; Use clippy instead of cargo check
   (add-hook 'rust-ts-mode-hook
-            (lambda ()
-              (setq-local eglot-workspace-configuration
+	    (lambda ()
+	      (setq-local eglot-workspace-configuration
 			  '(:rust-analyzer
 			    (:checkOnSave (:command "clippy")
 					  :rustfmt (:extraArgs ["--edition" "2021"])))))))
-
 
 (use-package cargo
   :ensure t
@@ -460,11 +482,6 @@
   (setq sly-auto-start 'always)
   :hook ((lisp-mode . sly-editing-mode)))
 
-;; Magit
-(use-package magit
-  :ensure t
-  :bind ("C-x g" . magit-status))
-
 ;; Mark
 (use-package markdown-mode
   :ensure t
@@ -476,8 +493,10 @@
       (set-face-attribute face nil :foreground 'unspecified))))
 (add-hook 'after-init-hook #'my/fix-nil-faces)
 
+;; Visual line mode (soft wrap) - enables visual line wrapping at window edge
+(global-visual-line-mode 1)
+
 (setq custom-enabled-themes nil) ;; we manage themes manually in init.el
 (provide 'init)
 (put 'downcase-region 'disabled nil)
 (put 'dired-find-alternate-file 'disabled nil)
-
