@@ -14,7 +14,7 @@
 		   gc-cons-percentage 0.1)))
 
 ;; ==============================================================================
-;; custom file (keep Customize noise out of init.el)
+;; custom file
 ;; ==============================================================================
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (load custom-file 'noerror)
@@ -82,18 +82,22 @@
 (repeat-mode 1)
 (global-auto-revert-mode 1)
 (winner-mode 1)
+(global-hl-line-mode -1)
+
+;; line numbers
 (setq display-line-numbers-type 'visual
       display-line-numbers-width 4)
 (global-display-line-numbers-mode)
 
-(global-hl-line-mode -1)
-
-(set-face-attribute 'hl-line nil :background "#e0e0e0")
-
 (global-set-key (kbd "C-c w") #'toggle-truncate-lines)
+
+;; font
+(set-face-attribute 'default nil :font (font-spec :family "Iosevka Extended" :size 14.0) :weight 'normal)
 
 ;; colorscheme
 (add-to-list 'custom-theme-load-path (expand-file-name "themes" user-emacs-directory))
+;; (load-theme 'tsdh-light t)
+(load-theme 'void-gruber t)
 
 ;; correct indentation
 (defun my/smart-return ()
@@ -170,10 +174,6 @@
             (setq file-name-handler-alist my/file-name-handler-alist-backup)))
 
 (setq backup-directory-alist `(("." . "~/.config/emacs/saves/")))
-
-;; (set-face-attribute 'default nil :font (font-spec :family "Terminus (TTF)" :size 16.0) :weight 'normal) 
-;; (set-face-attribute 'default nil :font (font-spec :family "DejaVu Sans Mono" :size 15.0) :weight 'normal)
-(set-face-attribute 'default nil :font (font-spec :family "Iosevka Extended" :size 14.0) :weight 'normal)
 
 (setq compile-command "")
 (global-set-key [escape] 'keyboard-escape-quit)

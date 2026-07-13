@@ -140,10 +140,6 @@
    `(tab-bar-tab-inactive ((t (:foreground ,text :background ,background))))
    )
 
-  (custom-theme-set-variables
-   'void
-   '(linum-format " %5i ")
-   )
   )
 
 ;;;###autoload

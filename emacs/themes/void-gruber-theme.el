@@ -74,7 +74,7 @@
 
   (custom-theme-set-variables
    'void-gruber
-   '(frame-brackground-mode (quote dark)))
+   '(frame-background-mode (quote dark)))
 
   (custom-theme-set-faces
    'void-gruber

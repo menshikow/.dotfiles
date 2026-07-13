@@ -175,10 +175,6 @@
    `(tab-bar-tab-inactive ((t (:foreground ,text :background ,background))))
    )
 
-  (custom-theme-set-variables
-   'jblow-nostalgia
-   '(linum-format " %5i ")
-   )
   )
 
 ;;;###autoload
