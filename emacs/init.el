@@ -89,6 +89,10 @@
       display-line-numbers-width 4)
 (global-display-line-numbers-mode)
 
+(defun my/keep-line-number-width (&rest _)
+  (setq display-line-numbers-width 4))
+(advice-add 'display-line-numbers--update-width :after #'my/keep-line-number-width)
+
 (global-set-key (kbd "C-c w") #'toggle-truncate-lines)
 
 ;; font
@@ -127,7 +131,6 @@
     (progn
       (setq my/window-toggle t)
       (delete-other-windows))))
-
 
 (global-set-key (kbd "C-x 9") #'my/toggle-maximize-window)
 (global-set-key (kbd "C-M-i") #'completion-at-point)
