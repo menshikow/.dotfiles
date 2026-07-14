@@ -83,6 +83,7 @@
 (global-auto-revert-mode 1)
 (winner-mode 1)
 (global-hl-line-mode -1)
+(global-visual-line-mode 1)
 
 ;; line numbers
 (setq display-line-numbers-type 'visual
@@ -134,16 +135,6 @@
 
 (global-set-key (kbd "C-x 9") #'my/toggle-maximize-window)
 (global-set-key (kbd "C-M-i") #'completion-at-point)
-
-(defun my/toggle-word-wrap ()
-  (interactive)
-  (if truncate-lines
-      (progn
-        (setq-local truncate-lines nil)
-        (setq-local word-wrap t))
-    (setq-local truncate-lines t
-                word-wrap nil)))
-(global-set-key (kbd "C-c w") #'my/toggle-word-wrap)
 
 ;; packages
 (use-package avy
@@ -335,11 +326,16 @@
         '("rustfmt" "--edition" "2021"))
   (add-to-list 'apheleia-mode-alist '(rust-mode . rustfmt))
   (add-to-list 'apheleia-mode-alist '(rust-ts-mode . rustfmt))
-  ;; Java via clang-format (4 spaces)
+  ;; Java via clang-format (2 spaces)
   (setf (alist-get 'clang-format apheleia-formatters)
-        '("clang-format" "-assume-filename" file "--style={IndentWidth: 4, ColumnLimit: 100}"))
+        '("clang-format" "-assume-filename" file "--style={IndentWidth: 2, ColumnLimit: 100}"))
   (add-to-list 'apheleia-mode-alist '(java-mode . clang-format))
   (add-to-list 'apheleia-mode-alist '(java-ts-mode . clang-format))
+  ;; C/C++ via clang-format (2 spaces)
+  (add-to-list 'apheleia-mode-alist '(c-mode . clang-format))
+  (add-to-list 'apheleia-mode-alist '(c-ts-mode . clang-format))
+  (add-to-list 'apheleia-mode-alist '(c++-mode . clang-format))
+  (add-to-list 'apheleia-mode-alist '(c++-ts-mode . clang-format))
   ;; Disable for Lisp (no formatter configured)
   (add-to-list 'apheleia-mode-alist '(emacs-lisp-mode . nil))
   (add-to-list 'apheleia-mode-alist '(lisp-mode . nil)))
@@ -400,7 +396,6 @@
   :hook
   (embark-collect-mode . consult-preview-at-point-mode))
 
-;; magit
 (use-package magit
   :ensure t
   :bind ("C-x g" . magit-status))
@@ -410,6 +405,18 @@
 	(display-buffer buffer
 			'(display-buffer-in-side-window
 			  (side . right) (window-width . 0.4)))))
+
+;; gf 
+(defun gf-sync ()
+  (interactive)
+  (when-let* ((f (buffer-file-name))
+              (l (line-number-at-pos)))
+    (with-temp-file "/tmp/gf_control.pipe"
+      (insert (format "f %s\nl %d\n" f l)))))
+
+(add-hook 'c-mode-common-hook
+  (lambda () (add-hook 'after-save-hook #'gf-sync nil t)))
+(global-set-key (kbd "C-c g") #'gf-sync)
 
 ;; autocompletion
 (use-package corfu
@@ -496,10 +503,8 @@
       (set-face-attribute face nil :foreground 'unspecified))))
 (add-hook 'after-init-hook #'my/fix-nil-faces)
 
-;; Visual line mode (soft wrap) - enables visual line wrapping at window edge
-(global-visual-line-mode 1)
-
 (setq custom-enabled-themes nil) ;; we manage themes manually in init.el
 (provide 'init)
 (put 'downcase-region 'disabled nil)
 (put 'dired-find-alternate-file 'disabled nil)
+
