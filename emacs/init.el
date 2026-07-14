@@ -58,15 +58,15 @@
   (add-to-list 'exec-path (expand-file-name "~/.ghcup/bin"))
   (add-to-list 'exec-path (expand-file-name "~/go/bin"))
   (add-to-list 'exec-path (expand-file-name "~/.cargo/bin"))
-  (setenv "PATH" (concat (expand-file-name "~/.pyenv/shims") ":"
+  (setenv "path" (concat (expand-file-name "~/.pyenv/shims") ":"
                          (expand-file-name "~/.ghcup/bin") ":"
                          (expand-file-name "~/go/bin") ":"
                          (expand-file-name "~/.cargo/bin") ":"
                          "/opt/homebrew/bin:"
-                         (getenv "PATH"))))
+                         (getenv "path"))))
 
 ;; ==============================================================================
-;; Ui and defaults
+;; ui and defaults
 ;; ==============================================================================
 (setq-default cursor-type 'box)
 (setq inhibit-startup-message 1)
@@ -97,7 +97,7 @@
 ;; colorscheme
 (add-to-list 'custom-theme-load-path (expand-file-name "themes" user-emacs-directory))
 ;; (load-theme 'tsdh-light t)
-(load-theme 'void-gruber t)
+(load-theme 'void-modern t)
 
 ;; correct indentation
 (defun my/smart-return ()
