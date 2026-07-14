@@ -1,4 +1,4 @@
-;;; void-theme.el --- Void color theme (modern structure)  -*- lexical-binding: t; -*-
+;;; void-theme.el --- void colorscheme for emacs -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2026
 
@@ -6,7 +6,7 @@
 ;; Version: 0.2
 ;; Filename: void-theme.el
 ;; Package-Requires: ((emacs "24"))
-;; URL: https://github.com/
+;; URL: https://github.com/menshikow/void-theme
 ;; License: MIT
 
 ;; Permission is hereby granted, free of charge, to any person
@@ -32,9 +32,8 @@
 ;;; Commentary:
 ;;
 ;; Void monochrome color theme.
-;; Covers all major Emacs packages with a structured, maintainable layout.
 
-(deftheme void "Void monochrome color theme")
+(deftheme void "void monochrome color theme")
 
 (let (;; UI colors
       (vm-fg        "#cccccc")
