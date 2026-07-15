@@ -40,12 +40,6 @@
         ns-option-modifier 'none
         ns-right-alternate-modifier 'none)
 
-  ;; macOS GUI apps don't inherit your shell's PATH, so pull it in explicitly.
-  (use-package exec-path-from-shell
-    :config
-    (when (memq window-system '(mac ns x))
-      (exec-path-from-shell-initialize)))
-
   (add-to-list 'exec-path "/opt/homebrew/bin")
   (add-to-list 'exec-path (expand-file-name "~/.pyenv/shims"))
   (setenv "PATH" (concat "/opt/homebrew/bin:"
@@ -347,8 +341,8 @@
 (setq tab-always-indent 'complete)
 
 (use-package corfu
+  :demand t
   :custom
-  (corfu-auto nil)
   (corfu-count 8)
   (corfu-min-width 30)
   (corfu-max-width 100)
@@ -360,6 +354,7 @@
   (global-corfu-mode)
   (corfu-history-mode)
   :config
+  (setq corfu-auto nil)
   (set-face-attribute 'corfu-default nil
               :background "#1e1e1e"
               :foreground "#d4d4d4")
@@ -377,8 +372,9 @@
   :bind ("M-d" . dired-jump)
   :custom (dired-listing-switches "-algh")
   :config
-  (when (executable-find "gls")
-    (setq insert-directory-program "gls"))
+  (dolist (candidate '("/opt/homebrew/bin/gls" "/usr/local/bin/gls"))
+    (when (file-executable-p candidate)
+      (setq insert-directory-program candidate)))
   (with-eval-after-load 'dired
     (define-key dired-mode-map (kbd "RET") 'dired-find-file)
     (define-key dired-mode-map (kbd "-") 'dired-up-directory)
