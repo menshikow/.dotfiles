@@ -30,40 +30,36 @@
 (unless (package-installed-p 'use-package)
   (package-install 'use-package))
 
-(setq use-package-always-ensure nil)
+(setq use-package-always-ensure t)
 
 ;; ==============================================================================
 ;; macos and german keyboard
 ;; ==============================================================================
-(setq ns-command-modifier 'meta)
-(setq ns-option-modifier 'none)
-(setq ns-right-alternate-modifier 'none)
+(when (eq system-type 'darwin)
+  (setq ns-command-modifier 'meta
+        ns-option-modifier 'none
+        ns-right-alternate-modifier 'none)
 
-(use-package exec-path-from-shell
-  :ensure t
-  :config
-  (when (memq window-system '(mac ns x))
-    (exec-path-from-shell-initialize)))
+  ;; macOS GUI apps don't inherit your shell's PATH, so pull it in explicitly.
+  (use-package exec-path-from-shell
+    :config
+    (when (memq window-system '(mac ns x))
+      (exec-path-from-shell-initialize)))
 
-;; Locally installed tools (~/.local/bin, cargo, go, etc.)
+  (add-to-list 'exec-path "/opt/homebrew/bin")
+  (add-to-list 'exec-path (expand-file-name "~/.pyenv/shims"))
+  (setenv "PATH" (concat "/opt/homebrew/bin:"
+                         (expand-file-name "~/.pyenv/shims") ":"
+                         (getenv "PATH"))))
+
+;; toolchain bins shared by both machines (same install location on mac + linux)
 (dolist (dir (list (expand-file-name "~/.local/bin")
                    (expand-file-name "~/.cargo/bin")
                    (expand-file-name "~/go/bin")
-                   (expand-file-name "~/.local/go/bin")))
+                   (expand-file-name "~/.local/go/bin")
+                   (expand-file-name "~/.ghcup/bin")
+                   (expand-file-name "~/.opam/default/bin")))
   (add-to-list 'exec-path dir))
-
-(when (eq system-type 'darwin)
-  (add-to-list 'exec-path "/opt/homebrew/bin")
-  (add-to-list 'exec-path (expand-file-name "~/.pyenv/shims"))
-  (add-to-list 'exec-path (expand-file-name "~/.ghcup/bin"))
-  (add-to-list 'exec-path (expand-file-name "~/go/bin"))
-  (add-to-list 'exec-path (expand-file-name "~/.cargo/bin"))
-  (setenv "path" (concat (expand-file-name "~/.pyenv/shims") ":"
-                         (expand-file-name "~/.ghcup/bin") ":"
-                         (expand-file-name "~/go/bin") ":"
-                         (expand-file-name "~/.cargo/bin") ":"
-                         "/opt/homebrew/bin:"
-                         (getenv "path"))))
 
 ;; ==============================================================================
 ;; ui and defaults
@@ -83,8 +79,6 @@
 (repeat-mode 1)
 (global-auto-revert-mode 1)
 (winner-mode 1)
-(global-hl-line-mode -1)
-
 
 ;; line numbers
 (setq display-line-numbers-type 'visual
@@ -93,7 +87,9 @@
 (global-display-line-numbers-mode)
 
 ;; font
-(set-face-attribute 'default nil :font (font-spec :family "Iosevka Extended" :size 14.0) :weight 'normal)
+
+;; (when (eq system-type 'darwin)
+(set-face-attribute 'default nil :font (font-spec :family "Iosevka Extended" :size 16.0) :weight 'normal)
 
 ;; colorscheme
 (add-to-list 'custom-theme-load-path (expand-file-name "themes" user-emacs-directory))
@@ -114,22 +110,17 @@
           (indent-according-to-mode))
       (newline-and-indent))))
 
-(defvar my/window-toggle nil)
 (defun my/toggle-maximize-window ()
   (interactive)
   (if (= (count-windows) 1)
       (winner-undo)
-    (progn
-      (setq my/window-toggle t)
-      (delete-other-windows))))
+    (delete-other-windows)))
 
 ;; packages
 (use-package avy
-  :ensure t
   :bind ("C--" . avy-goto-char-timer))
 
 (use-package ace-link
-  :ensure t
   :after (org info)
   :config
   (ace-link-setup-default)
@@ -178,9 +169,7 @@
 (global-set-key (kbd "C-c z") #'delete-other-windows)
 (global-set-key (kbd "C-c u") #'winner-undo)
 (global-set-key (kbd "C-x 9") #'my/toggle-maximize-window)
-(global-set-key (kbd "C-M-i") #'completion-at-point)
 (global-set-key [escape] 'keyboard-escape-quit)
-(global-set-key (kbd "C-z") #'Evil)
 (dolist (map (list minibuffer-local-map
                    minibuffer-local-completion-map
                    minibuffer-local-must-match-map
@@ -191,13 +180,12 @@
 (global-set-key (kbd "M--") 'text-scale-decrease)
 (global-set-key (kbd "M-0") (lambda () (interactive) (text-scale-set 0)))
 (global-set-key (kbd "C-x C-b") 'switch-to-buffer)
-(global-set-key (kbd "M-n") 'flycheck-next-error)
-(global-set-key (kbd "M-p") 'flycheck-previous-error)
+(global-set-key (kbd "M-n") 'flymake-goto-next-error)
+(global-set-key (kbd "M-p") 'flymake-goto-prev-error)
 (global-set-key (kbd "C-c r") #'recentf-open-files)
 (global-set-key (kbd "C-c c") #'compile)
 
 (use-package evil
-  :ensure t
   :init
   (setq evil-want-integration t evil-want-keybinding nil
         evil-want-C-u-scroll t)
@@ -209,21 +197,17 @@
   (evil-mode 1))
 
 (use-package evil-collection
-  :ensure t
   :after evil
   :config (evil-collection-init))
 
 (use-package evil-surround
-  :ensure t
   :config (global-evil-surround-mode 1))
 
 (use-package evil-commentary
-  :ensure t
   :after evil
   :config (evil-commentary-mode))
 
 (use-package evil-mc
-  :ensure t
   :after evil
   :config
   (global-evil-mc-mode 1)
@@ -270,7 +254,6 @@
 ;; Lsp, formatting & linting
 ;; ==============================================================================
 (use-package eglot
-  :ensure t
   :custom
   (eglot-sync-connect nil)
   (eglot-ignored-server-capabilities '(:codeActionProvider :codeActionResolve))
@@ -309,46 +292,26 @@
 (add-hook 'emacs-lisp-mode-hook #'my/lisp-indent-settings)
 (add-hook 'lisp-mode-hook       #'my/lisp-indent-settings)
 
-;; (use-package eglot-booster
-;;   :ensure t
-;;   :after eglot
-;;   :config (eglot-booster-mode))
-
 (setq read-process-output-max (* 1024 1024))
 (setq eldoc-idle-delay 0.2)
-
-
-(use-package flycheck
-  :ensure t
-  :init (global-flycheck-mode)
-  :custom
-  (flycheck-indication-mode nil)
-  :config
-  ;; Disabling native Flycheck C/C++ checkers lets Eglot (Flymake) run flawlessly
-  (setq-default flycheck-disabled-checkers 
-                '(emacs-lisp-checkdoc emacs-lisp-package-lint org-lint python-mypy c/c++-clang c/c++-gcc)))
 
 
 ;; ==============================================================================
 ;; Completion and tools
 ;; ==============================================================================
 (use-package vertico
-  :ensure t
   :config
   (vertico-mode))
 (use-package savehist :init (savehist-mode))
 (use-package marginalia
-  :ensure t
   :init (marginalia-mode))
 (use-package orderless
-  :ensure t
   :custom
   (completion-styles '(orderless basic))
   (completion-category-defaults nil)
   (completion-category-overrides '((file (styles partial-completion)))))
 
 (use-package consult
-  :ensure t
   :bind (("C-s" . consult-line)
          ("C-x b" . consult-buffer)
          ("M-s" . consult-ripgrep)
@@ -358,7 +321,6 @@
   (consult-project-root-function #'project-root))
 
 (use-package embark
-  :ensure t
   :bind (("C-." . embark-act)
          ("C-;" . embark-dwim)
          ("C-h B" . embark-bindings))
@@ -366,13 +328,11 @@
   (setq embark-help-key "?"))
 
 (use-package embark-consult
-  :ensure t
   :after (embark consult)
   :hook
   (embark-collect-mode . consult-preview-at-point-mode))
 
 (use-package magit
-  :ensure t
   :bind ("C-x g" . magit-status))
 
 (add-hook 'c-mode-common-hook
@@ -382,17 +342,20 @@
     (add-hook 'before-save-hook #'eglot-format nil t)))
 
 ;; autocompletion
+;; TAB indents when the line needs it; once the line is already indented,
+;; TAB triggers completion-at-point instead (which corfu displays).
+(setq tab-always-indent 'complete)
+
 (use-package corfu
-  :ensure t
   :custom
-  (corfu-auto t)
-  (corfu-auto-delay 0)
-  (corfu-auto-prefix 2)
+  (corfu-auto nil)
   (corfu-count 8)
   (corfu-min-width 30)
   (corfu-max-width 100)
   (corfu-on-exact-match nil)
   (corfu-scroll-margin 4)
+  :bind
+  (:map corfu-map ("TAB" . corfu-insert) ([tab] . corfu-insert))
   :init
   (global-corfu-mode)
   (corfu-history-mode)
@@ -424,7 +387,6 @@
 
 ;; Go
 (use-package go-ts-mode
-  :ensure t
   :mode ("\\.go\\'" . go-ts-mode)
   :hook (go-ts-mode . eglot-ensure)
   :config
@@ -444,12 +406,30 @@
                       :rustfmt (:extraArgs ["--edition" "2021"])))))))
 
 (use-package cargo
-  :ensure t
   :hook (rust-ts-mode . cargo-minor-mode))
+
+;; OCaml (requires: opam install ocaml-lsp-server)
+(use-package tuareg
+  :mode ("\\.ml[ip]?\\'" . tuareg-mode)
+  :hook (tuareg-mode . eglot-ensure))
+
+(use-package ocaml-eglot
+  :after (tuareg eglot)
+  :hook (tuareg-mode . ocaml-eglot))
+
+(with-eval-after-load 'eglot
+  (add-to-list 'eglot-server-programs '(tuareg-mode . ("ocamllsp"))))
+
+;; Haskell (requires: ghcup install hls)
+(use-package haskell-mode
+  :hook (haskell-mode . eglot-ensure))
+
+(with-eval-after-load 'eglot
+  (add-to-list 'eglot-server-programs
+               '(haskell-mode . ("haskell-language-server-wrapper" "--lsp"))))
 
 ;; Common Lisp
 (use-package sly
-  :ensure t
   :config
   (setq inferior-lisp-program "sbcl")
   (setq sly-auto-start 'always)
@@ -457,7 +437,6 @@
 
 ;; Mark
 (use-package markdown-mode
-  :ensure t
   :mode ("\\.md\\'" . markdown-mode))
 
 (defun my/fix-nil-faces ()

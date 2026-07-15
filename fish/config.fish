@@ -40,8 +40,8 @@ set -x LESS_TERMCAP_us (set_color -u 146)
 
 # General
 abbr -a l "ls -l -a"
-abbr -a vim "nvim"
 abbr -a ls "ls -l -a"
+abbr -a vim "vim"
 abbr -a e "eza -l -a"
 abbr -a c "code --reuse-window"
 abbr -a e "eza -l -a"
