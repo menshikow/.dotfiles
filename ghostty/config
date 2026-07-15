@@ -7,8 +7,6 @@ mouse-hide-while-typing = true
 font-feature = -calt, -liga, -dlig
 font-size = 17
 
-font-family = "Iosevka Fixed Extended"
-
 unfocused-split-opacity = 1.0
 
 keybind = super+d=new_split:right
