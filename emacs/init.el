@@ -85,12 +85,12 @@
  ((eq system-type 'darwin)   ; macOS
   (set-face-attribute 'default nil
                       :font "Iosevka Extended"
-                      :height 160))
+                      :height 170))
 
  ((eq system-type 'gnu/linux) ; Linux
   (set-face-attribute 'default nil
                       :font "Iosevka Extended"
-                      :height 140)))
+                      :height 150)))
 
 ;; colorscheme
 (add-to-list 'custom-theme-load-path (expand-file-name "themes" user-emacs-directory))
