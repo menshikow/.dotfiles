@@ -82,15 +82,16 @@
 
 ;; font
 (cond
- ((eq system-type 'darwin)   ; macOS
+ ((eq system-type 'darwin)
   (set-face-attribute 'default nil
-                      :font "Iosevka Extended"
-                      :height 170))
+                      :font "Liberation Mono"
+                      :height 140))
 
- ((eq system-type 'gnu/linux) ; Linux
+
+ ((eq system-type 'gnu/linux)
   (set-face-attribute 'default nil
-                      :font "Iosevka Extended"
-                      :height 140)))
+                      :font "Liberation Mono"
+                      :height 120)))
 
 ;; colorscheme
 (add-to-list 'custom-theme-load-path (expand-file-name "themes" user-emacs-directory))
@@ -194,7 +195,7 @@
   (setq evil-want-integration t evil-want-keybinding nil
         evil-want-C-u-scroll t)
   :config
-  (setq evil-insert-state-cursor '(box) 
+  (setq evil-insert-state-cursor '(bar) 
         evil-normal-state-cursor '(box) 
         evil-visual-state-cursor '(box) 
         evil-replace-state-cursor '(box))
@@ -451,7 +452,7 @@
       (set-face-attribute face nil :foreground 'unspecified))))
 (add-hook 'after-init-hook #'my/fix-nil-faces)
 
-(setq custom-enabled-themes nil) ;; we manage themes manually in init.el
+(setq custom-enabled-themes nil)
 (provide 'init)
 (put 'downcase-region 'disabled nil)
 (put 'dired-find-alternate-file 'disabled nil)

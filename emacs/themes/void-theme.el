@@ -33,7 +33,7 @@
 ;;
 ;; Void monochrome color theme.
 
-(deftheme void "void monochrome color theme")
+(deftheme void "monochrome theme for emacs")
 
 (let (;; UI colors
       (vm-fg        "#cccccc")
