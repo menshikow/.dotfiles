@@ -90,7 +90,7 @@
  ((eq system-type 'gnu/linux) ; Linux
   (set-face-attribute 'default nil
                       :font "Iosevka Extended"
-                      :height 150)))
+                      :height 140)))
 
 ;; colorscheme
 (add-to-list 'custom-theme-load-path (expand-file-name "themes" user-emacs-directory))
@@ -272,8 +272,8 @@
     c++-ts-mode-hook) . eglot-ensure)
   :config
   (fset #'jsonrpc--log-event #'ignore)
-  (add-to-list 'eglot-server-programs
-               '((python-mode python-ts-mode) . ("ruff" "server")))
+   (add-to-list 'eglot-server-programs
+                '((python-mode python-ts-mode) . ("basedpyright-langserver" "--stdio")))
   (add-to-list 'eglot-server-programs
                '((java-mode java-ts-mode) . ("jdtls")))
   ;; OS-conditional: macOS gets clangd, Linux gets clangd with gcc query-driver flags
