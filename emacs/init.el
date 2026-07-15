@@ -81,9 +81,16 @@
 (global-display-line-numbers-mode)
 
 ;; font
+(cond
+ ((eq system-type 'darwin)   ; macOS
+  (set-face-attribute 'default nil
+                      :font "Iosevka Extended"
+                      :height 160))
 
-;; (when (eq system-type 'darwin)
-(set-face-attribute 'default nil :font (font-spec :family "Iosevka Extended" :size 16.0) :weight 'normal)
+ ((eq system-type 'gnu/linux) ; Linux
+  (set-face-attribute 'default nil
+                      :font "Iosevka Extended"
+                      :height 140)))
 
 ;; colorscheme
 (add-to-list 'custom-theme-load-path (expand-file-name "themes" user-emacs-directory))
@@ -154,22 +161,25 @@
 (add-to-list 'display-buffer-alist '("\\*warnings\\*" (display-buffer-no-window)))
 
 ;; ==============================================================================
-;; Keybindings
+;; keybindings
 ;; ==============================================================================
 
-;; Global keybindings
+;; global keybindings
 (global-set-key (kbd "C-c w") #'toggle-truncate-lines)
 (define-key prog-mode-map (kbd "RET") #'my/smart-return)
 (global-set-key (kbd "C-c z") #'delete-other-windows)
 (global-set-key (kbd "C-c u") #'winner-undo)
 (global-set-key (kbd "C-x 9") #'my/toggle-maximize-window)
 (global-set-key [escape] 'keyboard-escape-quit)
+
+;; minibuffer pasting with C-z
 (dolist (map (list minibuffer-local-map
                    minibuffer-local-completion-map
                    minibuffer-local-must-match-map
                    minibuffer-local-filename-completion-map
                    minibuffer-local-isearch-map))
   (define-key map (kbd "C-z") #'yank))
+
 (global-set-key (kbd "M-+") 'text-scale-increase)
 (global-set-key (kbd "M--") 'text-scale-decrease)
 (global-set-key (kbd "M-0") (lambda () (interactive) (text-scale-set 0)))
