@@ -84,14 +84,14 @@
 (cond
  ((eq system-type 'darwin)
   (set-face-attribute 'default nil
-                      :font "Liberation Mono"
-                      :height 140))
+                      :font "Iosevka Extended"
+                      :height 160))
 
 
  ((eq system-type 'gnu/linux)
   (set-face-attribute 'default nil
-                      :font "Liberation Mono"
-                      :height 120)))
+                      :font "Iosevka Extended"
+                      :height 140)))
 
 ;; colorscheme
 (add-to-list 'custom-theme-load-path (expand-file-name "themes" user-emacs-directory))
@@ -195,7 +195,7 @@
   (setq evil-want-integration t evil-want-keybinding nil
         evil-want-C-u-scroll t)
   :config
-  (setq evil-insert-state-cursor '(bar) 
+  (setq evil-insert-state-cursor '(box) 
         evil-normal-state-cursor '(box) 
         evil-visual-state-cursor '(box) 
         evil-replace-state-cursor '(box))
