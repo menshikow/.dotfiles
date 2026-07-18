@@ -377,9 +377,11 @@
               :foreground "#333333"))
 
 (use-package project
+  :ensure nil
   :custom (project-list-file "~/.config/emacs/projects"))
 
 (use-package dired
+  :ensure nil
   :bind ("M-d" . dired-jump)
   :custom (dired-listing-switches "-algh")
   :config

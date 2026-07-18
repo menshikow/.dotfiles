@@ -1,4 +1,4 @@
-;;; light-void-theme.el --- light void colorscheme for emacs -*- lexical-binding: t; -*-
+;;; light-void-theme.el --- Light void colorscheme -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2026
 
@@ -33,7 +33,9 @@
 ;;
 ;; Void monochrome color theme, light version.
 
-(deftheme light-void "light monochrome theme for emacs")
+;;; Code:
+
+(deftheme light-void "Light monochrome theme for Emacs.")
 
 (let (;; UI colors
       (vm-fg        "#333333")

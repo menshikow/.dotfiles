@@ -1,4 +1,4 @@
-;;; dark-void-theme.el --- dark void colorscheme for emacs -*- lexical-binding: t; -*-
+;;; dark-void-theme.el --- Dark void colorscheme -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2026
 
@@ -33,7 +33,9 @@
 ;;
 ;; Dark void monochrome color theme.
 
-(deftheme dark-void "dark monochrome theme for emacs")
+;;; Code:
+
+(deftheme dark-void "Dark monochrome theme for Emacs.")
 
 (let (;; UI colors
       (vm-fg        "#cccccc")
