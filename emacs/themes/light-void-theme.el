@@ -1,10 +1,10 @@
-;;; void-theme.el --- void colorscheme for emacs -*- lexical-binding: t; -*-
+;;; light-void-theme.el --- light void colorscheme for emacs -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2026
 
 ;; Author: Adrian Menschikow <github.com/menshikow>
 ;; Version: 0.2
-;; Filename: void-theme.el
+;; Filename: light-void-theme.el
 ;; Package-Requires: ((emacs "24"))
 ;; URL: https://github.com/menshikow/void-theme
 ;; License: MIT
@@ -31,57 +31,57 @@
 
 ;;; Commentary:
 ;;
-;; Void monochrome color theme.
+;; Void monochrome color theme, light version.
 
-(deftheme void "monochrome theme for emacs")
+(deftheme light-void "light monochrome theme for emacs")
 
 (let (;; UI colors
-      (vm-fg        "#cccccc")
-      (vm-fg+1      "#ffffff")
-      (vm-fg+2      "#ffffff")
-      (vm-white     "#ffffff")
-      (vm-black     "#000000")
-      (vm-bg-1      "#000000")
-      (vm-bg        "#000000")
-      (vm-bg+1      "#1a1a1a")
-      (vm-bg+2      "#4d4d4d")
-      (vm-bg+3      "#484848")
-      (vm-bg+4      "#4d4d4d")
-      (vm-red-1     "#ff4444")
-      (vm-red       "#ff4444")
-      (vm-red+1     "#ff4444")
-      (vm-green     "#8fdf8f")
-      (vm-yellow    "#cccccc")
-      (vm-brown     "#a0a0a0")
-      (vm-quartz    "#a0a0a0")
-      (vm-niagara-2 "#a0a0a0")
-      (vm-niagara-1 "#888888")
-      (vm-niagara   "#a0a0a0")
-      (vm-wisteria  "#a0a0a0")
+      (vm-fg        "#333333")
+      (vm-fg+1      "#000000")
+      (vm-fg+2      "#000000")
+      (vm-white     "#000000")
+      (vm-black     "#ffffff")
+      (vm-bg-1      "#ffffff")
+      (vm-bg        "#f5f5f5")
+      (vm-bg+1      "#e8e8e8")
+      (vm-bg+2      "#b0b0b0")
+      (vm-bg+3      "#c8c8c8")
+      (vm-bg+4      "#b0b0b0")
+      (vm-red-1     "#cc2222")
+      (vm-red       "#cc2222")
+      (vm-red+1     "#cc2222")
+      (vm-green     "#3daa3d")
+      (vm-yellow    "#888800")
+      (vm-brown     "#5f5f5f")
+      (vm-quartz    "#5f5f5f")
+      (vm-niagara-2 "#5f5f5f")
+      (vm-niagara-1 "#777777")
+      (vm-niagara   "#5f5f5f")
+      (vm-wisteria  "#5f5f5f")
 
       ;; Syntax colors
-      (void-builtin      "#a0a0a0")
-      (void-text         "#cccccc")
-      (void-comments     "#6b9f6b")
-      (void-punctuation  "#a0a0a0")
-      (void-keywords     "#ffffff")
-      (void-variables    "#888888")
-      (void-functions    "#e8e8e8")
-      (void-methods      "#b8b8b8")
-      (void-strings      "#b08f5a")
-      (void-constants    "#888888")
-      (void-macros       "#888888")
-      (void-numbers      "#888888")
-      (void-warning      "#cccccc")
-      (void-error        "#ff4444")
-      (void-green        "#8fdf8f"))
+      (void-builtin      "#5f5f5f")
+      (void-text         "#333333")
+      (void-comments     "#3d7a3d")
+      (void-punctuation  "#5f5f5f")
+      (void-keywords     "#000000")
+      (void-variables    "#666666")
+      (void-functions    "#222222")
+      (void-methods      "#444444")
+      (void-strings      "#7a6633")
+      (void-constants    "#666666")
+      (void-macros       "#666666")
+      (void-numbers      "#666666")
+      (void-warning      "#888800")
+      (void-error        "#cc2222")
+      (void-green        "#3daa3d"))
 
   (custom-theme-set-variables
-   'void
-   '(frame-background-mode (quote dark)))
+   'light-void
+   '(frame-background-mode (quote light)))
 
   (custom-theme-set-faces
-   'void
+   'light-void
 
    ;; Agda2
    `(agda2-highlight-datatype-face ((t (:foreground ,vm-quartz))))
@@ -455,11 +455,11 @@
   (add-to-list 'custom-theme-load-path
                (file-name-as-directory (file-name-directory load-file-name))))
 
-(provide-theme 'void)
+(provide-theme 'light-void)
 
 ;; Local Variables:
 ;; no-byte-compile: t
 ;; indent-tabs-mode: nil
 ;; End:
 
-;;; void-theme.el ends here
+;;; light-void-theme.el ends here

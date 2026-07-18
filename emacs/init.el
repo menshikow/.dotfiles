@@ -78,14 +78,14 @@
 (setq display-line-numbers-type 'visual
       display-line-numbers-width 5
       display-line-numbers-grow-only nil)
-(global-display-line-numbers-mode)
+(global-display-line-numbers-mode -1)
 
 ;; font
 (cond
  ((eq system-type 'darwin)
   (set-face-attribute 'default nil
-                      :font "Iosevka Extended"
-                      :height 160))
+                      :font "Menlo"
+                      :height 150))
 
 
  ((eq system-type 'gnu/linux)
@@ -95,8 +95,8 @@
 
 ;; colorscheme
 (add-to-list 'custom-theme-load-path (expand-file-name "themes" user-emacs-directory))
-;; (load-theme 'tsdh-light t)
-(load-theme 'void t)
+;; (load-theme 'dark-void t)
+(load-theme 'light-void t)
 
 ;; correct indentation
 (defun my/smart-return ()
@@ -161,7 +161,7 @@
 (pixel-scroll-precision-mode 1)
 (add-to-list 'display-buffer-alist '("\\*warnings\\*" (display-buffer-no-window)))
 
-;; ==============================================================================
+;; =============================================================================
 ;; keybindings
 ;; ==============================================================================
 
