@@ -2,7 +2,8 @@
 
 ;; Copyright (C) 2026
 
-;; Author: Adrian Menschikow <github.com/menshikow>
+;; Author: Author Name <andreydmenshikov>
+;; Assisted-by: DeepSeek V4
 ;; Version: 0.2
 ;; Filename: dark-void-theme.el
 ;; Package-Requires: ((emacs "24"))
