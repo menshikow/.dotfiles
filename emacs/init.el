@@ -346,9 +346,7 @@
                 '(:clangd (:fallbackStyle "{IndentWidth: 2, ColumnLimit: 100}")))
     (add-hook 'before-save-hook #'eglot-format nil t)))
 
-;; autocompletion
-;; TAB indents when the line needs it; once the line is already indented,
-;; TAB triggers completion-at-point instead (which corfu displays).
+;; completion
 (setq tab-always-indent 'complete)
 
 (use-package corfu
@@ -358,13 +356,13 @@
   (corfu-min-width 30)
   (corfu-max-width 100)
   (corfu-on-exact-match nil)
+  
   (corfu-scroll-margin 4)
-  :bind
-  (:map corfu-map ("TAB" . corfu-insert) ([tab] . corfu-insert))
   :init
   (global-corfu-mode)
   (corfu-history-mode)
   :config
+  (define-key corfu-map (kbd "M-RET") #'corfu-insert)
   (setq corfu-auto nil)
   (set-face-attribute 'corfu-default nil
               :background "#1e1e1e"
