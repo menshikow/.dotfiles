@@ -5,6 +5,10 @@ Plug 'tpope/vim-sensible'
 
 call plug#end()
 
+set noswapfile
+set nobackup
+set noundofile
+
 colorscheme default
 set number
 
