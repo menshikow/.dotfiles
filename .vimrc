@@ -9,8 +9,8 @@ set noswapfile
 set nobackup
 set noundofile
 
-colorscheme default
-set number
+colorscheme desert
+set relativenumber
 
 syntax on
 
@@ -22,7 +22,11 @@ set softtabstop=2
 
 set autoindent
 set smartindent
-set clipboard=unnamedplus
+if has('mac') || has('macunix')
+  set clipboard=unnamed
+else
+  set clipboard=unnamedplus
+endif
 
 highlight StatusLine   cterm=NONE ctermfg=white ctermbg=black gui=NONE
 highlight StatusLineNC cterm=NONE ctermfg=gray  ctermbg=black gui=NONE
