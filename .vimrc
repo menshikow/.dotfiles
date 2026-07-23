@@ -2,6 +2,7 @@ call plug#begin()
 
 Plug 'jiangmiao/auto-pairs'
 Plug 'tpope/vim-sensible'
+Plug 'jiangmiao/auto-pairs'
 
 call plug#end()
 
@@ -9,7 +10,7 @@ set noswapfile
 set nobackup
 set noundofile
 
-colorscheme desert
+colorscheme default
 set relativenumber
 
 syntax on

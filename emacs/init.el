@@ -84,7 +84,7 @@
 (cond
  ((eq system-type 'darwin)
   (set-face-attribute 'default nil
-                      :font "Menlo"
+                      :font "JetBrainsMono Nerd Font Mono"
                       :height 150))
 
 
@@ -95,8 +95,8 @@
 
 ;; colorscheme
 (add-to-list 'custom-theme-load-path (expand-file-name "themes" user-emacs-directory))
-;; (load-theme 'dark-void t)
-(load-theme 'light-void t)
+(load-theme 'dark-void t)
+;; (load-theme 'light-void t)
 
 ;; correct indentation
 (defun my/smart-return ()
