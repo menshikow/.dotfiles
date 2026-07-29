@@ -80,22 +80,22 @@
       display-line-numbers-grow-only nil)
 (global-display-line-numbers-mode -1)
 
-;; font
+;; font 
 (cond
  ((eq system-type 'darwin)
   (set-face-attribute 'default nil
-                      :font "JetBrainsMono Nerd Font Mono"
-                      :height 150))
+                      :font "DejaVu Sans Mono"
+                      ;; :font "Iosevka Fixed"
+                      :height 130))
 
 
  ((eq system-type 'gnu/linux)
-  (set-face-attribute 'default nil
-                      :font "Iosevka Extended"
-                      :height 140)))
+                      :font "Iosevka Fixed"
+                      :height 140))
 
 ;; colorscheme
 (add-to-list 'custom-theme-load-path (expand-file-name "themes" user-emacs-directory))
-(load-theme 'dark-void t)
+;; (load-theme 'dark-void t)
 ;; (load-theme 'light-void t)
 
 ;; correct indentation
@@ -392,6 +392,8 @@
     (define-key dired-mode-map (kbd "o") 'dired-find-file-other-window)
     (define-key dired-mode-map (kbd "q") 'quit-window)))
 
+;; language specific (lsp and shit)
+
 ;; Go
 (use-package go-ts-mode
   :mode ("\\.go\\'" . go-ts-mode)
@@ -415,7 +417,7 @@
 (use-package cargo
   :hook (rust-ts-mode . cargo-minor-mode))
 
-;; OCaml (requires: opam install ocaml-lsp-server)
+;; OCaml
 (use-package tuareg
   :mode ("\\.ml[ip]?\\'" . tuareg-mode)
   :hook (tuareg-mode . eglot-ensure))
@@ -427,7 +429,7 @@
 (with-eval-after-load 'eglot
   (add-to-list 'eglot-server-programs '(tuareg-mode . ("ocamllsp"))))
 
-;; Haskell (requires: ghcup install hls)
+;; Haskell
 (use-package haskell-mode
   :hook (haskell-mode . eglot-ensure))
 
