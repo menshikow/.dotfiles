@@ -7,6 +7,7 @@ return {
 		require("rose-pine").setup({
 			highlight_groups = {
 				Normal = { bg = "#000000" },
+				NormalNC = { bg = "#000000" },
 				NormalFloat = { bg = "#000000" },
 				FloatBorder = { bg = "#000000" },
 				SignColumn = { bg = "#000000" },
