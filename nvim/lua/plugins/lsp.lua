@@ -27,6 +27,17 @@ return {
 				"ocaml",
 				"ocaml_interface",
 				"java",
+				"rust",
+				"zig",
+				"json",
+				"yaml",
+				"toml",
+				"bash",
+				"latex",
+				"html",
+				"css",
+				"javascript",
+				"typescript",
 			}
 
 			local installed = {} --- @type table<string, boolean>
@@ -54,11 +65,6 @@ return {
 				end,
 			})
 		end,
-	},
-
-	{
-		"nvim-treesitter/nvim-treesitter-textobjects",
-		dependencies = { "nvim-treesitter/nvim-treesitter" },
 	},
 
 	-- LSP
@@ -155,6 +161,20 @@ return {
 					if client then
 						client.server_capabilities.semanticTokensProvider = nil
 					end
+
+					local map = function(keys, fn, desc)
+						vim.keymap.set("n", keys, fn, { buffer = args.buf, desc = desc })
+					end
+
+					map("gr", vim.lsp.buf.references, "[G]oto [R]eferences")
+					map("gi", vim.lsp.buf.implementation, "[G]oto [I]mplementation")
+					map("K", vim.lsp.buf.hover, "Hover documentation")
+					map("<leader>rn", vim.lsp.buf.rename, "[R]e[n]ame")
+					map("<leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction")
+					map("<leader>ls", vim.lsp.buf.document_symbol, "[L]SP [S]ymbols")
+					map("<leader>li", function()
+						vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = args.buf }), { bufnr = args.buf })
+					end, "Toggle [I]nlay [H]ints")
 				end,
 			})
 
@@ -236,7 +256,6 @@ return {
 	-- Completion
 	{
 		"hrsh7th/nvim-cmp",
-		dependencies = { "L3MON4D3/LuaSnip" },
 		config = function()
 			local cmp = require("cmp")
 
@@ -253,15 +272,6 @@ return {
 					["<Down>"] = cmp.mapping.select_next_item(),
 					["<Up>"] = cmp.mapping.select_prev_item(),
 				}),
-
-				snippet = {
-					expand = function(args)
-						local ok, luasnip = pcall(require, "luasnip")
-						if ok then
-							luasnip.lsp_expand(args.body)
-						end
-					end,
-				},
 			})
 		end,
 	},

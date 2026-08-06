@@ -33,6 +33,8 @@ map("n", "<leader>k", vim.diagnostic.goto_prev, opts)
 map("n", "<leader>j", vim.diagnostic.goto_next, opts)
 
 -- window splits
+map("n", "<C-x>3", "<cmd>vsplit<CR>", opts)
+map("n", "<C-x>2", "<cmd>split<CR>", opts)
 map("n", "<leader>sv", "<cmd>vsplit<CR>", opts)
 map("n", "<leader>sh", "<cmd>split<CR>", opts)
 map("n", "<leader>se", "<C-w>=", opts)
