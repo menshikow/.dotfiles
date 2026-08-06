@@ -3,10 +3,9 @@ background = #000000
 command = /opt/homebrew/bin/fish
 
 mouse-hide-while-typing = true
-font-family = "IoskeleyMonoTerm Nerd Font"
 
 font-feature = -calt, -liga, -dlig
-font-size = 15
+font-size = 16
 
 unfocused-split-opacity = 1.0
 

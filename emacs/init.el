@@ -30,6 +30,7 @@
 (unless (package-installed-p 'use-package)
   (package-install 'use-package))
 
+(require 'use-package)
 (setq use-package-always-ensure t)
 
 ;; ==============================================================================
@@ -45,7 +46,6 @@
   (setenv "PATH" (concat "/opt/homebrew/bin:"
                          (expand-file-name "~/.pyenv/shims") ":"
                          (getenv "PATH"))))
-
 ;; toolchain bins shared by both machines (same install location on mac + linux)
 (dolist (dir (list (expand-file-name "~/.local/bin")
                    (expand-file-name "~/.cargo/bin")
@@ -76,7 +76,7 @@
 
 ;; line numbers
 (setq display-line-numbers-type 'visual
-      display-line-numbers-width 5
+      display-line-numbers-width 3
       display-line-numbers-grow-only nil)
 (global-display-line-numbers-mode -1)
 
@@ -85,18 +85,15 @@
  ((eq system-type 'darwin)
   (set-face-attribute 'default nil
                       :font "DejaVu Sans Mono"
-                      ;; :font "Iosevka Fixed"
-                      :height 130))
-
+                      :height 170))
 
  ((eq system-type 'gnu/linux)
+  (set-face-attribute 'default nil
                       :font "Iosevka Fixed"
-                      :height 140))
+                      :height 140)))
 
 ;; colorscheme
 (add-to-list 'custom-theme-load-path (expand-file-name "themes" user-emacs-directory))
-;; (load-theme 'dark-void t)
-;; (load-theme 'light-void t)
 
 ;; correct indentation
 (defun my/smart-return ()
@@ -391,6 +388,24 @@
     (define-key dired-mode-map (kbd "-") 'dired-up-directory)
     (define-key dired-mode-map (kbd "o") 'dired-find-file-other-window)
     (define-key dired-mode-map (kbd "q") 'quit-window)))
+
+
+(use-package treesit
+  :ensure nil
+  :config
+  (setq treesit-font-lock-level 4)
+  (setq major-mode-remap-alist
+        '((python-mode . python-ts-mode)
+          (c-mode . c-ts-mode)
+          (c++-mode . c++-ts-mode)
+          (java-mode . java-ts-mode)
+          (bash-mode . bash-ts-mode))))
+
+(defun my-eglot-auto () (eglot-ensure))
+(add-hook 'prog-mode-hook #'my-eglot-auto)
+(add-hook 'eglot-managed-mode-hook
+          (lambda ()
+            (add-hook 'before-save-hook #'eglot-format-buffer nil t)))
 
 ;; language specific (lsp and shit)
 
