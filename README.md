@@ -1,6 +1,6 @@
 # dotfiles
 
-> fish, nvim, tmux, ghostty, sioyek, macOS defaults and brew bundle, etc.
+> fish, nvim, tmux, ghostty, macOS defaults and brew bundle, etc.
 
 Managed with [GNU stow](https://www.gnu.org/software/stow/) — the repo IS the
 stow tree, so `stow .` from the repo root links everything into `~`.
@@ -42,11 +42,6 @@ $ ~/bin/install-fonts.sh
 $ ~/.dotfiles/macos/set-defaults.sh   # requires a restart
 $ cd ~/.dotfiles/macos && brew bundle # install everything in the Brewfile
 ```
-
-## sioyek
-
-sioyek reads `prefs_user.config` from `~/Library/Application Support/sioyek`
-on macOS, which stow can't manage, so it's symlinked manually:
 
 ```console
 $ ln -s ~/.dotfiles/.config/sioyek/prefs_user.config \
