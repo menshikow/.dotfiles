@@ -1,0 +1,298 @@
+tap "d12frosted/emacs-plus", trusted: true
+tap "danvk/webdiff", trusted: { formulae: ["webdiff"] }
+tap "dart-lang/dart"
+tap "dimentium/autoraise"
+tap "felixkratz/formulae", "https://github.com/FelixKratz/homebrew-formulae"
+tap "nikitabobko/tap"
+tap "sass/sass"
+# Spell checker with better logic than ispell
+brew "aspell"
+# Tool for generating GNU Standards-compliant Makefiles
+brew "automake"
+# Pyright fork with various improvements and built-in pylance features
+brew "basedpyright"
+# Generate compilation database for clang tooling
+brew "bear"
+# XML-based font configuration API for X Windows
+brew "fontconfig"
+# Formatting tools for C, C++, Obj-C, Java, JavaScript, TypeScript
+brew "clang-format"
+# Statistics utility to count lines of code
+brew "cloc"
+# Cross-platform make
+brew "cmake"
+# GNU File, Shell, and Text utilities
+brew "coreutils"
+# Pack, ship and run any application as a lightweight container
+brew "docker"
+# Isolated development environments using Docker
+brew "docker-compose"
+# Generate documentation for several programming languages
+brew "doxygen"
+# Functional metaprogramming aware language built on Erlang VM
+brew "elixir"
+# Modern, maintained replacement for ls
+brew "eza"
+# Simple, fast and user-friendly alternative to find
+brew "fd"
+# Powerful, lightweight programming language
+brew "lua"
+# Lua Lisp Language
+brew "fennel"
+# SDL2 compatibility layer that uses SDL3 behind the scenes
+brew "sdl2-compat"
+# Play, record, convert, and stream select audio and video codecs
+brew "ffmpeg"
+# User-friendly command-line shell for UNIX-like operating systems
+brew "fish"
+# Plugin manager for the Fish shell
+brew "fisher"
+# Fast and simple Node.js version manager
+brew "fnm"
+# Interpreted, interactive, object-oriented programming language
+brew "python@3.14"
+# Command-line outline and bitmap font editor/converter
+brew "fontforge"
+# Command-line fuzzy finder written in Go
+brew "fzf"
+# GNU compiler collection
+brew "gcc"
+# GNU debugger
+brew "gdb"
+# GitHub command-line tool
+brew "gh"
+# Distributed revision control system
+brew "git"
+# Syntax-highlighting pager for git and diff output
+brew "git-delta"
+# Quickly rewrite git repository history
+brew "git-filter-repo"
+# Open source programming language to build simple/reliable/efficient software
+brew "go"
+# Development kit for the Java programming language
+brew "openjdk"
+# Reformats Java source code to comply with Google Java Style
+brew "google-java-format"
+# Open-source build automation tool based on the Groovy and Kotlin DSL
+brew "gradle"
+# Graph visualization software from AT&T and Bell Labs
+brew "graphviz"
+# Integration point for ghcide and haskell-ide-engine. One IDE to rule them all
+brew "haskell-language-server"
+# Haskell source code suggestions
+brew "hlint"
+# Configurable static site generator
+brew "hugo"
+# Java language specific implementation of the Language Server Protocol
+brew "jdtls"
+# Swiss-army knife of markup format conversion
+brew "pandoc"
+# Interactive environments for writing and running code
+brew "jupyterlab"
+# Statically typed programming language for the JVM
+brew "kotlin"
+# Anti-bikeshedding Kotlin linter with built-in formatter
+brew "ktlint"
+# LaTeX to XML/HTML/MathML Converter
+brew "latexml"
+# C99 library which implements a VT220 or xterm terminal emulator
+brew "libvterm"
+# Next-gen compiler infrastructure
+brew "llvm"
+# Package manager for the Lua programming language
+brew "luarocks"
+# Modern programming language in the Lisp/Scheme family
+brew "minimal-racket"
+# Project documentation with Markdown
+brew "mkdocs"
+# Remote terminal application
+brew "mosh"
+# Incremental parsing library
+brew "tree-sitter"
+# Ambitious Vim-fork focused on extensibility and agility
+brew "neovim"
+# Small build system for use with gyp or CMake
+brew "ninja"
+# OCaml package manager
+brew "opam"
+# Search tool like grep and The Silver Searcher
+brew "ripgrep"
+# AI coding agent, built for the terminal
+brew "opencode"
+# PDF rendering library (based on the xpdf-3.0 code base)
+brew "poppler"
+# Theme for zsh
+brew "powerlevel10k"
+# Python version management
+brew "pyenv"
+# Static type checker for Python
+brew "pyright"
+# Lisp installer and launcher for major environments
+brew "roswell"
+# Extremely fast Python linter, written in Rust
+brew "ruff"
+# Safe, concurrent, practical language
+brew "rust"
+# Experimental Rust compiler front-end for IDEs
+brew "rust-analyzer"
+# Rust toolchain installer
+brew "rustup"
+# Steel Bank Common Lisp system
+brew "sbcl"
+# Library for loading images as SDL surfaces and textures
+brew "sdl2_image"
+# Sample multi-channel audio mixer library
+brew "sdl2_mixer"
+# Library for using TrueType fonts in SDL applications
+brew "sdl2_ttf"
+# Opinionated Lua code formatter
+brew "stylua"
+# Feature-rich console based todo list manager
+brew "task"
+# Terminal user interface for taskwarrior
+brew "taskwarrior-tui"
+# Implementation of the Language Server Protocol for LaTeX
+brew "texlab"
+# Terminal multiplexer
+brew "tmux"
+# Program that allows you to count code, quickly
+brew "tokei"
+# Display directories as trees (with optional color/HTML output)
+brew "tree"
+# Parser generator tool
+brew "tree-sitter-cli"
+# Python grammar for tree-sitter
+brew "tree-sitter-python"
+# Incremental parsing library
+brew "tree-sitter@0.25"
+# Internet file retriever
+brew "wget"
+# Programming language designed for robustness, optimality, and clarity
+brew "zig"
+# UNIX shell (command interpreter)
+brew "zsh"
+# GNU Emacs text editor
+brew "d12frosted/emacs-plus/emacs-plus@32"
+# GPU-accelerated terminal emulator
+cask "alacritty"
+cask "font-dejavu"
+cask "font-fira-code"
+cask "font-hack"
+cask "font-iosevka"
+cask "font-iosevka-nerd-font"
+cask "font-jetbrains-mono-nerd-font"
+cask "font-liberation"
+cask "font-noto-sans-mono"
+cask "font-terminus"
+cask "font-ubuntu-mono-nerd-font"
+# Terminal emulator that uses platform-native UI and GPU acceleration
+cask "ghostty"
+# Official Kotlin Language Server
+cask "kotlin-lsp"
+# Full TeX Live distribution with GUI applications
+cask "mactex"
+# Knowledge base that works on top of a local folder of plain text Markdown files
+cask "obsidian"
+# Convert HTML to PDF
+cask "prince"
+# Scientific and technical publishing system built on Pandoc
+cask "quarto"
+# Modern programming language in the Lisp/Scheme family
+cask "racket"
+# PDF viewer designed for reading research papers and technical books
+cask "sioyek"
+# PDF reader and note-taking application
+cask "skim"
+vscode "1yib.rust-bundle"
+vscode "adpyke.vscode-sql-formatter"
+vscode "anotherglitchinthematrix.monochrome"
+vscode "batisteo.vscode-django"
+vscode "betterthantomorrow.calva"
+vscode "charliermarsh.ruff"
+vscode "cweijan.dbclient-jdbc"
+vscode "cweijan.vscode-postgresql-client2"
+vscode "donjayamanne.python-environment-manager"
+vscode "donjayamanne.python-extension-pack"
+vscode "dustypomerleau.rust-syntax"
+vscode "eamodio.gitlens"
+vscode "esbenp.prettier-vscode"
+vscode "evzen-wybitul.magic-racket"
+vscode "fill-labs.dependi"
+vscode "firefox-devtools.vscode-firefox-debug"
+vscode "github.vscode-github-actions"
+vscode "github.vscode-pull-request-github"
+vscode "golang.go"
+vscode "haskell.haskell"
+vscode "haskell.language-haskell"
+vscode "jakebecker.elixir-ls"
+vscode "james-yu.latex-workshop"
+vscode "jdinhlife.gruvbox"
+vscode "kchanqvq.olive"
+vscode "kevinrose.vsc-python-indent"
+vscode "kriegalex.vscode-cudacpp"
+vscode "leanprover.lean4"
+vscode "llvm-vs-code-extensions.lldb-dap"
+vscode "mathematic.vscode-latex"
+vscode "mhutchie.git-graph"
+vscode "ms-azuretools.vscode-containers"
+vscode "ms-azuretools.vscode-docker"
+vscode "ms-dotnettools.vscode-dotnet-runtime"
+vscode "ms-kubernetes-tools.vscode-kubernetes-tools"
+vscode "ms-mssql.data-workspace-vscode"
+vscode "ms-mssql.mssql"
+vscode "ms-mssql.sql-bindings-vscode"
+vscode "ms-mssql.sql-database-projects-vscode"
+vscode "ms-ossdata.vscode-pgsql"
+vscode "ms-python.black-formatter"
+vscode "ms-python.debugpy"
+vscode "ms-python.python"
+vscode "ms-python.vscode-pylance"
+vscode "ms-python.vscode-python-envs"
+vscode "ms-toolsai.jupyter"
+vscode "ms-toolsai.jupyter-keymap"
+vscode "ms-toolsai.jupyter-renderers"
+vscode "ms-toolsai.vscode-jupyter-cell-tags"
+vscode "ms-toolsai.vscode-jupyter-slideshow"
+vscode "ms-vscode-remote.remote-containers"
+vscode "ms-vscode-remote.remote-ssh"
+vscode "ms-vscode-remote.remote-ssh-edit"
+vscode "ms-vscode.cmake-tools"
+vscode "ms-vscode.cpp-devtools"
+vscode "ms-vscode.cpptools"
+vscode "ms-vscode.cpptools-extension-pack"
+vscode "ms-vscode.cpptools-themes"
+vscode "ms-vscode.makefile-tools"
+vscode "ms-vscode.remote-explorer"
+vscode "neonxp.gotools"
+vscode "njpwerner.autodocstring"
+vscode "ocamllabs.ocaml-platform"
+vscode "pixl-garden.bongocat"
+vscode "pkief.material-icon-theme"
+vscode "pmndrs.pmndrs"
+vscode "quick-lint.quick-lint-js"
+vscode "redhat.java"
+vscode "redhat.vscode-yaml"
+vscode "ritwickdey.liveserver"
+vscode "roblourens.vscode-nand2tetris-hdl"
+vscode "rust-lang.rust-analyzer"
+vscode "shd101wyy.markdown-preview-enhanced"
+vscode "tamasfe.even-better-toml"
+vscode "vscjava.vscode-gradle"
+vscode "vscjava.vscode-java-debug"
+vscode "vscjava.vscode-java-dependency"
+vscode "vscjava.vscode-java-pack"
+vscode "vscjava.vscode-java-test"
+vscode "vscjava.vscode-maven"
+vscode "vscodevim.vim"
+vscode "wholroyd.jinja"
+vscode "yoavbls.pretty-ts-errors"
+vscode "yzhang.markdown-all-in-one"
+vscode "ziglang.vscode-zig"
+go "golang.org/x/tools/cmd/goimports"
+go "github.com/golangci/golangci-lint/cmd/golangci-lint"
+go "golang.org/x/tools/gopls"
+cargo "emacs-lsp-booster"
+cargo "proximity-sort"
+cargo "rustlings"
+uv "groqmate"
+npm "pure-prompt"

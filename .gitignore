@@ -1,3 +1,5 @@
+.DS_Store
+
 *.local
 .env
 .env.*
@@ -6,71 +8,14 @@
 private/
 local/
 
-.ssh/
-.gnupg/
+fonts/
 
-.aws/
-.azure/
-.gcloud/
-.kube/
+prompts/
 
-.1password/
-.bitwarden/
+node_modules/
 
 .zsh_history
 .bash_history
 .history
 
-.DS_Store
-
-*~
-*.swp
-*.swo
-.session
-
-.eln-cache/
-.auto-save-list/
-.emacs.desktop
-.emacs.desktop.lock
-
-.nvimlog
-shada/
-
-.direnv/
-
-.venv/
-venv/
-
-node_modules/
-prompts/
-
 Thumbs.db
-
-
-# emacs
-elpa/
-
-eln-cache/
-
-ido.last
-smex-items
-recentf
-bookmarks
-places
-
-auto-save-list/
-*.elc
-
-tree-sitter/
-transient/
-saves/
-custom.el
-
-*~
-\#*\#
-emacs/rewrite.md
-emacs-commands
-LICENSES/
-emacs/rewrite.md
-TODO
-TODO.md
