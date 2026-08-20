@@ -29,8 +29,7 @@ $ stow .
 
 ## Fonts
 
-Fonts live in `fonts/` and are **not tracked by git** (kept only on this
-machine). Install them with:
+Fonts live in `fonts/` and are **not tracked by git**. Install them with:
 
 ```console
 $ ~/bin/install-fonts.sh

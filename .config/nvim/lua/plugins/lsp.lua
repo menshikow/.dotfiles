@@ -73,7 +73,7 @@ return {
 	{
 		"neovim/nvim-lspconfig",
 		dependencies = {
-			{ "williamboman/mason.nvim", opts = {} },
+			{ "williamboman/mason.nvim", opts = { ensure_installed = { "google-java-format" } } },
 			"williamboman/mason-lspconfig.nvim",
 			"hrsh7th/cmp-nvim-lsp",
 		},
@@ -85,7 +85,7 @@ return {
 					settings = {
 						basedpyright = {
 							analysis = {
-								typeCheckingMode = "off",
+								typeCheckingMode = "basic",
 							},
 						},
 					},
@@ -247,10 +247,16 @@ return {
 				css = { "prettier" },
 				html = { "prettier" },
 				json = { "prettier" },
+				java = { "google-java-format" },
 				lua = { "stylua" },
 				ocaml = { "ocamlformat" },
 				rust = { "rustfmt" },
 				zig = { "zigfmt" },
+			},
+			formatters = {
+				["google-java-format"] = {
+					prepend_args = { "--aosp" },
+				},
 			},
 		},
 	},

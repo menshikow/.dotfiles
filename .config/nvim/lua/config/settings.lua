@@ -23,7 +23,7 @@ vim.opt.signcolumn = "yes"
 vim.opt.cursorline = false
 
 -- cursor block in all modes
-vim.opt.guicursor = "a:block"
+-- vim.opt.guicursor = "a:block"
 
 -- line wrap
 vim.opt.wrap = false
@@ -40,6 +40,7 @@ vim.opt.swapfile = false
 vim.opt.backup = false
 vim.opt.undodir = os.getenv("HOME") .. "/.vim/undodir"
 vim.opt.undofile = true
+vim.fn.mkdir(vim.fn.expand("~/.vim/undodir"), "p")
 
 -- colors
 vim.opt.termguicolors = true

@@ -2,13 +2,9 @@ background = #000000
 
 command = /opt/homebrew/bin/fish
 
-cursor-style = block
-cursor-style-blink = false
-shell-integration-features = no-cursor
-
 mouse-hide-while-typing = true
 
-# font-family = "IoskeleyMonoTerm Nerd Font"
+font-family = "Geist Mono"
 font-feature = -calt, -liga, -dlig
 font-size = 16
 
