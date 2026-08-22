@@ -82,7 +82,7 @@ return {
 				harpoon:list():select(3)
 			end)
 
-vim.keymap.set("n", "<leader>h4", function()
+			vim.keymap.set("n", "<leader>h4", function()
 				harpoon:list():select(4)
 			end)
 		end,

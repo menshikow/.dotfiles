@@ -61,6 +61,9 @@ return {
 					local ok, parser = pcall(vim.treesitter.get_parser, args.buf)
 					if ok and parser then
 						vim.treesitter.start(args.buf)
+						if vim.treesitter.highlight then
+							vim.treesitter.highlight.disable(args.buf)
+						end
 					else
 						vim.bo[args.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
 					end
