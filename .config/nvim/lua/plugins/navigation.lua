@@ -87,19 +87,4 @@ return {
 			end)
 		end,
 	},
-	{
-		"sindrets/diffview.nvim",
-		dependencies = { "nvim-lua/plenary.nvim" },
-		cmd = { "DiffviewOpen", "DiffviewFileHistory", "DiffviewClose" },
-		keys = {
-			{ "<leader>gd", "<cmd>DiffviewOpen<CR>", desc = "[G]it [D]iff (open)" },
-			{ "<leader>gh", "<cmd>DiffviewFileHistory<CR>", desc = "Diff [H]istory (file)" },
-			{ "<leader>gD", "<cmd>DiffviewClose<CR>", desc = "[G]it [D]iff (close)" },
-		},
-	},
-	{
-		"mbbill/undotree",
-		lazy = true,
-		keys = { { "<leader>u", "<cmd>UndotreeToggle<CR>", desc = "[U]ndo tree" } },
-	},
 }

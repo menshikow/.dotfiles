@@ -26,7 +26,6 @@ return {
 				"python",
 				"ocaml",
 				"ocaml_interface",
-				"java",
 				"rust",
 				"zig",
 				"json",
@@ -61,9 +60,6 @@ return {
 					local ok, parser = pcall(vim.treesitter.get_parser, args.buf)
 					if ok and parser then
 						vim.treesitter.start(args.buf)
-						if vim.treesitter.highlight then
-							vim.treesitter.highlight.disable(args.buf)
-						end
 					else
 						vim.bo[args.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
 					end
@@ -76,7 +72,7 @@ return {
 	{
 		"neovim/nvim-lspconfig",
 		dependencies = {
-			{ "williamboman/mason.nvim", opts = { ensure_installed = { "google-java-format" } } },
+			{ "williamboman/mason.nvim", opts = {} },
 			"williamboman/mason-lspconfig.nvim",
 			"hrsh7th/cmp-nvim-lsp",
 		},
@@ -88,7 +84,7 @@ return {
 					settings = {
 						basedpyright = {
 							analysis = {
-								typeCheckingMode = "basic",
+								typeCheckingMode = "off",
 							},
 						},
 					},
@@ -99,7 +95,9 @@ return {
 				hls = {},
 				jdtls = {},
 				lua_ls = {},
-				ocamllsp = {},
+				ocamllsp = {
+					cmd = { vim.fn.expand("~/.opam/default/bin/ocamllsp") },
+				},
 				rust_analyzer = {
 					settings = {
 						["rust-analyzer"] = {
@@ -147,7 +145,9 @@ return {
 			-- mason
 
 			require("mason-lspconfig").setup({
-				ensure_installed = vim.tbl_keys(servers),
+				ensure_installed = vim.tbl_filter(function(name)
+					return name ~= "ocamllsp"
+				end, vim.tbl_keys(servers)),
 				automatic_installation = false,
 				handlers = {
 					function(server_name)
@@ -250,16 +250,10 @@ return {
 				css = { "prettier" },
 				html = { "prettier" },
 				json = { "prettier" },
-				java = { "google-java-format" },
 				lua = { "stylua" },
 				ocaml = { "ocamlformat" },
 				rust = { "rustfmt" },
 				zig = { "zigfmt" },
-			},
-			formatters = {
-				["google-java-format"] = {
-					prepend_args = { "--aosp" },
-				},
 			},
 		},
 	},

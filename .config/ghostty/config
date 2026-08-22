@@ -1,3 +1,5 @@
+cursor-style = "bar"
+
 background = #000000
 
 command = /opt/homebrew/bin/fish

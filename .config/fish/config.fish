@@ -3,13 +3,15 @@
 # =========================
 set -gx PATH $HOME/.local/bin $PATH
 fish_add_path $HOME/bin
-set -gx PATH /opt/homebrew/opt/tree-sitter@0.25/libexec/bin $PATH
-set -gx PATH /Library/TeX/texbin $PATH
-set -gx PATH /Applications/Emacs.app/Contents/MacOS $PATH
 
-if test -f /opt/homebrew/bin/brew
-    eval (/opt/homebrew/bin/brew shellenv)
-end
+
+    set -gx PATH /opt/homebrew/opt/tree-sitter@0.25/libexec/bin $PATH
+    set -gx PATH /Library/TeX/texbin $PATH
+    set -gx PATH /Applications/Emacs.app/Contents/MacOS $PATH
+    if test -f /opt/homebrew/bin/brew
+        eval (/opt/homebrew/bin/brew shellenv)
+    end
+
 
 # =========================
 # UI / Terminal Colors
@@ -42,7 +44,6 @@ set -x LESS_TERMCAP_us (set_color -u 146)
 # General
 abbr -a l "ls -l -a"
 abbr -a ls "ls -l -a"
-abbr -a n "nvim"
 abbr -a vim "vim"
 abbr -a e "eza -l -a"
 abbr -a c "code --reuse-window"
@@ -86,7 +87,9 @@ fish_add_path $HOME/.cargo/bin
 fish_add_path $HOME/.cabal/bin $HOME/.ghcup/bin
 
 # PNPM
-set -gx PNPM_HOME $HOME/Library/pnpm
+
+    set -gx PNPM_HOME $HOME/Library/pnpm
+
 if not contains $PNPM_HOME $PATH
     set -gx PATH $PNPM_HOME $PATH
 end
@@ -129,6 +132,8 @@ else
     else
         set -x PATH "/opt/miniconda3/bin" $PATH
     end
-end
-# <<< conda initialize <<<
+end # <<< conda initialize <<<
 
+
+# opencode
+fish_add_path /home/menshikow/.opencode/bin
