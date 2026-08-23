@@ -22,9 +22,6 @@ vim.opt.signcolumn = "yes"
 -- cursorline
 vim.opt.cursorline = false
 
--- cursor block in all modes
-vim.opt.guicursor = "a:block"
-
 -- line wrap
 vim.opt.wrap = false
 
