@@ -8,6 +8,9 @@ vim.opt.list = false
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
 
+-- cursor
+vim.opt.guicursor = "a:block"
+
 -- testing
 vim.opt.iskeyword:remove("_")
 
