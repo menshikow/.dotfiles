@@ -1,12 +1,12 @@
 cursor-style = "bar"
 
-background = #0B0B0C
+# background = #0B0B0C
 
 command = /opt/homebrew/bin/fish
 
 mouse-hide-while-typing = true
 
-font-family = "Geist Mono"
+# font-family = "Geist Mono"
 font-feature = -calt, -liga, -dlig
 font-size = 14
 

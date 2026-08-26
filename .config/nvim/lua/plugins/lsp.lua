@@ -178,7 +178,10 @@ return {
 					map("<leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction")
 					map("<leader>ls", vim.lsp.buf.document_symbol, "[L]SP [S]ymbols")
 					map("<leader>li", function()
-						vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ bufnr = args.buf }), { bufnr = args.buf })
+						vim.lsp.inlay_hint.enable(
+							not vim.lsp.inlay_hint.is_enabled({ bufnr = args.buf }),
+							{ bufnr = args.buf }
+						)
 					end, "Toggle [I]nlay [H]ints")
 				end,
 			})
