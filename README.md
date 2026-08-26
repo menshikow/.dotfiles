@@ -1,6 +1,6 @@
 # dotfiles
 
-> fish, nvim, tmux, ghostty, macOS defaults and brew bundle, etc.
+> emacs, fish, tmux, ghostty, etc.
 
 Managed with [GNU stow](https://www.gnu.org/software/stow/) — the repo IS the
 stow tree, so `stow .` from the repo root links everything into `~`.
@@ -25,14 +25,6 @@ $ stow .
 $ cd ~/.dotfiles
 $ git pull
 $ stow .
-```
-
-## Fonts
-
-Fonts live in `fonts/` and are **not tracked by git**. Install them with:
-
-```console
-$ ~/bin/install-fonts.sh
 ```
 
 ## macOS defaults
