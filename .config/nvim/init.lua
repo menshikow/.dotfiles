@@ -83,6 +83,14 @@ vim.opt.iskeyword:remove("_")
 -- hotkeys
 --
 -------------------------------------------------------------------------------
+-- window splits
+vim.keymap.set("n", "<C-x>3", "<cmd>vsplit<CR>")
+vim.keymap.set("n", "<C-x>2", "<cmd>split<CR>")
+vim.keymap.set("n", "<leader>sv", "<cmd>vsplit<CR>")
+vim.keymap.set("n", "<leader>sh", "<cmd>split<CR>")
+vim.keymap.set("n", "<leader>se", "<C-w>=")
+vim.keymap.set("n", "<leader>sx", "<cmd>close<CR>")
+vim.keymap.set("n", "<leader>so", "<cmd>only<CR>")
 -- quick-save
 vim.keymap.set("n", "<leader>w", "<cmd>w<cr>")
 -- make missing : less annoying

@@ -1,8 +1,8 @@
 cursor-style = "bar"
 
-background = #0B0B0C
-
 command = /opt/homebrew/bin/fish
+
+theme = Gruvbox Dark Hard
 
 mouse-hide-while-typing = true
 
