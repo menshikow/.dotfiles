@@ -492,7 +492,7 @@ require("lazy").setup({
 			vim.cmd("filetype plugin indent on")
 		end,
 	},
-
+	{ "octol/vim-cpp-enhanced-highlight", ft = { "c", "cpp" } },
 	-- LSP
 	{
 		"neovim/nvim-lspconfig",
