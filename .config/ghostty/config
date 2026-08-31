@@ -2,8 +2,6 @@ cursor-style = "bar"
 
 command = /opt/homebrew/bin/fish
 
-theme = Gruvbox Dark Hard
-
 mouse-hide-while-typing = true
 
 font-family = "Geist Mono"
