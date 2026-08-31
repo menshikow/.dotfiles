@@ -27,14 +27,4 @@ $ git pull
 $ stow .
 ```
 
-## macOS defaults
 
-```console
-$ ~/.dotfiles/macos/set-defaults.sh   # requires a restart
-$ cd ~/.dotfiles/macos && brew bundle # install everything in the Brewfile
-```
-
-```console
-$ ln -s ~/.dotfiles/.config/sioyek/prefs_user.config \
-        "$HOME/Library/Application Support/sioyek/prefs_user.config"
-```
