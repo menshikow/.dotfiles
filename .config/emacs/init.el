@@ -25,20 +25,34 @@
 (setq use-package-always-ensure t)
 
 ;; ==============================================================================
-;; 2. MACOS & GERMAN KEYBOARD
+;; 2. macOS-ONLY SETTINGS (kept for portability, harmless on Windows)
 ;; ==============================================================================
-(setq ns-command-modifier 'meta)
-(setq ns-option-modifier 'none)
-(setq ns-right-alternate-modifier 'none)
-
 (when (eq system-type 'darwin)
+  (setq ns-command-modifier 'meta)
+  (setq ns-option-modifier 'none)
+  (setq ns-right-alternate-modifier 'none)
   (add-to-list 'exec-path "/opt/homebrew/bin")
   (setenv "PATH" (concat "/opt/homebrew/bin:" (getenv "PATH"))))
+
+;; ==============================================================================
+;; 2b. WINDOWS-ONLY SETTINGS
+;; ==============================================================================
+(when (eq system-type 'windows-nt)
+  ;; Point Emacs at a real shell for M-x shell / eshell subprocess calls.
+  ;; Adjust the path if your Git-for-Windows or MSYS2 install differs.
+  (when (executable-find "bash")
+    (setq shell-file-name (executable-find "bash")))
+  ;; Windows Emacs doesn't ship an SSH agent integration by default;
+  ;; uncomment and point this at Pageant/OpenSSH if you use TRAMP over SSH.
+  ;; (setenv "SSH_AUTH_SOCK" "...")
+  )
 
 ;; ==============================================================================
 ;; 3. UI & DEFAULTS
 ;; ==============================================================================
 (setq-default cursor-type 'box)
+;; cursor color — light mint green
+(add-to-list 'default-frame-alist '(cursor-color . "#98fb98"))
 (setq inhibit-startup-message t)
 (scroll-bar-mode -1)
 (tool-bar-mode -1)
@@ -47,10 +61,17 @@
 (setq frame-resize-pixelwise t
       window-resize-pixelwise t)
 
+;; Open maximized (fills the screen, taskbar and title bar still visible) —
+;; this is NOT the same as Emacs' true "fullscreen" (fullboth), which would
+;; also hide the taskbar and title bar. This gives you the "full window" feel
+;; you asked for without going into actual fullscreen.
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
-;; remove the macos window title bar completely
-(add-to-list 'default-frame-alist '(undecorated . t))
+;; NOTE: the original config also removed the window title bar entirely via
+;; (undecorated . t) — that was specifically to fake fullscreen on macOS.
+;; Left OUT here on purpose since you don't want that. If you ever do want
+;; a borderless maximized window on Windows, add back:
+;; (add-to-list 'default-frame-alist '(undecorated . t))
 
 (setq visible-bell t
       ring-bell-function 'ignore
@@ -68,11 +89,23 @@
 (setq backup-directory-alist `(("." . "~/.config/emacs/saves/")))
 
 (set-face-attribute 'default nil
-                    :height 160
+                    :font "Consolas"
+                    :height 110
                     :weight 'regular)
 
 ;; load theme
-;; get the jon blow theme maybe idk
+(load-theme 'naysayer t)
+
+
+;; Put your .el theme files in a "themes" folder next to this init file
+;; (e.g. ~/.emacs.d/themes/ or, if you use early-init, wherever
+;; user-emacs-directory points). Then tell Emacs to look there:
+;; (add-to-list 'custom-theme-load-path
+;;              (expand-file-name "themes" user-emacs-directory))
+;; and load the theme by its name (the symbol before "-theme.el" in the
+;; filename, e.g. "doom-one-theme.el" -> 'doom-one). `t` here skips the
+;; "trust this theme?" confirmation prompt.
+;; (load-theme 'your-theme-name t)
 
 ;; compile comamnd
 (setq compile-command "")
@@ -117,6 +150,17 @@
   :config
   (evil-commentary-mode))
 
+;; auto-close brackets/quotes with structural editing (wrap region, smart
+;; delete of empty pairs, slurp/barf, etc.)
+(use-package smartparens
+  :config
+  (require 'smartparens-config)
+  (smartparens-global-mode 1))
+
+(use-package evil-smartparens
+  :after (evil smartparens)
+  :hook (smartparens-mode . evil-smartparens-mode))
+
 ;; global emacs adjustments
 (global-set-key (kbd "M-+") 'text-scale-increase)
 (global-set-key (kbd "M--") 'text-scale-decrease)
@@ -157,6 +201,11 @@
   (completion-category-defaults nil)
   (completion-category-overrides '((file (styles partial-completion)))))
 
+;; consult: live-narrowing search/navigation commands (consult-line replaces
+;; plain isearch with a minibuffer list of matches + preview as you move)
+(use-package consult
+  :bind (("C-s" . consult-line)))
+
 (use-package dired
   :ensure nil
   :bind ("M-d" . dired-jump)
@@ -177,10 +226,9 @@
 
 (use-package corfu
   :custom
-  (corfu-auto t)
-  (corfu-auto-delay 0.2)
-  (corfu-auto-prefix 2)
+  (corfu-auto nil)          ; don't pop up automatically as you type
   (corfu-quit-no-match t)
+  :bind (("C-SPC" . completion-at-point))  ; trigger the popup manually
   :init (global-corfu-mode))
 
 ;; snippets
@@ -342,6 +390,11 @@
                '(haskell-ts-mode . ("haskell-language-server-wrapper"))))
 
 ;; ocaml
+;; NOTE: opam/OCaml's toolchain is Unix-oriented. On native Windows this
+;; realistically only works cleanly via WSL2 (running Emacs inside WSL,
+;; or pointing utop-command/eglot at the WSL binaries). If you're on
+;; native Windows without WSL, expect tuareg/utop below to fail to find
+;; `opam`/`ocaml` on PATH until you install and configure it.
 (use-package tuareg
   :mode ("\\.ml[ily]?\\'" . tuareg-mode)
   :custom
@@ -375,4 +428,3 @@
 
 (provide 'init)
 ;;; init.el ends here
-
