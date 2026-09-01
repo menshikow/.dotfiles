@@ -25,7 +25,7 @@
 (setq use-package-always-ensure t)
 
 ;; ==============================================================================
-;; 2. macOS-ONLY SETTINGS (kept for portability, harmless on Windows)
+;; 2. macOS SETTINGS 
 ;; ==============================================================================
 (when (eq system-type 'darwin)
   (setq ns-command-modifier 'meta)
@@ -35,7 +35,7 @@
   (setenv "PATH" (concat "/opt/homebrew/bin:" (getenv "PATH"))))
 
 ;; ==============================================================================
-;; 2b. WINDOWS-ONLY SETTINGS
+;; 2b. WINDOWS SETTINGS
 ;; ==============================================================================
 (when (eq system-type 'windows-nt)
   ;; Point Emacs at a real shell for M-x shell / eshell subprocess calls.
@@ -96,7 +96,7 @@
 ;; load theme
 (load-theme 'naysayer t)
 
-
+;; thanks chatti
 ;; Put your .el theme files in a "themes" folder next to this init file
 ;; (e.g. ~/.emacs.d/themes/ or, if you use early-init, wherever
 ;; user-emacs-directory points). Then tell Emacs to look there:
@@ -152,9 +152,14 @@
 
 ;; auto-close brackets/quotes with structural editing (wrap region, smart
 ;; delete of empty pairs, slurp/barf, etc.)
+
+;; TODO turn off autocoloring when inserting parenthesis
 (use-package smartparens
   :config
   (require 'smartparens-config)
+  (setq sp-highlight-pair-overlay nil
+        sp-highlight-wrap-overlay nil
+        sp-highlight-wrap-tag-overlay nil)
   (smartparens-global-mode 1))
 
 (use-package evil-smartparens
