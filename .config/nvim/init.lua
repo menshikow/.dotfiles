@@ -86,8 +86,8 @@ vim.opt.diffopt:append("indent-heuristic")
 
 -- show a column at 80 characters as a guide for long lines
 -- vim.opt.colorcolumn = '80'
---- except in Rust where the rule is 100 characters
-vim.api.nvim_create_autocmd("Filetype", { pattern = "rust", command = "set colorcolumn=100" })
+--- vim.api.nvim_create_autocmd("Filetype", { pattern = "rust", command = "set colorcolumn=100" })
+vim.opt.colorcolumn = ""
 
 -- show more hidden characters
 -- also, show tabs nicer
@@ -218,14 +218,14 @@ vim.api.nvim_create_autocmd("Filetype", {
 	command = "setlocal formatoptions+=w",
 })
 -- shorter columns in text because it reads better that way
-local text = vim.api.nvim_create_augroup("text", { clear = true })
-for _, pat in ipairs({ "text", "markdown", "mail", "gitcommit" }) do
-	vim.api.nvim_create_autocmd("Filetype", {
-		pattern = pat,
-		group = text,
-		command = "setlocal spell tw=72 colorcolumn=73",
-	})
-end
+-- local text = vim.api.nvim_create_augroup("text", { clear = true })
+-- for _, pat in ipairs({ "text", "markdown", "mail", "gitcommit" }) do
+-- 	vim.api.nvim_create_autocmd("Filetype", {
+-- 		pattern = pat,
+-- 		group = text,
+-- 		command = "setlocal spell tw=72 colorcolumn=",
+-- 	})
+-- end
 --- tex has so much syntax that a little wider is ok
 vim.api.nvim_create_autocmd("Filetype", {
 	pattern = "tex",
