@@ -139,14 +139,8 @@ vim.keymap.set("n", "/", "/\\v")
 vim.keymap.set("c", "%s/", "%sm/")
 -- open new file adjacent to current file
 vim.keymap.set("n", "<leader>o", ':e <C-R>=expand("%:p:h") . "/" <cr>')
--- no arrow keys --- force yourself to use the home row
-vim.keymap.set("n", "<up>", "<nop>")
-
-vim.keymap.set("n", "<down>", "<nop>")
-vim.keymap.set("i", "<up>", "<nop>")
-vim.keymap.set("i", "<down>", "<nop>")
-vim.keymap.set("i", "<left>", "<nop>")
-vim.keymap.set("i", "<right>", "<nop>")
+-- more detailed diagnostics messages
+vim.keymap.set("n", "gl", vim.diagnostic.open_float, { noremap = true, silent = true })
 -- let the left and right arrows be useful: they can switch buffers
 vim.keymap.set("n", "<left>", ":bp<cr>")
 vim.keymap.set("n", "<right>", ":bn<cr>")
@@ -232,7 +226,6 @@ vim.api.nvim_create_autocmd("Filetype", {
 	group = text,
 	command = "setlocal spell tw=80 colorcolumn=81",
 })
--- TODO: no autocomplete in text
 
 -------------------------------------------------------------------------------
 --
@@ -289,6 +282,7 @@ require("lazy").setup({
 		end,
 
 	},
+
 	-- nice bar at the bottom
 	{
 		"itchyny/lightline.vim",
@@ -317,7 +311,7 @@ require("lazy").setup({
 			function LightlineFilenameInLua(opts)
 				if vim.fn.expand("%:t") == "" then
 					return "[No Name]"
-				else
+                                else	
 					return vim.fn.getreg("%")
 				end
 			end
@@ -823,6 +817,7 @@ require("lazy").setup({
 					["<C-e>"] = cmp.mapping.abort(),
 					["<CR>"] = cmp.mapping.confirm({ select = true }),
 					["<Tab>"] = cmp.mapping.select_next_item(),
+                                        ["<C-f>"] = cmp.mapping.select_next_item(),
 					["<S-Tab>"] = cmp.mapping.select_prev_item(),
 					["<Down>"] = cmp.mapping.select_next_item(),
 					["<Up>"] = cmp.mapping.select_prev_item(),
@@ -866,4 +861,13 @@ require("lazy").setup({
 		end,
 	},
 	"khaveesh/vim-fish-syntax",
+        "lewis6991/gitsigns.nvim",
+
+        -- undotree
+        {
+                "mbbill/undotree",
+                keys = {
+                        { "<leader>u", "<cmd>UndotreeToggle<CR>", desc = "Toggle undo tree" },
+                },
+        },
 })
