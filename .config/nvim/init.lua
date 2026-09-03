@@ -1,4 +1,5 @@
 -- always set leader first!
+
 vim.keymap.set("n", "<Space>", "<Nop>", { silent = true })
 vim.g.mapleader = " "
 
@@ -10,7 +11,9 @@ vim.g.mapleader = " "
 -- never ever folding
 vim.opt.foldenable = false
 vim.opt.foldmethod = "manual"
+
 vim.opt.foldlevelstart = 99
+
 -- very basic "continue indent" mode (autoindent) is always on in neovim
 -- could try smartindent/cindent, but meh.
 -- vim.opt.cindent = true
@@ -25,51 +28,67 @@ vim.opt.foldlevelstart = 99
 -- vim.opt.timeoutlen = 300
 -- keep more context on screen while scrolling
 vim.opt.scrolloff = 2
+
 -- never show me line breaks if they're not there
 vim.opt.wrap = false
+
 -- always draw sign column. prevents buffer moving when adding/deleting sign
 vim.opt.signcolumn = "yes"
+
 -- sweet sweet relative line numbers
 vim.opt.relativenumber = true
+
 -- and show the absolute line number for the current line
 vim.opt.number = true
+
 -- keep current content top + left when splitting
 vim.opt.splitright = true
 vim.opt.splitbelow = true
+
 -- infinite undo!
 -- NOTE: ends up in ~/.local/state/nvim/undo/
 vim.opt.undofile = true
+
 --" Decent wildmenu
 -- in completion, when there is more than one match,
 -- list all matches, and only complete to longest common match
 vim.opt.wildmode = "list:longest"
+
 -- when opening a file with a command (like :e),
 -- don't suggest files like there:
 vim.opt.wildignore = ".hg,.svn,*~,*.png,*.jpg,*.gif,*.min.js,*.swp,*.o,vendor,dist,_site"
--- tabs: go big or go home
-vim.opt.shiftwidth = 4
+
+-- fuck tabs
+vim.opt.shiftwidth = 8
 vim.opt.softtabstop = 8
 vim.opt.tabstop = 8
-vim.opt.expandtab = false
+vim.opt.expandtab = true
+
 -- case-insensitive search/replace
 vim.opt.ignorecase = true
+
 -- unless uppercase in search term
 vim.opt.smartcase = true
+
 -- never ever make my terminal beep
 vim.opt.vb = true
+
 -- more useful diffs (nvim -d)
 --- by ignoring whitespace
 vim.opt.diffopt:append("iwhite")
+
 --- and using a smarter algorithm
 --- https://vimways.org/2018/the-power-of-diff/
 --- https://stackoverflow.com/questions/32365271/whats-the-difference-between-git-diff-patience-and-git-diff-histogram
 --- https://luppeng.wordpress.com/2020/10/10/when-to-use-each-of-the-git-diff-algorithms/
 vim.opt.diffopt:append("algorithm:histogram")
 vim.opt.diffopt:append("indent-heuristic")
+
 -- show a column at 80 characters as a guide for long lines
 -- vim.opt.colorcolumn = '80'
 --- except in Rust where the rule is 100 characters
 vim.api.nvim_create_autocmd("Filetype", { pattern = "rust", command = "set colorcolumn=100" })
+
 -- show more hidden characters
 -- also, show tabs nicer
 vim.opt.listchars = "tab:^ ,nbsp:¬,extends:»,precedes:«,trail:•"
@@ -85,9 +104,11 @@ vim.opt.iskeyword:remove("_")
 -------------------------------------------------------------------------------
 -- window splits
 vim.keymap.set("n", "<C-x>3", "<cmd>vsplit<CR>")
+
 vim.keymap.set("n", "<C-x>2", "<cmd>split<CR>")
 vim.keymap.set("n", "<leader>sv", "<cmd>vsplit<CR>")
 vim.keymap.set("n", "<leader>sh", "<cmd>split<CR>")
+
 vim.keymap.set("n", "<leader>se", "<C-w>=")
 vim.keymap.set("n", "<leader>sx", "<cmd>close<CR>")
 vim.keymap.set("n", "<leader>so", "<cmd>only<CR>")
@@ -107,6 +128,7 @@ vim.keymap.set("n", "<leader><leader>", "<c-^>")
 vim.keymap.set("n", "<leader>,", ":set invlist<cr>")
 -- always center search results
 vim.keymap.set("n", "n", "nzz", { silent = true })
+
 vim.keymap.set("n", "N", "Nzz", { silent = true })
 vim.keymap.set("n", "*", "*zz", { silent = true })
 vim.keymap.set("n", "#", "#zz", { silent = true })
@@ -119,6 +141,7 @@ vim.keymap.set("c", "%s/", "%sm/")
 vim.keymap.set("n", "<leader>o", ':e <C-R>=expand("%:p:h") . "/" <cr>')
 -- no arrow keys --- force yourself to use the home row
 vim.keymap.set("n", "<up>", "<nop>")
+
 vim.keymap.set("n", "<down>", "<nop>")
 vim.keymap.set("i", "<up>", "<nop>")
 vim.keymap.set("i", "<down>", "<nop>")
@@ -136,6 +159,7 @@ vim.keymap.set("n", "<leader>m", "ct_")
 vim.keymap.set("", "<F1>", "<Esc>")
 vim.keymap.set("i", "<F1>", "<Esc>")
 
+
 -------------------------------------------------------------------------------
 --
 -- configuring diagnostics
@@ -144,11 +168,13 @@ vim.keymap.set("i", "<F1>", "<Esc>")
 -- Allow virtual text
 vim.diagnostic.config({ virtual_text = true, virtual_lines = false })
 
+
 -------------------------------------------------------------------------------
 --
 -- autocommands
 --
 -------------------------------------------------------------------------------
+
 -- highlight yanked text
 vim.api.nvim_create_autocmd("TextYankPost", {
 	pattern = "*",
@@ -163,6 +189,7 @@ vim.api.nvim_create_autocmd("BufReadPost", {
 			-- https://stackoverflow.com/questions/31449496/vim-ignore-specifc-file-in-autocommand
 			if not vim.fn.expand("%:p"):find(".git", 1, true) then
 				vim.cmd('exe "normal! g\'\\""')
+
 			end
 		end
 	end,
@@ -173,9 +200,11 @@ vim.api.nvim_create_autocmd("BufRead", { pattern = "*.pacnew", command = "set re
 -- leave paste mode when leaving insert mode (if it was on)
 vim.api.nvim_create_autocmd("InsertLeave", { pattern = "*", command = "set nopaste" })
 -- help filetype detection (add as needed)
+
 --vim.api.nvim_create_autocmd('BufRead', { pattern = '*.ext', command = 'set filetype=someft' })
 -- correctly classify mutt buffers
 local email = vim.api.nvim_create_augroup("email", { clear = true })
+
 vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
 	pattern = "/tmp/mutt*",
 	group = email,
@@ -215,6 +244,7 @@ vim.api.nvim_create_autocmd("Filetype", {
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
 	vim.fn.system({
+
 		"git",
 		"clone",
 		"--filter=blob:none",
@@ -223,6 +253,7 @@ if not vim.loop.fs_stat(lazypath) then
 		lazypath,
 	})
 end
+
 vim.opt.rtp:prepend(lazypath)
 -- then, setup!
 require("lazy").setup({
@@ -238,9 +269,11 @@ require("lazy").setup({
 			-- Less visible window separator
 			vim.api.nvim_set_hl(0, "WinSeparator", { fg = 1250067 })
 			-- Make comments more prominent -- they are important.
+
 			local bools = vim.api.nvim_get_hl(0, { name = "Boolean" })
 			vim.api.nvim_set_hl(0, "Comment", bools)
 			-- Make it clearly visible which argument we're at.
+
 			local marked = vim.api.nvim_get_hl(0, { name = "PMenu" })
 			vim.api.nvim_set_hl(
 				0,
@@ -250,9 +283,11 @@ require("lazy").setup({
 			-- XXX
 			-- Would be nice to customize the highlighting of warnings and the like to make
 			-- them less glaring. But alas
+
 			-- https://github.com/nvim-lua/lsp_extensions.nvim/issues/21
 			-- call Base16hi("CocHintSign", g:base16_gui03, "", g:base16_cterm03, "", "", "")
 		end,
+
 	},
 	-- nice bar at the bottom
 	{
@@ -262,6 +297,7 @@ require("lazy").setup({
 			-- no need to also show mode in cmd line when we have bar
 			vim.o.showmode = false
 			vim.g.lightline = {
+
 				active = {
 					left = {
 						{ "mode", "paste" },
@@ -271,6 +307,7 @@ require("lazy").setup({
 						{ "lineinfo" },
 						{ "percent" },
 						{ "fileencoding", "filetype" },
+
 					},
 				},
 				component_function = {
@@ -298,15 +335,18 @@ require("lazy").setup({
 	-- better %
 	{
 		"andymass/vim-matchup",
+
 		config = function()
 			vim.g.matchup_matchparen_offscreen = { method = "popup" }
 		end,
+
 	},
 	-- option to center the editor
 	{
 		"shortcuts/no-neck-pain.nvim",
 		version = "*",
 		opts = {
+
 			mappings = {
 				enabled = true,
 				toggle = false,
@@ -344,12 +384,14 @@ require("lazy").setup({
 		dependencies = { "nvim-tree/nvim-web-devicons" },
 		config = function()
 			require("oil").setup({
+			        columns = {},
 				default_file_explorer = true,
 				delete_to_trash = true,
 				skip_confirm_for_simple_edits = true,
 				view_options = {
 					show_hidden = true,
 					natural_order = true,
+
 				},
 			})
 
@@ -362,6 +404,7 @@ require("lazy").setup({
 		init = function()
 			pcall(vim.keymap.del, "n", "<C-n>")
 			pcall(vim.keymap.del, "x", "<C-n>")
+
 
 			vim.g.VM_maps = {
 				["Find Under"] = "<C-n>",
@@ -408,11 +451,13 @@ require("lazy").setup({
 			vim.keymap.set("n", "gd", builtin.lsp_definitions, { desc = "[G]o to [D]efinition" })
 			vim.keymap.set("n", "gb", "<C-o>", { desc = "Go back" }) -- Keeping your native Vim jump map
 
+
 			-- Complex Prompt/Grep Map
 			vim.keymap.set("n", "<leader>fa", function()
 				local dir = vim.fn.input("Search in directory: ", vim.fn.getcwd(), "dir")
 				if dir ~= "" then
 					builtin.live_grep({ search_dirs = { dir } })
+
 				end
 			end, { desc = "[F]ind [A]nywhere (all files)" })
 
@@ -425,8 +470,10 @@ require("lazy").setup({
 			vim.keymap.set("n", "<leader>gC", builtin.git_commits, { desc = "[G]it [C]ommits" })
 			vim.keymap.set("n", "<leader>gS", builtin.git_status, { desc = "[G]it [S]tatus" })
 			vim.keymap.set("n", "<leader>gb", builtin.git_branches, { desc = "[G]it [B]ranches" })
+
 		end,
 	},
+
 
 	-- new config dont know all of the keymaps
 	{
@@ -449,6 +496,7 @@ require("lazy").setup({
 				harpoon.ui:toggle_quick_menu(harpoon:list())
 			end)
 
+
 			vim.keymap.set("n", "<leader>aa", function()
 				harpoon:list():add()
 			end)
@@ -456,6 +504,7 @@ require("lazy").setup({
 			vim.keymap.set("n", "<leader>h1", function()
 				harpoon:list():select(1)
 			end)
+
 
 			vim.keymap.set("n", "<leader>h2", function()
 				harpoon:list():select(2)
@@ -469,6 +518,7 @@ require("lazy").setup({
 				harpoon:list():select(4)
 			end)
 		end,
+
 	},
 
 	{
@@ -477,6 +527,7 @@ require("lazy").setup({
 		opts = {
 			library = {
 				{ path = "${3rd}/luv/library", words = { "vim%.uv" } },
+
 			},
 		},
 	},
@@ -491,6 +542,7 @@ require("lazy").setup({
 			vim.cmd("syntax on")
 			vim.cmd("filetype plugin indent on")
 		end,
+
 	},
 	{ "octol/vim-cpp-enhanced-highlight", ft = { "c", "cpp" } },
 	-- LSP
@@ -504,8 +556,10 @@ require("lazy").setup({
 		config = function()
 			local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
+
 			local servers = {
 				basedpyright = {
+
 					settings = {
 						basedpyright = {
 							analysis = {
@@ -524,6 +578,7 @@ require("lazy").setup({
 				ocamllsp = {
 					-- resolves via the active opam switch (including local/per-project
 					-- switches) instead of hardcoding the "default" switch's binary
+
 					cmd = { "opam", "exec", "--", "ocamllsp" },
 				},
 				rust_analyzer = {
@@ -548,12 +603,14 @@ require("lazy").setup({
 									enable = false,
 								},
 							},
+
 						},
 					},
 				},
 				zls = {},
 
 				texlab = {
+
 					settings = {
 						texlab = {
 							build = {
@@ -575,6 +632,7 @@ require("lazy").setup({
 				cssls = {},
 				jsonls = {},
 				yamlls = {},
+
 				ts_ls = {},
 				svelte = {},
 				terraformls = {},
@@ -588,12 +646,15 @@ require("lazy").setup({
 					-- ocamllsp is installed via opam, not mason
 					return name ~= "ocamllsp"
 				end, vim.tbl_keys(servers)),
+
 				automatic_installation = false,
 				handlers = {
 					function(server_name)
 						local server = servers[server_name] or {}
 
+
 						server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
+
 
 						require("lspconfig")[server_name].setup(server)
 					end,
@@ -636,16 +697,19 @@ require("lazy").setup({
 					prefix = "●",
 				},
 				float = { border = "rounded", source = true },
+
 				signs = {
 					text = {
 						[vim.diagnostic.severity.ERROR] = "E",
 						[vim.diagnostic.severity.WARN] = "W",
 						[vim.diagnostic.severity.HINT] = "H",
 						[vim.diagnostic.severity.INFO] = "I",
+
 					},
 				},
 				underline = false,
 				update_in_insert = false,
+
 				severity_sort = true,
 			})
 
@@ -654,15 +718,18 @@ require("lazy").setup({
 			vim.api.nvim_set_hl(0, "DiagnosticVirtualTextWarn", { fg = "#d79921", italic = true })
 			vim.api.nvim_set_hl(0, "DiagnosticVirtualTextInfo", { fg = "#83a598", italic = true })
 		end,
+
 	},
 
 	-- inline function signatures
 	{
 		"ray-x/lsp_signature.nvim",
 		event = "VeryLazy",
+
 		opts = {},
 		config = function(_, opts)
 			require("lsp_signature").setup({
+
 				doc_lines = 0,
 				handler_opts = {
 					border = "none",
@@ -671,11 +738,13 @@ require("lazy").setup({
 		end,
 	},
 
+
 	-- Formatting
 	{
 		"stevearc/conform.nvim",
 		event = { "BufWritePre" },
 		cmd = { "ConformInfo" },
+
 		keys = {
 			{
 				"<leader>f",
@@ -707,10 +776,12 @@ require("lazy").setup({
 				html = { "prettier" },
 				json = { "prettier" },
 				yaml = { "prettier" },
+
 				markdown = { "prettier" },
 				lua = { "stylua" },
 				ocaml = { "ocamlformat" },
 				rust = { "rustfmt" },
+
 				zig = { "zigfmt" },
 				terraform = { "terraform_fmt" },
 			},
@@ -724,6 +795,7 @@ require("lazy").setup({
 		dependencies = {
 			"hrsh7th/cmp-nvim-lsp",
 			"hrsh7th/cmp-buffer",
+
 			"hrsh7th/cmp-path",
 		},
 		config = function()
@@ -743,6 +815,7 @@ require("lazy").setup({
 					{ name = "path" },
 				}),
 
+
 				mapping = cmp.mapping.preset.insert({
 					["<C-b>"] = cmp.mapping.scroll_docs(-4),
 					["<C-f>"] = cmp.mapping.scroll_docs(4),
@@ -759,6 +832,7 @@ require("lazy").setup({
 					ghost_text = true,
 				},
 			})
+
 
 			cmp.setup.cmdline(":", {
 				sources = cmp.config.sources({
