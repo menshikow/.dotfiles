@@ -1,30 +1,7 @@
-# dotfiles
+The configuration files are managed with GNU Stow. Each top-level directory represents a "group" of configs (e.g., alacritty, fish, ghostty, nvim), and you can "install" (by symlinking) the configs of a group using
 
-> emacs, fish, tmux, ghostty, etc.
+$ stow -Sv <group>
 
-Managed with [GNU stow](https://www.gnu.org/software/stow/) — the repo IS the
-stow tree, so `stow .` from the repo root links everything into `~`.
+You can use -n to just show what it would install.
 
-## Requirements
-
-- `git`
-- `stow` (`brew install stow`)
-- `fish` (the shell)
-
-## Install
-
-```console
-$ git clone git@github.com:menshikow/.dotfiles.git ~/.dotfiles
-$ cd ~/.dotfiles
-$ stow .
-```
-
-## Update
-
-```console
-$ cd ~/.dotfiles
-$ git pull
-$ stow .
-```
-
-
+Stow has a bunch of shortcomings, but I haven't bothered to move to anything else yet. In theory, the directory layout should be mostly compatible with other tools like chezmoi that you may enjoy more, though I have not tried them myself.
