@@ -5,14 +5,3 @@ live_config_reload = true
 [selection]
 # Automatically copies highlighted text straight to your Windows clipboard
 save_to_clipboard = true
-
-[[keyboard.bindings]]
-key = "C"
-mods = "Control"
-action = "Copy"
-
-[[keyboard.bindings]]
-key = "V"
-mods = "Control"
-action = "Paste"
-
