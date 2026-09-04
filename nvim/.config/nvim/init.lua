@@ -538,6 +538,7 @@ require("lazy").setup({
 		end,
 
 	},
+        -- extended highliting for c and cpp
 	{ "octol/vim-cpp-enhanced-highlight", ft = { "c", "cpp" } },
 	-- LSP
 	{
@@ -549,7 +550,6 @@ require("lazy").setup({
 		},
 		config = function()
 			local capabilities = require("cmp_nvim_lsp").default_capabilities()
-
 
 			local servers = {
 				basedpyright = {
@@ -620,7 +620,6 @@ require("lazy").setup({
 					},
 				},
 
-				-- newly added: broader language coverage
 				bashls = {},
 				html = {},
 				cssls = {},
