@@ -102,6 +102,8 @@ vim.opt.iskeyword:remove("_")
 -- hotkeys
 --
 -------------------------------------------------------------------------------
+-- TODO: add a keymap for C-x-f to create a file in an oil buffer
+
 -- window splits
 vim.keymap.set("n", "<C-x>3", "<cmd>vsplit<CR>")
 
@@ -467,9 +469,6 @@ require("lazy").setup({
 
 		end,
 	},
-
-
-	-- new config dont know all of the keymaps
 	{
 		"folke/which-key.nvim",
 		event = "VeryLazy",
@@ -869,4 +868,6 @@ require("lazy").setup({
                         { "<leader>u", "<cmd>UndotreeToggle<CR>", desc = "Toggle undo tree" },
                 },
         },
+        -- code stas
+        { 'wakatime/vim-wakatime', lazy = false },
 })

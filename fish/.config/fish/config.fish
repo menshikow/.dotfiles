@@ -63,14 +63,12 @@ set -x LESS_TERMCAP_so (set_color -b 246)
 set -x LESS_TERMCAP_ue (set_color normal)
 set -x LESS_TERMCAP_us (set_color -u 146)
 
-
 # fzf (only if fd is installed)
 if command -v fd > /dev/null
 	set -x FZF_DEFAULT_COMMAND 'fd --type file --follow'
 	set -x FZF_CTRL_T_COMMAND 'fd --type file --follow'
 end
 set -x FZF_DEFAULT_OPTS '--height 20%'
-
 
 # Abbreviations
 
@@ -98,6 +96,12 @@ abbr -a ga "git add -p"
 abbr -a gah "git stash; and git pull --rebase; and git stash pop"
 
 # Functions
+
+function fish_user_key_bindings
+    fish_vi_key_bindings
+    bind -M insert \cf forward-char
+    bind -M normal \cf forward-char
+end
 
 # Jump to the root of the current git repo
 function d
