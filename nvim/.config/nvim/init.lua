@@ -405,6 +405,7 @@ require("lazy").setup({
 			vim.g.VM_maps = {
 				["Find Under"] = "<C-n>",
 				["Find Subword Under"] = "<C-n>",
+		                ["Visual All"] = "<leader>a",  -- select all occurrences of visual selection
 			}
 		end,
 	},
@@ -770,7 +771,6 @@ require("lazy").setup({
 				yaml = { "prettier" },
 
 				markdown = { "prettier" },
-				lua = { "stylua" },
 				ocaml = { "ocamlformat" },
 				rust = { "rustfmt" },
 
