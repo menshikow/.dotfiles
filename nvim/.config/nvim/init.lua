@@ -308,7 +308,7 @@ require("lazy").setup({
                         vim.g.base16_italicize_comments = 0
 
                         -- more readble comments, they are important
-                        local comment_hl = { italic = false, fg = "#999580" }
+                        local comment_hl = { italic = false, fg = "#c6c3b5" }
                         vim.api.nvim_set_hl(0, "Comment", comment_hl)
                         vim.api.nvim_set_hl(0, "@comment", comment_hl)
                 end,
