@@ -351,11 +351,14 @@ require("lazy").setup({
 	-- 	end,
 	-- },
         {
-            priority = 1000,
-            "nvim-lualine/lualine.nvim",
-            opts = {
-                icons_enabled = false,
+          "nvim-lualine/lualine.nvim",
+          opts = {
+            options = {
+              icons_enabled = false,
+              component_separators = "",
+              section_separators = "",
             },
+          },
         },
 	-- better %
 	{
