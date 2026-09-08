@@ -1,6 +1,8 @@
 background = #20201d
 
 cursor-style = "bar"
+cursor-color = cell-foreground
+cursor-text = cell-background
 
 command = /opt/homebrew/bin/fish
 
