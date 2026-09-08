@@ -102,7 +102,6 @@ vim.opt.iskeyword:remove("_")
 -- hotkeys
 --
 -------------------------------------------------------------------------------
--- TODO: add a keymap for C-x-f to create a file in an oil buffer
 
 -- window splits
 vim.keymap.set("n", "<C-x>3", "<cmd>vsplit<CR>")
@@ -253,81 +252,111 @@ vim.opt.rtp:prepend(lazypath)
 -- then, setup!
 require("lazy").setup({
 	-- main color scheme
-	{
-		"wincent/base16-nvim",
-		lazy = false, -- load at start
-		priority = 1000, -- load first
-		config = function()
-			vim.cmd([[colorscheme gruvbox-dark-hard]])
-			vim.o.background = "dark"
-			vim.cmd([[hi Normal ctermbg=NONE]])
-			-- Less visible window separator
-			vim.api.nvim_set_hl(0, "WinSeparator", { fg = 1250067 })
-			-- Make comments more prominent -- they are important.
-
-			local bools = vim.api.nvim_get_hl(0, { name = "Boolean" })
-			vim.api.nvim_set_hl(0, "Comment", bools)
-			-- Make it clearly visible which argument we're at.
-
-			local marked = vim.api.nvim_get_hl(0, { name = "PMenu" })
-			vim.api.nvim_set_hl(
-				0,
-				"LspSignatureActiveParameter",
-				{ fg = marked.fg, bg = marked.bg, ctermfg = marked.ctermfg, ctermbg = marked.ctermbg, bold = true }
-			)
-			-- XXX
-			-- Would be nice to customize the highlighting of warnings and the like to make
-			-- them less glaring. But alas
-
-			-- https://github.com/nvim-lua/lsp_extensions.nvim/issues/21
-			-- call Base16hi("CocHintSign", g:base16_gui03, "", g:base16_cterm03, "", "", "")
-		end,
-
-	},
+	-- {
+	-- 	"wincent/base16-nvim",
+	-- 	lazy = false, -- load at start
+	-- 	priority = 1000, -- load first
+	-- 	config = function()
+	-- 		vim.cmd([[colorscheme gruvbox-dark-hard]])
+	-- 		vim.o.background = "dark"
+	-- 		vim.cmd([[hi Normal ctermbg=NONE]])
+	-- 		-- Less visible window separator
+	-- 		vim.api.nvim_set_hl(0, "WinSeparator", { fg = 1250067 })
+	-- 		-- Make comments more prominent -- they are important.
+	--
+	-- 		local bools = vim.api.nvim_get_hl(0, { name = "Boolean" })
+	-- 		vim.api.nvim_set_hl(0, "Comment", bools)
+	-- 		-- Make it clearly visible which argument we're at.
+	--
+	-- 		local marked = vim.api.nvim_get_hl(0, { name = "PMenu" })
+	-- 		vim.api.nvim_set_hl(
+	-- 			0,
+	-- 			"LspSignatureActiveParameter",
+	-- 			{ fg = marked.fg, bg = marked.bg, ctermfg = marked.ctermfg, ctermbg = marked.ctermbg, bold = true }
+	-- 		)
+	-- 		-- XXX
+	-- 		-- Would be nice to customize the highlighting of warnings and the like to make
+	-- 		-- them less glaring. But alas
+	--
+	-- 		-- https://github.com/nvim-lua/lsp_extensions.nvim/issues/21
+	-- 		-- call Base16hi("CocHintSign", g:base16_gui03, "", g:base16_cterm03, "", "", "")
+	-- 	end,
+	--
+	-- },
+        {
+          "RRethy/nvim-base16",
+          config = function()
+            require("base16-colorscheme").setup({
+              base00 = "#20201d",
+              base01 = "#292824",
+              base02 = "#6e6b5e",
+              base03 = "#7d7a68",
+              base04 = "#999580",
+              base05 = "#a6a28c",
+              base06 = "#e8e4cf",
+              base07 = "#fefbec",
+              base08 = "#d43552",
+              base09 = "#b65611",
+              base0A = "#ae9513",
+              base0B = "#60ac39",
+              base0C = "#1ead8f",
+              base0D = "#6684e1",
+              base0E = "#b854d4",
+              base0F = "#b46958",
+            })
+          end,
+        },
 
 	-- nice bar at the bottom
-	{
-		"itchyny/lightline.vim",
-		lazy = false, -- also load at start since it's UI
-		config = function()
-			-- no need to also show mode in cmd line when we have bar
-			vim.o.showmode = false
-			vim.g.lightline = {
-
-				active = {
-					left = {
-						{ "mode", "paste" },
-						{ "readonly", "filename", "modified" },
-					},
-					right = {
-						{ "lineinfo" },
-						{ "percent" },
-						{ "fileencoding", "filetype" },
-
-					},
-				},
-				component_function = {
-					filename = "LightlineFilename",
-				},
-			}
-			function LightlineFilenameInLua(opts)
-				if vim.fn.expand("%:t") == "" then
-					return "[No Name]"
-                                else	
-					return vim.fn.getreg("%")
-				end
-			end
-			-- https://github.com/itchyny/lightline.vim/issues/657
-			vim.api.nvim_exec(
-				[[
-				function! g:LightlineFilename()
-					return v:lua.LightlineFilenameInLua()
-				endfunction
-				]],
-				true
-			)
-		end,
-	},
+	-- {
+	-- 	"itchyny/lightline.vim",
+	-- 	lazy = false, -- also load at start since it's UI
+	-- 	config = function()
+	-- 		-- no need to also show mode in cmd line when we have bar
+	-- 		vim.o.showmode = false
+	-- 		vim.g.lightline = {
+	--
+	-- 			active = {
+	-- 				left = {
+	-- 					{ "mode", "paste" },
+	-- 					{ "readonly", "filename", "modified" },
+	-- 				},
+	-- 				right = {
+	-- 					{ "lineinfo" },
+	-- 					{ "percent" },
+	-- 					{ "fileencoding", "filetype" },
+	--
+	-- 				},
+	-- 			},
+	-- 			component_function = {
+	-- 				filename = "LightlineFilename",
+	-- 			},
+	-- 		}
+	-- 		function LightlineFilenameInLua(opts)
+	-- 			if vim.fn.expand("%:t") == "" then
+	-- 				return "[No Name]"
+	--                                else	
+	-- 				return vim.fn.getreg("%")
+	-- 			end
+	-- 		end
+	-- 		-- https://github.com/itchyny/lightline.vim/issues/657
+	-- 		vim.api.nvim_exec(
+	-- 			[[
+	-- 			function! g:LightlineFilename()
+	-- 				return v:lua.LightlineFilenameInLua()
+	-- 			endfunction
+	-- 			]],
+	-- 			true
+	-- 		)
+	-- 	end,
+	-- },
+        {
+            priority = 1000,
+            "nvim-lualine/lualine.nvim",
+            opts = {
+                icons_enabled = false,
+            },
+        },
 	-- better %
 	{
 		"andymass/vim-matchup",
@@ -370,14 +399,45 @@ require("lazy").setup({
 		"lewis6991/gitsigns.nvim",
 		opts = {},
 	},
+	-- :G status/diff/blame/commit, fills the gap left by dropping
+	-- telescope's git_commits/git_branches pickers
+	"tpope/vim-fugitive",
+	-- respects a repo's .editorconfig, overriding your global
+	-- tab/indent settings on a per-project basis when one is present
+	"gpanders/editorconfig.nvim",
+	-- lets `:e file.rs:42` (or `nvim file.rs:42` from the shell) jump
+	-- straight to that line instead of opening at line 1
+	"lewis6991/fileline.nvim",
+	-- project-wide search-and-replace UI, pairs well with fff for
+	-- find-then-replace-across-files workflows
+	{
+		"MagicDuck/grug-far.nvim",
+		keys = {
+			{ "<leader>fR", "<cmd>GrugFar<CR>", desc = "[F]ind/[R]eplace across files" },
+		},
+		opts = {},
+	},
 	{
 		"windwp/nvim-autopairs",
 		event = "InsertEnter",
 		config = true,
 	},
+	-- surround-text-object editing: ys{motion}{char} to add, cs{old}{new}
+	-- to change, ds{char} to delete a surrounding pair
+	{
+		"kylechui/nvim-surround",
+		version = "*",
+		event = "VeryLazy",
+		opts = {},
+	},
+	-- shows marks (m{a-z}) in the sign column instead of leaving them invisible
+	{
+		"chentoast/marks.nvim",
+		event = "VeryLazy",
+		opts = {},
+	},
 	{
 		"stevearc/oil.nvim",
-		dependencies = { "nvim-tree/nvim-web-devicons" },
 		config = function()
 			require("oil").setup({
 			        columns = {},
@@ -405,7 +465,7 @@ require("lazy").setup({
 			vim.g.VM_maps = {
 				["Find Under"] = "<C-n>",
 				["Find Subword Under"] = "<C-n>",
-		                ["Visual All"] = "<leader>a",  -- select all occurrences of visual selection
+		                ["Visual All"] = "<C-e>",  -- select all occurrences of visual selection
 			}
 		end,
 	},
@@ -422,58 +482,97 @@ require("lazy").setup({
 			require("nvim-rooter").setup()
 		end,
 	},
-	-- telescope
+	-- hop: EasyMotion-style jump-to-anywhere motions
+	-- (smoka7/hop.nvim, not phaazon/hop.nvim -- the original is
+	-- unmaintained, smoka7's fork is the actively developed continuation)
 	{
-		"nvim-telescope/telescope.nvim",
-		dependencies = { "nvim-lua/plenary.nvim" },
-		config = function()
-			local builtin = require("telescope.builtin")
+		"smoka7/hop.nvim",
+		version = "*",
+		opts = { keys = "etovxqpdygfblzhckisuran" },
+		config = function(_, opts)
+			require("hop").setup(opts)
+			local hop = require("hop")
+
+			-- jump to any visible 2-char sequence, either direction
+			vim.keymap.set("n", "s", hop.hint_char2, { desc = "Hop to char" })
+			vim.keymap.set("v", "s", hop.hint_char2, { desc = "Hop to char" })
+
+			vim.keymap.set("n", "<leader>jw", hop.hint_words, { desc = "[J]ump to [W]ord" })
+			vim.keymap.set("n", "<leader>jl", hop.hint_lines, { desc = "[J]ump to [L]ine" })
+			vim.keymap.set("n", "<leader>jp", hop.hint_patterns, { desc = "[J]ump to [P]attern" })
+		end,
+	},
+	-- fff: fast fuzzy file finder / live grep, backed by a Rust index
+	-- (devicons dependency dropped: no file-type icons in the picker)
+        {
+                "dmtrKovalenko/fff.nvim",
+                build = function()
+                        require("fff.download").download_or_build_binary()
+                end,
+                config = function()
+                        require("fff").setup({
+                                wrap_around = true,
+                                prompt = "> ",
+                                grep = {
+                                        trim_whitespace = true,
+                                },
+                                layout = {
+                                        prompt_position = "bottom",
+                                },
+                        })
+                end,
+        },
+	-- fff-plus: buffer picker + git-status picker on top of fff's index
+	-- (third-party extension, smaller/less battle-tested than fff.nvim itself)
+	{
+		"vinitkumar/fff-plus.nvim",
+		dependencies = { "dmtrKovalenko/fff.nvim" },
+		opts = { legacy_commands = false },
+		config = function(_, opts)
+			require("fff_plus").setup(opts)
+			local fff = require("fff")
+			local plus = require("fff_plus")
 
 			-- Files & Search
-			vim.keymap.set("n", "<C-p>", builtin.find_files, { desc = "Find files" })
-			vim.keymap.set("n", "<leader>ff", builtin.find_files, { desc = "[F]ind [F]iles" })
-			vim.keymap.set("n", "<leader>fg", builtin.live_grep, { desc = "[F]ind by [G]rep (live)" })
-			vim.keymap.set("n", "<leader>fw", builtin.grep_string, { desc = "[F]ind [W]ord under cursor" })
-			vim.keymap.set("n", "<leader>fl", builtin.current_buffer_fuzzy_find, { desc = "[F]ind [L]ines in buffer" })
-			vim.keymap.set("n", "<leader>fr", builtin.oldfiles, { desc = "[F]ind [R]ecent files" })
+			vim.keymap.set("n", "<C-p>", fff.find_files, { desc = "Find files" })
+			vim.keymap.set("n", "<leader>ff", fff.find_files, { desc = "[F]ind [F]iles" })
+			vim.keymap.set("n", "<leader>fg", fff.live_grep, { desc = "[F]ind by [G]rep (live)" })
+			vim.keymap.set("n", "<leader>fw", fff.live_grep_under_cursor, { desc = "[F]ind [W]ord under cursor" })
 
 			-- Buffers
-			vim.keymap.set("n", "<leader>;", builtin.buffers, { desc = "Find buffers" })
-			vim.keymap.set("n", "<leader>fb", builtin.buffers, { desc = "[F]ind [B]uffers" })
-
-			-- Vim/Help/LSP
-			vim.keymap.set("n", "<leader>fh", builtin.help_tags, { desc = "[F]ind [H]elp" })
-			vim.keymap.set("n", "<leader>fc", builtin.commands, { desc = "[F]ind [C]ommands" })
-			vim.keymap.set("n", "<leader>fk", builtin.keymaps, { desc = "[F]ind [K]eymaps" })
-			vim.keymap.set("n", "gd", builtin.lsp_definitions, { desc = "[G]o to [D]efinition" })
-			vim.keymap.set("n", "gb", "<C-o>", { desc = "Go back" }) -- Keeping your native Vim jump map
-
+			vim.keymap.set("n", "<leader>;", plus.buffers, { desc = "Find buffers" })
+			vim.keymap.set("n", "<leader>fb", plus.buffers, { desc = "[F]ind [B]uffers" })
 
 			-- Complex Prompt/Grep Map
 			vim.keymap.set("n", "<leader>fa", function()
 				local dir = vim.fn.input("Search in directory: ", vim.fn.getcwd(), "dir")
 				if dir ~= "" then
-					builtin.live_grep({ search_dirs = { dir } })
-
+					fff.find_files_in_dir(dir)
 				end
 			end, { desc = "[F]ind [A]nywhere (all files)" })
 
 			-- Neovim Config Search
 			vim.keymap.set("n", "<leader>sn", function()
-				builtin.find_files({ cwd = vim.fn.stdpath("config") })
+				fff.find_files_in_dir(vim.fn.stdpath("config"))
 			end, { desc = "[S]earch [N]eovim Config" })
 
 			-- Git Integration
-			vim.keymap.set("n", "<leader>gC", builtin.git_commits, { desc = "[G]it [C]ommits" })
-			vim.keymap.set("n", "<leader>gS", builtin.git_status, { desc = "[G]it [S]tatus" })
-			vim.keymap.set("n", "<leader>gb", builtin.git_branches, { desc = "[G]it [B]ranches" })
+			vim.keymap.set("n", "<leader>gS", plus.git_status, { desc = "[G]it [S]tatus" })
 
+			-- gb was previously bound to <C-o> (native jump-back) alongside a
+			-- separate telescope git_branches map on the same key in the git
+			-- block below it, so the branches map never actually fired; kept
+			-- as native jump-back here since that's what was live before.
+			vim.keymap.set("n", "gb", "<C-o>", { desc = "Go back" })
 		end,
 	},
+	-- which-key.nvim: group/mapping icons disabled below
 	{
 		"folke/which-key.nvim",
 		event = "VeryLazy",
-		opts = {},
+		opts = {
+			icons = { mappings = false },
+		},
 	},
 	-- quick navigation
 	{
@@ -544,12 +643,24 @@ require("lazy").setup({
 	{
 		"neovim/nvim-lspconfig",
 		dependencies = {
-			{ "williamboman/mason.nvim", opts = {} },
+			-- mason.nvim: status icons swapped for plain ASCII below
+			{
+				"williamboman/mason.nvim",
+				opts = {
+					ui = {
+						icons = {
+							package_installed = "[x]",
+							package_pending = "[~]",
+							package_uninstalled = "[ ]",
+						},
+					},
+				},
+			},
 			"williamboman/mason-lspconfig.nvim",
-			"hrsh7th/cmp-nvim-lsp",
+			"saghen/blink.cmp",
 		},
 		config = function()
-			local capabilities = require("cmp_nvim_lsp").default_capabilities()
+			local capabilities = require("blink.cmp").get_lsp_capabilities()
 
 			local servers = {
 				basedpyright = {
@@ -684,10 +795,11 @@ require("lazy").setup({
 				end,
 			})
 
+			-- diagnostic signs switched from icon glyphs to plain letters
 			vim.diagnostic.config({
 				virtual_text = {
 					spacing = 4,
-					prefix = "●",
+					prefix = "-",
 				},
 				float = { border = "rounded", source = true },
 
@@ -731,6 +843,31 @@ require("lazy").setup({
 		end,
 	},
 
+
+	-- lightbulb sign switched from the default icon glyph to a plain
+	-- asterisk -- complements <leader>ca
+	{
+		"kosayoda/nvim-lightbulb",
+		event = "LspAttach",
+		opts = {
+			autocmd = { enabled = true },
+			sign = { text = "*" },
+		},
+	},
+	-- inline Cargo.toml dependency versions + upgrade hints via rust-analyzer
+	{
+		"saecki/crates.nvim",
+		event = "BufRead Cargo.toml",
+		dependencies = { "nvim-lua/plenary.nvim" },
+		opts = {
+			lsp = {
+				enabled = true,
+				actions = true,
+				completion = true,
+				hover = true,
+			},
+		},
+	},
 
 	-- Formatting
 	{
@@ -781,58 +918,55 @@ require("lazy").setup({
 	},
 
 	-- Completion
+	-- blink.cmp: menu draw columns trimmed to drop the kind_icon column,
+	-- so completion entries show label + description only, no icons
 	{
-		"hrsh7th/nvim-cmp",
-		event = "InsertEnter",
-		dependencies = {
-			"hrsh7th/cmp-nvim-lsp",
-			"hrsh7th/cmp-buffer",
-
-			"hrsh7th/cmp-path",
+		"saghen/blink.cmp",
+		dependencies= {
+			{
+				"L3MON4D3/LuaSnip",
+				build = "make install_jsregexp",
+				config = function()
+					local luasnip = require("luasnip")
+					require("luasnip.loaders.from_vscode").load({ paths = "~/.config/nvim/snippets" })
+					luasnip.config.set_config({
+						region_check_events = "InsertEnter",
+						delete_check_events = "InsertLeave",
+					})
+					luasnip.config.setup({})
+                                end,
+			},
 		},
-		config = function()
-			local cmp = require("cmp")
-
-			cmp.setup({
-				snippet = {
-					expand = function(args)
-						vim.snippet.expand(args.body)
-					end,
+		-- use a release tag to download pre-built binaries
+		version = "1.*",
+		-- AND/OR build from source, requires nightly: https://rust-lang.github.io/rustup/concepts/channels.html#working-with-nightly-rust
+		-- build = 'cargo build --release',
+		---@module 'blink.cmp'
+		---@type blink.cmp.Config
+		opts = {
+			keymap = {
+				preset = "enter",
+				["<Tab>"] = { "fallback" },
+				["<S-Tab>"] = { "snippet_forward", "fallback" },
+			},
+			snippets = { preset = "luasnip" },
+			appearance = {
+				nerd_font_variant = "mono",
+			},
+			completion = {
+				documentation = { auto_show = true },
+				menu = {
+					draw = {
+						columns = { { "label", "label_description", gap = 1 } },
+					},
 				},
-
-				sources = cmp.config.sources({
-					{ name = "nvim_lsp" },
-				}, {
-					{ name = "buffer" },
-					{ name = "path" },
-				}),
-
-
-				mapping = cmp.mapping.preset.insert({
-					["<C-b>"] = cmp.mapping.scroll_docs(-4),
-					["<C-f>"] = cmp.mapping.scroll_docs(4),
-					["<C-Space>"] = cmp.mapping.complete(),
-					["<C-e>"] = cmp.mapping.abort(),
-					["<CR>"] = cmp.mapping.confirm({ select = true }),
-					["<Tab>"] = cmp.mapping.select_next_item(),
-                                        ["<C-f>"] = cmp.mapping.select_next_item(),
-					["<S-Tab>"] = cmp.mapping.select_prev_item(),
-					["<Down>"] = cmp.mapping.select_next_item(),
-					["<Up>"] = cmp.mapping.select_prev_item(),
-				}),
-
-				experimental = {
-					ghost_text = true,
-				},
-			})
-
-
-			cmp.setup.cmdline(":", {
-				sources = cmp.config.sources({
-					{ name = "path" },
-				}),
-			})
-		end,
+			},
+			sources = {
+				default = { "snippets", "lsp", "path", "buffer" },
+			},
+			fuzzy = { implementation = "prefer_rust_with_warning" },
+		},
+		opts_extend = { "sources.default" },
 	},
 
 	-- filetype plugins not covered by LSP alone
