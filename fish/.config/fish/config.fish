@@ -2,19 +2,19 @@
 
 # Prompt
 function fish_prompt
-	set_color brblack
+	set_color 7d7a68 # base03 - muted, for timestamp
 	echo -n "["(date "+%H:%M")"] "
-	set_color blue
+	set_color 6684e1 # base0D - blue, for hostname
 	echo -n (command -q hostname; and hostname; or hostnamectl hostname)
 	if [ $PWD != $HOME ]
-		set_color brblack
+		set_color 7d7a68 # base03
 		echo -n ':'
-		set_color yellow
+		set_color ae9513 # base0A - yellow, for dir
 		echo -n (basename $PWD)
 	end
-	set_color green
+	set_color 60ac39 # base0B - green, for git status
 	printf '%s ' (__fish_git_prompt)
-	set_color red
+	set_color d43552 # base08 - red, for separator
 	echo -n '| '
 	set_color normal
 end
@@ -112,6 +112,3 @@ function d
 		cd ..
 	end
 end
-
-# opam configuration
-test -r '/home/adria/.opam/opam-init/init.fish' && source '/home/adria/.opam/opam-init/init.fish' > /dev/null 2> /dev/null; or true
