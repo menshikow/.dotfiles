@@ -304,7 +304,7 @@ require("lazy").setup({
                                 base0F = "#b46958",
                         })
 
-                        -- disable base16's default italics
+                        -- disable italics
                         vim.g.base16_italicize_comments = 0
 
                         -- more readble comments, they are important
