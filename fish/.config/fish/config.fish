@@ -29,29 +29,6 @@ function fish_greeting
 	set_color brblack
 	echo (hostname)" — "(uname -sr)
 	echo (uptime -p 2>/dev/null; or uptime)
-
-	# Disk usage on root, one line
-	echo "Disk: "(df -h / | awk 'NR==2 {print $3" / "$2" ("$5")"}')
-
-	# Battery (if on a laptop)
-	if command -v upower > /dev/null
-		set bat (upower -i (upower -e | grep BAT) 2>/dev/null | grep percentage | awk '{print $2}')
-		test -n "$bat"; and echo "Battery: $bat"
-	end
-
-	# Whether a reboot is required (Ubuntu writes this file after kernel/security updates)
-	if test -f /var/run/reboot-required
-		set_color red
-		echo "Reboot required"
-		set_color brblack
-	end
-
-	# Git status if already inside a repo
-	if git rev-parse --is-inside-work-tree > /dev/null 2>&1
-		echo "Git: "(git branch --show-current)" ("(git status --porcelain | wc -l)" changes)"
-	end
-
-	set_color normal
 end
 
 # Colored Man Pages
