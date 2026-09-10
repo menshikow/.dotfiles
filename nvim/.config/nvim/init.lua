@@ -251,68 +251,68 @@ vim.opt.rtp:prepend(lazypath)
 -- then, setup!
 require("lazy").setup({
         -- main color scheme
-        -- {
-        -- 	"wincent/base16-nvim",
-        -- 	lazy = false, -- load at start
-        -- 	priority = 1000, -- load first
-        -- 	config = function()
-        -- 		vim.cmd([[colorscheme gruvbox-dark-hard]])
-        -- 		vim.o.background = "dark"
-        -- 		vim.cmd([[hi Normal ctermbg=NONE]])
-        -- 		-- Less visible window separator
-        -- 		vim.api.nvim_set_hl(0, "WinSeparator", { fg = 1250067 })
-        -- 		-- Make comments more prominent -- they are important.
-        --
-        -- 		local bools = vim.api.nvim_get_hl(0, { name = "Boolean" })
-        -- 		vim.api.nvim_set_hl(0, "Comment", bools)
-        -- 		-- Make it clearly visible which argument we're at.
-        --
-        -- 		local marked = vim.api.nvim_get_hl(0, { name = "PMenu" })
-        -- 		vim.api.nvim_set_hl(
-        -- 			0,
-        -- 			"LspSignatureActiveParameter",
-        -- 			{ fg = marked.fg, bg = marked.bg, ctermfg = marked.ctermfg, ctermbg = marked.ctermbg, bold = true }
-        -- 		)
-        -- 		-- XXX
-        -- 		-- Would be nice to customize the highlighting of warnings and the like to make
-        -- 		-- them less glaring. But alas
-        --
-        -- 		-- https://github.com/nvim-lua/lsp_extensions.nvim/issues/21
-        -- 		-- call Base16hi("CocHintSign", g:base16_gui03, "", g:base16_cterm03, "", "", "")
-        -- 	end,
-        --
-        -- },
         {
-                "RRethy/nvim-base16",
-                config = function()
-                        require("base16-colorscheme").setup({
-                                base00 = "#20201d",
-                                base01 = "#292824",
-                                base02 = "#6e6b5e",
-                                base03 = "#7d7a68",
-                                base04 = "#999580",
-                                base05 = "#a6a28c",
-                                base06 = "#e8e4cf",
-                                base07 = "#fefbec",
-                                base08 = "#d43552",
-                                base09 = "#b65611",
-                                base0A = "#ae9513",
-                                base0B = "#60ac39",
-                                base0C = "#1ead8f",
-                                base0D = "#6684e1",
-                                base0E = "#b854d4",
-                                base0F = "#b46958",
-                        })
+        	"wincent/base16-nvim",
+        	lazy = false, -- load at start
+        	priority = 1000, -- load first
+        	config = function()
+        		vim.cmd([[colorscheme gruvbox-dark-hard]])
+        		vim.o.background = "dark"
+        		vim.cmd([[hi Normal ctermbg=NONE]])
+        		-- Less visible window separator
+        		vim.api.nvim_set_hl(0, "WinSeparator", { fg = 1250067 })
+        		-- Make comments more prominent -- they are important.
 
-                        -- disable italics
-                        vim.g.base16_italicize_comments = 0
+        		local bools = vim.api.nvim_get_hl(0, { name = "Boolean" })
+        		vim.api.nvim_set_hl(0, "Comment", bools)
+        		-- Make it clearly visible which argument we're at.
 
-                        -- more readble comments, they are important
-                        local comment_hl = { italic = false, fg = "#c6c3b5" }
-                        vim.api.nvim_set_hl(0, "Comment", comment_hl)
-                        vim.api.nvim_set_hl(0, "@comment", comment_hl)
-                end,
+        		local marked = vim.api.nvim_get_hl(0, { name = "PMenu" })
+        		vim.api.nvim_set_hl(
+        			0,
+        			"LspSignatureActiveParameter",
+        			{ fg = marked.fg, bg = marked.bg, ctermfg = marked.ctermfg, ctermbg = marked.ctermbg, bold = true }
+        		)
+        		-- XXX
+        		-- Would be nice to customize the highlighting of warnings and the like to make
+        		-- them less glaring. But alas
+
+        		-- https://github.com/nvim-lua/lsp_extensions.nvim/issues/21
+        		-- call Base16hi("CocHintSign", g:base16_gui03, "", g:base16_cterm03, "", "", "")
+        	end,
+
         },
+        -- {
+        --         "RRethy/nvim-base16",
+        --         config = function()
+        --                 require("base16-colorscheme").setup({
+        --                         base00 = "#20201d",
+        --                         base01 = "#292824",
+        --                         base02 = "#6e6b5e",
+        --                         base03 = "#7d7a68",
+        --                         base04 = "#999580",
+        --                         base05 = "#a6a28c",
+        --                         base06 = "#e8e4cf",
+        --                         base07 = "#fefbec",
+        --                         base08 = "#d43552",
+        --                         base09 = "#b65611",
+        --                         base0A = "#ae9513",
+        --                         base0B = "#60ac39",
+        --                         base0C = "#1ead8f",
+        --                         base0D = "#6684e1",
+        --                         base0E = "#b854d4",
+        --                         base0F = "#b46958",
+        --                 })
+        --
+        --                 -- disable italics
+        --                 vim.g.base16_italicize_comments = 0
+        --
+        --                 -- more readble comments, they are important
+        --                 local comment_hl = { italic = false, fg = "#c6c3b5" }
+        --                 vim.api.nvim_set_hl(0, "Comment", comment_hl)
+        --                 vim.api.nvim_set_hl(0, "@comment", comment_hl)
+        --         end,
+        -- },
 
         -- nice bar at the bottom
         -- {

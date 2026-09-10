@@ -2,19 +2,19 @@
 
 # Prompt
 function fish_prompt
-	set_color 7d7a68 # base03 - muted, for timestamp
+	set_color 665c54 # base03 - muted, for timestamp
 	echo -n "["(date "+%H:%M")"] "
-	set_color 6684e1 # base0D - blue, for hostname
+	set_color 83a598 # base0D - blue, for hostname
 	echo -n (command -q hostname; and hostname; or hostnamectl hostname)
 	if [ $PWD != $HOME ]
-		set_color 7d7a68 # base03
+		set_color 665c54 # base03
 		echo -n ':'
-		set_color ae9513 # base0A - yellow, for dir
+		set_color fabd2f # base0A - yellow, for dir
 		echo -n (basename $PWD)
 	end
-	set_color 60ac39 # base0B - green, for git status
+	set_color b8bb26 # base0B - green, for git status
 	printf '%s ' (__fish_git_prompt)
-	set_color d43552 # base08 - red, for separator
+	set_color fb4934 # base08 - red, for separator
 	echo -n '| '
 	set_color normal
 end
