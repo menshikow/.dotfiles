@@ -252,34 +252,34 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup({
         -- main color scheme
         {
-        	"wincent/base16-nvim",
-        	lazy = false, -- load at start
-        	priority = 1000, -- load first
-        	config = function()
-        		vim.cmd([[colorscheme gruvbox-dark-hard]])
-        		vim.o.background = "dark"
-        		vim.cmd([[hi Normal ctermbg=NONE]])
-        		-- Less visible window separator
-        		vim.api.nvim_set_hl(0, "WinSeparator", { fg = 1250067 })
-        		-- Make comments more prominent -- they are important.
+                "wincent/base16-nvim",
+                lazy = false,    -- load at start
+                priority = 1000, -- load first
+                config = function()
+                        vim.cmd([[colorscheme gruvbox-dark-hard]])
+                        vim.o.background = "dark"
+                        vim.cmd([[hi Normal ctermbg=NONE]])
+                        -- Less visible window separator
+                        vim.api.nvim_set_hl(0, "WinSeparator", { fg = 1250067 })
+                        -- Make comments more prominent -- they are important.
 
-        		local bools = vim.api.nvim_get_hl(0, { name = "Boolean" })
-        		vim.api.nvim_set_hl(0, "Comment", bools)
-        		-- Make it clearly visible which argument we're at.
+                        local bools = vim.api.nvim_get_hl(0, { name = "Boolean" })
+                        vim.api.nvim_set_hl(0, "Comment", bools)
+                        -- Make it clearly visible which argument we're at.
 
-        		local marked = vim.api.nvim_get_hl(0, { name = "PMenu" })
-        		vim.api.nvim_set_hl(
-        			0,
-        			"LspSignatureActiveParameter",
-        			{ fg = marked.fg, bg = marked.bg, ctermfg = marked.ctermfg, ctermbg = marked.ctermbg, bold = true }
-        		)
-        		-- XXX
-        		-- Would be nice to customize the highlighting of warnings and the like to make
-        		-- them less glaring. But alas
+                        local marked = vim.api.nvim_get_hl(0, { name = "PMenu" })
+                        vim.api.nvim_set_hl(
+                                0,
+                                "LspSignatureActiveParameter",
+                                { fg = marked.fg, bg = marked.bg, ctermfg = marked.ctermfg, ctermbg = marked.ctermbg, bold = true }
+                        )
+                        -- XXX
+                        -- Would be nice to customize the highlighting of warnings and the like to make
+                        -- them less glaring. But alas
 
-        		-- https://github.com/nvim-lua/lsp_extensions.nvim/issues/21
-        		-- call Base16hi("CocHintSign", g:base16_gui03, "", g:base16_cterm03, "", "", "")
-        	end,
+                        -- https://github.com/nvim-lua/lsp_extensions.nvim/issues/21
+                        -- call Base16hi("CocHintSign", g:base16_gui03, "", g:base16_cterm03, "", "", "")
+                end,
 
         },
         -- {
@@ -393,12 +393,11 @@ require("lazy").setup({
                         },
                 },
                 config = function()
-                        vim.keymap.set("", "<leader>t", function()
+                        vim.keymap.set("", "<leader>n", function()
                                 vim.cmd([[
-					:NoNeckPain
-					:set formatoptions-=tc linebreak tw=0 cc=0 wrap wm=20 noautoindent nocindent nosmartindent indentkeys=
-				]])
-                                -- make 0, ^ and $ behave better in wrapped text
+                NoNeckPain
+                set formatoptions-=tc linebreak tw=0 cc=0 wrap wm=20 noautoindent nocindent nosmartindent indentkeys=
+            ]])
                                 vim.keymap.set("n", "0", "g0")
                                 vim.keymap.set("n", "$", "g$")
                                 vim.keymap.set("n", "^", "g^")
@@ -1014,4 +1013,47 @@ require("lazy").setup({
         },
         -- code stas
         { 'wakatime/vim-wakatime',            lazy = false },
+        {
+                "nvim-neo-tree/neo-tree.nvim",
+                branch = "v3.x",
+                dependencies = {
+                        "nvim-lua/plenary.nvim",
+                        "MunifTanjim/nui.nvim",
+                },
+
+                keys = {
+                        {
+                                "<leader>t",
+                                "<cmd>Neotree toggle<cr>",
+                                desc = "Toggle Neo-tree",
+                        },
+                },
+
+                opts = {
+                        default_component_configs = {
+                                icon = {
+                                        enabled = false,
+                                },
+                                indent = {
+                                        with_markers = false,
+                                },
+                                modified = {
+                                        symbol = "",
+                                },
+                                git_status = {
+                                        symbols = {
+                                                added = "",
+                                                modified = "",
+                                                deleted = "",
+                                                renamed = "",
+                                                untracked = "",
+                                                ignored = "",
+                                                unstaged = "",
+                                                staged = "",
+                                                conflict = "",
+                                        },
+                                },
+                        },
+                },
+        },
 })
