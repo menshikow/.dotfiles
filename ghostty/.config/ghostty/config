@@ -11,7 +11,7 @@ mouse-hide-while-typing = true
 font-family = "Geist Mono"
 # font-family = "Source Code Pro"
 font-feature = -calt, -liga, -dlig
-font-size = 16
+font-size = 14
 
 unfocused-split-opacity = 1.0
 
