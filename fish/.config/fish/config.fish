@@ -56,6 +56,7 @@ abbr -a vim "vim"
 abbr -a c "code --reuse-window"
 abbr -a .. "cd .."
 abbr -a ... "cd ../.."
+abbr -a ls "eza -l -a"
 abbr -a reload "source ~/.config/fish/config.fish"
 
 if command -v eza > /dev/null
