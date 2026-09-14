@@ -9,8 +9,9 @@ command = /opt/homebrew/bin/fish
 mouse-hide-while-typing = true
 
 font-family = "Geist Mono"
+# font-family = "Source Code Pro"
 font-feature = -calt, -liga, -dlig
-font-size = 15
+font-size = 16
 
 unfocused-split-opacity = 1.0
 
