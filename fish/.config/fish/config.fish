@@ -2,21 +2,27 @@
 
 # Prompt
 function fish_prompt
-	set_color 665c54 # base03 - muted, for timestamp
-	echo -n "["(date "+%H:%M")"] "
-	set_color 83a598 # base0D - blue, for hostname
-	echo -n (command -q hostname; and hostname; or hostnamectl hostname)
-	if [ $PWD != $HOME ]
-		set_color 665c54 # base03
-		echo -n ':'
-		set_color fabd2f # base0A - yellow, for dir
-		echo -n (basename $PWD)
-	end
-	set_color b8bb26 # base0B - green, for git status
-	printf '%s ' (__fish_git_prompt)
-	set_color fb4934 # base08 - red, for separator
-	echo -n '| '
-	set_color normal
+    set_color 808080 # muted gray, for timestamp
+    echo -n "["(date "+%H:%M")"] "
+
+    set_color 81A1C1 # blue, for hostname
+    echo -n (command -q hostname; and hostname; or hostnamectl hostname)
+
+    if [ $PWD != $HOME ]
+        set_color 808080 # gray
+        echo -n ':'
+
+        set_color E5C07B # yellow, for dir
+        echo -n (basename $PWD)
+    end
+
+    set_color 98C379 # green, for git status
+    printf '%s ' (__fish_git_prompt)
+
+    set_color E06C75 # red, for separator
+    echo -n '| '
+
+    set_color normal
 end
 
 set __fish_git_prompt_showuntrackedfiles 'yes'
