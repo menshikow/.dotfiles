@@ -250,6 +250,15 @@ end
 vim.opt.rtp:prepend(lazypath)
 -- then, setup!
 require("lazy").setup({
+        -- colorscheme
+        {
+                "phha/zenburn.nvim",
+                lazy = false,
+                priority = 1000,
+                config = function()
+                        vim.cmd.colorscheme("zenburn")
+                end,
+        },
         {
                 "nvim-lualine/lualine.nvim",
                 opts = {
@@ -257,6 +266,7 @@ require("lazy").setup({
                                 icons_enabled = false,
                                 component_separators = "",
                                 section_separators = "",
+                                theme = "zenburn",
                         },
                 },
         },
@@ -529,7 +539,7 @@ require("lazy").setup({
         },
 
         -- built-in regex-based syntax highlighting
-	{
+        {
                 "nvim-treesitter/nvim-treesitter",
                 branch = "master",
                 build = ":TSUpdate",

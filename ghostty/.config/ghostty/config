@@ -1,5 +1,4 @@
-# background = #1E2021
-theme = Nvim Dark
+theme = Zenburn
 
 cursor-style = "bar"
 cursor-color = cell-foreground
@@ -13,6 +12,8 @@ mouse-hide-while-typing = true
 # font-family = "Source Code Pro"
 font-feature = -calt, -liga, -dlig
 font-size = 14
+
+unfocused-split-opacity = 1
 
 unfocused-split-opacity = 1.0
 
