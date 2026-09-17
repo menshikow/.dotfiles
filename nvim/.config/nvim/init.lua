@@ -273,13 +273,18 @@ require("lazy").setup({
                 end,
         },
         {
+                "lukas-reineke/indent-blankline.nvim",
+                main = "ibl",
+                opts = {},
+        },
+        {
                 "nvim-lualine/lualine.nvim",
                 opts = {
                         options = {
                                 icons_enabled = false,
                                 component_separators = "",
                                 section_separators = "",
-                                theme = "zenburn",
+                                theme = "auto",
                         },
                 },
         },
