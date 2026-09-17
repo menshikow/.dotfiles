@@ -1,5 +1,3 @@
-background = #000000
-
 cursor-style = "bar"
 cursor-color = cell-foreground
 cursor-text = cell-background
@@ -11,7 +9,7 @@ mouse-hide-while-typing = true
 font-family = "Geist Mono"
 # font-family = "Source Code Pro"
 font-feature = -calt, -liga, -dlig
-font-size = 16
+font-size = 15
 
 unfocused-split-opacity = 1
 
