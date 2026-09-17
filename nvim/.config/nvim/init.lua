@@ -1,3 +1,4 @@
+--
 -- always set leader first!
 
 vim.keymap.set("n", "<Space>", "<Nop>", { silent = true })
@@ -252,31 +253,37 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup({
         -- colorscheme
         {
-                "folke/tokyonight.nvim",
-                lazy = false,
-                priority = 1000,
-                opts = {
-                        style = "night",
-                        on_colors = function(c)
-                                c.bg = "#000000"
-                                c.bg_dark = "#000000"
-                                c.bg_dark1 = "#000000"
-                                c.bg_float = "#000000"
-                                c.bg_popup = "#000000"
-                                c.bg_sidebar = "#000000"
-                                c.bg_statusline = "#000000"
-                        end,
-                },
-                config = function(_, opts)
-                        require("tokyonight").setup(opts)
-                        vim.cmd.colorscheme("tokyonight")
+                "wincent/base16-nvim",
+                lazy = false,    -- load at start
+                priority = 1000, -- load first
+                config = function()
+                        vim.cmd([[colorscheme gruvbox-dark-hard]])
+                        vim.o.background = "dark"
+                        vim.cmd([[hi Normal ctermbg=NONE]])
+                        -- Less visible window separator
+                        vim.api.nvim_set_hl(0, "WinSeparator", { fg = 1250067 })
+                        -- Make comments more prominent -- they are important.
+
+                        local bools = vim.api.nvim_get_hl(0, { name = "Boolean" })
+                        vim.api.nvim_set_hl(0, "Comment", bools)
+                        -- Make it clearly visible which argument we're at.
+
+                        local marked = vim.api.nvim_get_hl(0, { name = "PMenu" })
+                        vim.api.nvim_set_hl(
+                                0,
+                                "LspSignatureActiveParameter",
+                                { fg = marked.fg, bg = marked.bg, ctermfg = marked.ctermfg, ctermbg = marked.ctermbg, bold = true }
+                        )
+                        -- XXX
+                        -- Would be nice to customize the highlighting of warnings and the like to make
+                        -- them less glaring. But alas
+
+                        -- https://github.com/nvim-lua/lsp_extensions.nvim/issues/21
+                        -- call Base16hi("CocHintSign", g:base16_gui03, "", g:base16_cterm03, "", "", "")
                 end,
+
         },
-        {
-                "lukas-reineke/indent-blankline.nvim",
-                main = "ibl",
-                opts = {},
-        },
+        --
         {
                 "nvim-lualine/lualine.nvim",
                 opts = {
@@ -556,22 +563,6 @@ require("lazy").setup({
                 },
         },
 
-        -- built-in regex-based syntax highlighting
-        {
-                "nvim-treesitter/nvim-treesitter",
-                branch = "master",
-                build = ":TSUpdate",
-                lazy = false,
-                config = function()
-                        require("nvim-treesitter.configs").setup({
-                                ensure_installed = { "c", "cpp", "rust", "lua", "vim", "vimdoc", "query", "elixir", "heex", "javascript", "html", "ocaml" },
-                                sync_install = false,
-                                highlight = { enable = true, additional_vim_regex_highlighting = false },
-                                indent = { enable = true },
-                                auto_install = true,
-                        })
-                end,
-        },
         -- extended highliting for c and cpp
         { "octol/vim-cpp-enhanced-highlight", ft = { "c", "cpp" } },
         -- LSP
