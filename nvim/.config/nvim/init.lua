@@ -252,11 +252,24 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup({
         -- colorscheme
         {
-                "phha/zenburn.nvim",
+                "folke/tokyonight.nvim",
                 lazy = false,
                 priority = 1000,
-                config = function()
-                        vim.cmd.colorscheme("zenburn")
+                opts = {
+                        style = "night",
+                        on_colors = function(c)
+                                c.bg = "#000000"
+                                c.bg_dark = "#000000"
+                                c.bg_dark1 = "#000000"
+                                c.bg_float = "#000000"
+                                c.bg_popup = "#000000"
+                                c.bg_sidebar = "#000000"
+                                c.bg_statusline = "#000000"
+                        end,
+                },
+                config = function(_, opts)
+                        require("tokyonight").setup(opts)
+                        vim.cmd.colorscheme("tokyonight")
                 end,
         },
         {
