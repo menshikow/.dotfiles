@@ -1,3 +1,5 @@
+background = "#404040"
+
 cursor-style = "bar"
 cursor-color = cell-foreground
 cursor-text = cell-background
@@ -6,7 +8,7 @@ command = /opt/homebrew/bin/fish
 
 mouse-hide-while-typing = true
 
-font-family = "Geist Mono"
+# font-family = "Geist Mono"
 # font-family = "Source Code Pro"
 font-feature = -calt, -liga, -dlig
 font-size = 15

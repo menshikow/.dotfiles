@@ -252,6 +252,7 @@ vim.opt.rtp:prepend(lazypath)
 -- then, setup!
 require("lazy").setup({
         -- colorscheme
+        --      
         {
                 "phha/zenburn.nvim",
                 lazy = false,
