@@ -252,30 +252,30 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup({
 	-- colorscheme
 	--
-	{
-		"phha/zenburn.nvim",
-		lazy = false,
-		priority = 1000,
-		config = function()
-			vim.cmd.colorscheme("zenburn")
-
-			vim.api.nvim_set_hl(0, "Normal", {
-				bg = "#353535",
-			})
-
-			vim.api.nvim_set_hl(0, "NormalNC", {
-				bg = "#353535",
-			})
-
-			vim.api.nvim_set_hl(0, "SignColumn", {
-				bg = "#353535",
-			})
-
-			vim.api.nvim_set_hl(0, "EndOfBuffer", {
-				bg = "#353535",
-			})
-		end,
-	},
+	 {
+	 	"phha/zenburn.nvim",
+	 	lazy = false,
+	 	priority = 1000,
+	 	config = function()
+	 		vim.cmd.colorscheme("zenburn")
+	
+	 		vim.api.nvim_set_hl(0, "Normal", {
+	 			bg = "#353535",
+	 		})
+	
+	 		vim.api.nvim_set_hl(0, "NormalNC", {
+	 			bg = "#353535",
+	 		})
+	
+	 		vim.api.nvim_set_hl(0, "SignColumn", {
+	 			bg = "#353535",
+	 		})
+	
+	 		vim.api.nvim_set_hl(0, "EndOfBuffer", {
+	 			bg = "#353535",
+	 		})
+	 	end,
+	 },
 
 
 	-- {
