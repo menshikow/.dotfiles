@@ -252,30 +252,29 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup({
 	-- colorscheme
 	--
-	 {
-	 	"phha/zenburn.nvim",
-	 	lazy = false,
-	 	priority = 1000,
-	 	config = function()
-	 		vim.cmd.colorscheme("zenburn")
-	
-	 		vim.api.nvim_set_hl(0, "Normal", {
-	 			bg = "#353535",
-	 		})
-	
-	 		vim.api.nvim_set_hl(0, "NormalNC", {
-	 			bg = "#353535",
-	 		})
-	
-	 		vim.api.nvim_set_hl(0, "SignColumn", {
-	 			bg = "#353535",
-	 		})
-	
-	 		vim.api.nvim_set_hl(0, "EndOfBuffer", {
-	 			bg = "#353535",
-	 		})
-	 	end,
-	 },
+	{
+		"ydkulks/cursor-dark.nvim",
+		lazy = false,
+		priority = 1000,
+		config = function()
+			vim.opt.termguicolors = true
+			vim.api.nvim_create_autocmd("ColorScheme", {
+				group = vim.api.nvim_create_augroup("CursorThemeOverrides", { clear = true }),
+				pattern = "cursor-dark",
+				callback = function()
+					-- Keep the existing background while using Cursor's syntax colors.
+					for _, group in ipairs({ "Normal", "NormalNC", "SignColumn", "EndOfBuffer", "ColorColumn" }) do
+						local highlight = vim.api.nvim_get_hl(0, { name = group, link = false })
+						highlight.bg = "#0a0a0a"
+						vim.api.nvim_set_hl(0, group, highlight)
+					end
+					vim.api.nvim_set_hl(0, "Cursor", { reverse = true })
+					vim.api.nvim_set_hl(0, "lCursor", { reverse = true })
+				end,
+			})
+			vim.cmd.colorscheme("cursor-dark")
+		end,
+	},
 
 
 	-- {
@@ -317,7 +316,7 @@ require("lazy").setup({
 				icons_enabled = false,
 				component_separators = "",
 				section_separators = "",
-				theme = "zenburn",
+				theme = "auto",
 			},
 		},
 	},
@@ -770,10 +769,6 @@ require("lazy").setup({
 				severity_sort = true,
 			})
 
-			vim.api.nvim_set_hl(0, "DiagnosticVirtualTextError", { fg = "#cc241d", italic = true })
-			vim.api.nvim_set_hl(0, "DiagnosticVirtualTextHint", { fg = "#ebdbb2", italic = true })
-			vim.api.nvim_set_hl(0, "DiagnosticVirtualTextWarn", { fg = "#d79921", italic = true })
-			vim.api.nvim_set_hl(0, "DiagnosticVirtualTextInfo", { fg = "#83a598", italic = true })
 		end,
 
 	},
