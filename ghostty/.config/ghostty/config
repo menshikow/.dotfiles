@@ -22,7 +22,7 @@ palette = 14=#56b6c2
 palette = 15=#eeeeee
 
 cursor-style = "bar"
-cursor-color = cell-foreground
+cursor-color = "#ffffff"
 cursor-text = cell-background
 
 command = /opt/homebrew/bin/fish
