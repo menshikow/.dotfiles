@@ -258,7 +258,7 @@ require("lazy").setup({
 		priority = 1000,
 		config = function()
 			vim.opt.termguicolors = true
-			vim.opt.guicursor = "a:block-Cursor/lCursor"
+			vim.opt.guicursor = "a:block-Cursor/lCursor,i:ver25-Cursor/lCursor"
 			vim.api.nvim_create_autocmd("ColorScheme", {
 				group = vim.api.nvim_create_augroup("CursorThemeOverrides", { clear = true }),
 				pattern = "cursor-dark",
