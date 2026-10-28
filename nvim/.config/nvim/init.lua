@@ -253,17 +253,26 @@ require("lazy").setup({
 	-- colorscheme
 	--
 	{
-		"ydkulks/cursor-dark.nvim",
+		"datsfilipe/vesper.nvim",
 		lazy = false,
 		priority = 1000,
 		config = function()
+			require("vesper").setup({
+				italics = {
+					comments = false,
+					keywords = false,
+					functions = false,
+					strings = false,
+					variables = false,
+				},
+			})
 			vim.opt.termguicolors = true
 			vim.opt.guicursor = "a:block-Cursor/lCursor,i:ver25-Cursor/lCursor"
 			vim.api.nvim_create_autocmd("ColorScheme", {
-				group = vim.api.nvim_create_augroup("CursorThemeOverrides", { clear = true }),
-				pattern = "cursor-dark",
+				group = vim.api.nvim_create_augroup("VesperThemeOverrides", { clear = true }),
+				pattern = "vesper",
 				callback = function()
-					-- Keep the existing background while using Cursor's syntax colors.
+					-- Keep the existing background while using Vesper's syntax colors.
 					for _, group in ipairs({ "Normal", "NormalNC", "SignColumn", "EndOfBuffer", "ColorColumn" }) do
 						local highlight = vim.api.nvim_get_hl(0, { name = group, link = false })
 						highlight.bg = "#0a0a0a"
@@ -278,11 +287,18 @@ require("lazy").setup({
 					vim.api.nvim_set_hl(0, "BlinkCmpMenuSelection", { link = "PmenuSel" })
 					vim.api.nvim_set_hl(0, "BlinkCmpMenuBorder", { fg = "#505050", bg = "#1e1e1e" })
 					-- Keep comments prominent and easy to read.
-					vim.api.nvim_set_hl(0, "Comment", { fg = "#a0a0a0", italic = false })
+					vim.api.nvim_set_hl(0, "Comment", { fg = "#bcbcbc", italic = false })
 					vim.api.nvim_set_hl(0, "@comment", { link = "Comment" })
+					-- Disable italics in remaining UI and syntax highlight groups too.
+					for name, highlight in pairs(vim.api.nvim_get_hl(0, {})) do
+						if highlight.italic then
+							highlight.italic = false
+							vim.api.nvim_set_hl(0, name, highlight)
+						end
+					end
 				end,
 			})
-			vim.cmd.colorscheme("cursor-dark")
+			vim.cmd.colorscheme("vesper")
 		end,
 	},
 
