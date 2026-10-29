@@ -289,6 +289,21 @@ require("lazy").setup({
 					-- Keep comments prominent and easy to read.
 					vim.api.nvim_set_hl(0, "Comment", { fg = "#bcbcbc", italic = false })
 					vim.api.nvim_set_hl(0, "@comment", { link = "Comment" })
+					-- Make function and method names stand out against the dark background.
+					vim.api.nvim_set_hl(0, "Function", { fg = "#8cdaff", italic = false })
+					for _, group in ipairs({
+						"@function",
+						"@function.call",
+						"@function.builtin",
+						"@function.method",
+						"@function.method.call",
+						"@method",
+						"@method.call",
+						"@lsp.type.function",
+						"@lsp.type.method",
+					}) do
+						vim.api.nvim_set_hl(0, group, { link = "Function" })
+					end
 					-- Disable italics in remaining UI and syntax highlight groups too.
 					for name, highlight in pairs(vim.api.nvim_get_hl(0, {})) do
 						if highlight.italic then
@@ -426,9 +441,10 @@ require("lazy").setup({
 	},
 	{
 		"stevearc/oil.nvim",
+		dependencies = { "nvim-tree/nvim-web-devicons" },
 		config = function()
 			require("oil").setup({
-				columns = {},
+				columns = { "icon" },
 				default_file_explorer = true,
 				delete_to_trash = true,
 				skip_confirm_for_simple_edits = true,
