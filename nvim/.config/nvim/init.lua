@@ -3,6 +3,10 @@
 vim.keymap.set("n", "<Space>", "<Nop>", { silent = true })
 vim.g.mapleader = " "
 
+-- Neo-tree handles directories; prevent netrw from opening first.
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
 -------------------------------------------------------------------------------
 --
 -- preferences
@@ -286,9 +290,13 @@ require("lazy").setup({
 					vim.api.nvim_set_hl(0, "BlinkCmpMenu", { link = "Pmenu" })
 					vim.api.nvim_set_hl(0, "BlinkCmpMenuSelection", { link = "PmenuSel" })
 					vim.api.nvim_set_hl(0, "BlinkCmpMenuBorder", { fg = "#505050", bg = "#1e1e1e" })
-					-- Keep comments prominent and easy to read.
+					-- Keep comments readable without using a syntax accent color.
 					vim.api.nvim_set_hl(0, "Comment", { fg = "#bcbcbc", italic = false })
 					vim.api.nvim_set_hl(0, "@comment", { link = "Comment" })
+					-- Keep Markdown code blocks as readable as normal text.
+					for _, group in ipairs({ "mkdCode", "markdownCode", "markdownCodeBlock", "@markup.raw", "@markup.raw.block" }) do
+						vim.api.nvim_set_hl(0, group, { link = "Normal" })
+					end
 					-- Make function and method names stand out against the dark background.
 					vim.api.nvim_set_hl(0, "Function", { fg = "#8cdaff", italic = false })
 					for _, group in ipairs({
@@ -445,7 +453,7 @@ require("lazy").setup({
 		config = function()
 			require("oil").setup({
 				columns = { "icon" },
-				default_file_explorer = true,
+				default_file_explorer = false,
 				delete_to_trash = true,
 				skip_confirm_for_simple_edits = true,
 				view_options = {
@@ -993,6 +1001,7 @@ require("lazy").setup({
 	{
 		"nvim-neo-tree/neo-tree.nvim",
 		branch = "v3.x",
+		lazy = false, -- Load early so directory arguments open in Neo-tree.
 		dependencies = {
 			"nvim-lua/plenary.nvim",
 			"MunifTanjim/nui.nvim",
@@ -1008,6 +1017,11 @@ require("lazy").setup({
 		},
 
 		opts = {
+			filesystem = {
+				hijack_netrw_behavior = "open_current",
+				async_directory_scan = "always",
+				use_libuv_file_watcher = true,
+			},
 			default_component_configs = {
 				icon = {
 					folder_closed = "",
