@@ -1,25 +1,25 @@
-# OpenCode dark theme
+# Kanagawa Dragon with the existing background
+theme = "Kanagawa Dragon"
 background = "#0a0a0a"
-foreground = "#eeeeee"
-selection-background = "#282828"
-selection-foreground = "#eeeeee"
 
-palette = 0=#1e1e1e
-palette = 1=#e06c75
-palette = 2=#7fd88f
-palette = 3=#e5c07b
-palette = 4=#5c9cf5
-palette = 5=#9d7cd8
-palette = 6=#56b6c2
-palette = 7=#eeeeee
-palette = 8=#808080
-palette = 9=#e06c75
-palette = 10=#7fd88f
-palette = 11=#f5a742
-palette = 12=#5c9cf5
-palette = 13=#9d7cd8
-palette = 14=#56b6c2
-palette = 15=#eeeeee
+# Dragon colors blended 20% toward white; keep the dark background unchanged.
+foreground = "#d1d4d1"
+selection-background = "#d1d4d1"
+palette = 1=#d0908b
+palette = 2=#a1ae95
+palette = 3=#d0c1a1
+palette = 4=#a2b6c0
+palette = 5=#b5a8b5
+palette = 6=#a5b6b5
+palette = 7=#d3cda9
+palette = 8=#b8b8b0
+palette = 9=#e98691
+palette = 10=#9fba9f
+palette = 11=#ebcf9d
+palette = 12=#99c3d5
+palette = 13=#a9a1ba
+palette = 14=#95b9b2
+palette = 15=#d1d4d1
 
 cursor-style = "bar"
 cursor-color = "#ffffff"

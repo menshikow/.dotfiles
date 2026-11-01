@@ -291,26 +291,66 @@ require("lazy").setup({
 	--]=]
 
 	{
-		"datsfilipe/vesper.nvim",
+		"rebelot/kanagawa.nvim",
 		lazy = false,
 		priority = 1000,
 		config = function()
-			require("vesper").setup({
-				italics = {
-					comments = false,
-					keywords = false,
-					functions = false,
-					strings = false,
-					variables = false,
+			require("kanagawa").setup({
+				theme = "dragon",
+				background = { dark = "dragon", light = "lotus" },
+				commentStyle = { italic = false },
+				keywordStyle = { italic = false },
+				colors = {
+					-- Dragon colors blended 20% toward white, without lifting backgrounds.
+					palette = {
+						dragonWhite = "#d1d4d1",
+						dragonGreen = "#9fba9f",
+						dragonGreen2 = "#a1ae95",
+						dragonPink = "#b5a8b5",
+						dragonOrange = "#c5a895",
+						dragonOrange2 = "#c7a495",
+						dragonGray = "#b8b8b0",
+						dragonGray2 = "#b1afa9",
+						dragonGray3 = "#959c9b",
+						dragonBlue2 = "#a2b6c0",
+						dragonViolet = "#a1a8b9",
+						dragonRed = "#d0908b",
+						dragonAqua = "#a5b6b5",
+						dragonAsh = "#8f968f",
+						dragonTeal = "#a9b2c4",
+						dragonYellow = "#d0c1a1",
+						oldWhite = "#d3cda9",
+						waveRed = "#e98691",
+						carpYellow = "#ebcf9d",
+						springBlue = "#99c3d5",
+						springViolet1 = "#a9a1ba",
+						waveAqua2 = "#95b9b2",
+						fujiWhite = "#e3dfc8",
+					},
+					theme = {
+						dragon = {
+							ui = {
+								bg = "#0a0a0a",
+								bg_dim = "#0a0a0a",
+								bg_gutter = "#0a0a0a",
+								pmenu = {
+									bg = "#1e1e1e",
+									bg_sel = "#353535",
+									bg_sbar = "#282828",
+									bg_thumb = "#505050",
+								},
+							},
+						},
+					},
 				},
 			})
 			vim.opt.termguicolors = true
 			vim.opt.guicursor = "a:block-Cursor/lCursor,i:ver25-Cursor/lCursor"
 			vim.api.nvim_create_autocmd("ColorScheme", {
-				group = vim.api.nvim_create_augroup("VesperThemeOverrides", { clear = true }),
-				pattern = "vesper",
+				group = vim.api.nvim_create_augroup("KanagawaThemeOverrides", { clear = true }),
+				pattern = "kanagawa*",
 				callback = function()
-					-- Keep the existing background while using Vesper's syntax colors.
+					-- Keep the existing background while using Kanagawa's syntax colors.
 					for _, group in ipairs({ "Normal", "NormalNC", "SignColumn", "EndOfBuffer", "ColorColumn" }) do
 						local highlight = vim.api.nvim_get_hl(0, { name = group, link = false })
 						highlight.bg = "#0a0a0a"
@@ -318,33 +358,15 @@ require("lazy").setup({
 					end
 					vim.api.nvim_set_hl(0, "Cursor", { fg = "#0a0a0a", bg = "#ffffff" })
 					vim.api.nvim_set_hl(0, "lCursor", { fg = "#0a0a0a", bg = "#ffffff" })
-					-- Give completion suggestions a distinct background.
-					vim.api.nvim_set_hl(0, "Pmenu", { fg = "#D8DEE9", bg = "#1e1e1e" })
-					vim.api.nvim_set_hl(0, "PmenuSel", { fg = "#D8DEE9", bg = "#323232" })
+					-- Keep completion suggestions on a charcoal background.
 					vim.api.nvim_set_hl(0, "BlinkCmpMenu", { link = "Pmenu" })
 					vim.api.nvim_set_hl(0, "BlinkCmpMenuSelection", { link = "PmenuSel" })
 					vim.api.nvim_set_hl(0, "BlinkCmpMenuBorder", { fg = "#505050", bg = "#1e1e1e" })
-					-- Keep comments readable without using a syntax accent color.
-					vim.api.nvim_set_hl(0, "Comment", { fg = "#bcbcbc", italic = false })
-					vim.api.nvim_set_hl(0, "@comment", { link = "Comment" })
+					vim.api.nvim_set_hl(0, "BlinkCmpDoc", { fg = "#d1d4d1", bg = "#1e1e1e" })
+					vim.api.nvim_set_hl(0, "BlinkCmpDocBorder", { link = "BlinkCmpMenuBorder" })
 					-- Keep Markdown code blocks as readable as normal text.
 					for _, group in ipairs({ "mkdCode", "markdownCode", "markdownCodeBlock", "@markup.raw", "@markup.raw.block" }) do
 						vim.api.nvim_set_hl(0, group, { link = "Normal" })
-					end
-					-- Make function and method names stand out against the dark background.
-					vim.api.nvim_set_hl(0, "Function", { fg = "#8cdaff", italic = false })
-					for _, group in ipairs({
-						"@function",
-						"@function.call",
-						"@function.builtin",
-						"@function.method",
-						"@function.method.call",
-						"@method",
-						"@method.call",
-						"@lsp.type.function",
-						"@lsp.type.method",
-					}) do
-						vim.api.nvim_set_hl(0, group, { link = "Function" })
 					end
 					-- Disable italics in remaining UI and syntax highlight groups too.
 					for name, highlight in pairs(vim.api.nvim_get_hl(0, {})) do
@@ -355,7 +377,7 @@ require("lazy").setup({
 					end
 				end,
 			})
-			vim.cmd.colorscheme("vesper")
+			vim.cmd.colorscheme("kanagawa-dragon")
 		end,
 	},
 
