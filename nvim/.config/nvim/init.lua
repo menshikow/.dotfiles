@@ -256,6 +256,40 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup({
 	-- colorscheme
 	--
+	-- Cursor configuration preserved for switching back later.
+	--[=[
+	{
+		"ydkulks/cursor-dark.nvim",
+		lazy = false,
+		priority = 1000,
+		config = function()
+			vim.opt.termguicolors = true
+			vim.opt.guicursor = "a:block-Cursor/lCursor,i:ver25-Cursor/lCursor"
+			vim.api.nvim_create_autocmd("ColorScheme", {
+				group = vim.api.nvim_create_augroup("CursorThemeOverrides", { clear = true }),
+				pattern = "cursor-dark",
+				callback = function()
+					for _, group in ipairs({ "Normal", "NormalNC", "SignColumn", "EndOfBuffer", "ColorColumn" }) do
+						local highlight = vim.api.nvim_get_hl(0, { name = group, link = false })
+						highlight.bg = "#0a0a0a"
+						vim.api.nvim_set_hl(0, group, highlight)
+					end
+					vim.api.nvim_set_hl(0, "Cursor", { fg = "#0a0a0a", bg = "#ffffff" })
+					vim.api.nvim_set_hl(0, "lCursor", { fg = "#0a0a0a", bg = "#ffffff" })
+					vim.api.nvim_set_hl(0, "Pmenu", { fg = "#D8DEE9", bg = "#1e1e1e" })
+					vim.api.nvim_set_hl(0, "PmenuSel", { fg = "#D8DEE9", bg = "#323232" })
+					vim.api.nvim_set_hl(0, "BlinkCmpMenu", { link = "Pmenu" })
+					vim.api.nvim_set_hl(0, "BlinkCmpMenuSelection", { link = "PmenuSel" })
+					vim.api.nvim_set_hl(0, "BlinkCmpMenuBorder", { fg = "#505050", bg = "#1e1e1e" })
+					vim.api.nvim_set_hl(0, "Comment", { fg = "#a0a0a0", italic = false })
+					vim.api.nvim_set_hl(0, "@comment", { link = "Comment" })
+				end,
+			})
+			vim.cmd.colorscheme("cursor-dark")
+		end,
+	},
+	--]=]
+
 	{
 		"datsfilipe/vesper.nvim",
 		lazy = false,
