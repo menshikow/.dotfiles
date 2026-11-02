@@ -364,6 +364,11 @@ require("lazy").setup({
 					vim.api.nvim_set_hl(0, "BlinkCmpMenuBorder", { fg = "#505050", bg = "#1e1e1e" })
 					vim.api.nvim_set_hl(0, "BlinkCmpDoc", { fg = "#d1d4d1", bg = "#1e1e1e" })
 					vim.api.nvim_set_hl(0, "BlinkCmpDocBorder", { link = "BlinkCmpMenuBorder" })
+					-- Use soft blue for matching braces and match-up's off-screen previews.
+					vim.api.nvim_set_hl(0, "MatchParen", { fg = "#99c3d5", bold = true })
+					for _, group in ipairs({ "MatchWord", "MatchParenCur", "MatchWordCur" }) do
+						vim.api.nvim_set_hl(0, group, { link = "MatchParen" })
+					end
 					-- Keep Markdown code blocks as readable as normal text.
 					for _, group in ipairs({ "mkdCode", "markdownCode", "markdownCodeBlock", "@markup.raw", "@markup.raw.block" }) do
 						vim.api.nvim_set_hl(0, group, { link = "Normal" })
