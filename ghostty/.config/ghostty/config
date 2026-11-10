@@ -1,25 +1,25 @@
-# OpenCode dark theme
-background = "#0a0a0a"
-foreground = "#eeeeee"
-selection-background = "#282828"
-selection-foreground = "#eeeeee"
+# Tokyo Night (night variant) with a pure black background.
+background = "#000000"
+foreground = "#c0caf5"
+selection-background = "#283457"
+selection-foreground = "#c0caf5"
 
-palette = 0=#1e1e1e
-palette = 1=#e06c75
-palette = 2=#7fd88f
-palette = 3=#e5c07b
-palette = 4=#5c9cf5
-palette = 5=#9d7cd8
-palette = 6=#56b6c2
-palette = 7=#eeeeee
-palette = 8=#808080
-palette = 9=#e06c75
-palette = 10=#7fd88f
-palette = 11=#f5a742
-palette = 12=#5c9cf5
-palette = 13=#9d7cd8
-palette = 14=#56b6c2
-palette = 15=#eeeeee
+palette = 0=#15161e
+palette = 1=#f7768e
+palette = 2=#9ece6a
+palette = 3=#e0af68
+palette = 4=#7aa2f7
+palette = 5=#bb9af7
+palette = 6=#7dcfff
+palette = 7=#a9b1d6
+palette = 8=#414868
+palette = 9=#ff899d
+palette = 10=#9fe044
+palette = 11=#faba4a
+palette = 12=#8db0ff
+palette = 13=#c7a9ff
+palette = 14=#a4daff
+palette = 15=#c0caf5
 
 cursor-style = "bar"
 cursor-color = "#ffffff"
@@ -32,7 +32,7 @@ mouse-hide-while-typing = true
 # font-family = "Geist Mono"
 # font-family = "Source Code Pro"
 font-feature = -calt, -liga, -dlig
-font-size = 14
+font-size = 12
 
 unfocused-split-opacity = 1
 
