@@ -291,33 +291,13 @@ require("lazy").setup({
 	--]=]
 
         {
-                "folke/tokyonight.nvim",
+                "if-not-nil/bark",
                 lazy = false,
                 priority = 1000,
                 config = function()
                         vim.opt.termguicolors = true
-                        require("tokyonight").setup({
-                                style = "night",
-                                transparent = false,
-                                on_colors = function(colors)
-                                        colors.bg = "#000000"
-                                        colors.bg_dark = "#000000"
-                                        colors.bg_sidebar = "#000000"
-                                end,
-                        })
-                        vim.api.nvim_create_autocmd("ColorScheme", {
-                                group = vim.api.nvim_create_augroup("TokyoNightThemeOverrides", { clear = true }),
-                                pattern = "tokyonight*",
-                                callback = function()
-                                        -- Pure black editor background with Tokyo Night colors on top.
-                                        for _, group in ipairs({ "Normal", "NormalNC", "SignColumn", "EndOfBuffer", "ColorColumn", "LineNr" }) do
-                                                local highlight = vim.api.nvim_get_hl(0, { name = group, link = false })
-                                                highlight.bg = "#000000"
-                                                vim.api.nvim_set_hl(0, group, highlight)
-                                        end
-                                end,
-                        })
-                        vim.cmd.colorscheme("tokyonight-night")
+                        vim.opt.background = "dark"
+                        vim.cmd.colorscheme("bark")
                 end,
         },
         -- {
@@ -351,17 +331,17 @@ require("lazy").setup({
         --         end,
         --
         -- },
-        -- {
-        --         "nvim-lualine/lualine.nvim",
-        --         opts = {
-        --                 options = {
-        --                         icons_enabled = false,
-        --                         component_separators = "",
-        --                         section_separators = "",
-        --                         theme = "auto",
-        --                 },
-        --         },
-        -- },
+        {
+                "nvim-lualine/lualine.nvim",
+                opts = {
+                        options = {
+                                icons_enabled = false,
+                                component_separators = "",
+                                section_separators = "",
+                                theme = "auto",
+                        },
+                },
+        },
         -- better %
         {
                 "andymass/vim-matchup",
