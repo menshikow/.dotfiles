@@ -4,5 +4,5 @@
 
 ## Neovim theme
 
-> [Bark Nord](https://github.com/menshikow/bark-nord.nvim) is the colorscheme used
+> [Winterash](https://github.com/menshikow/winterash.nvim) is the colorscheme used
 > in nvim.

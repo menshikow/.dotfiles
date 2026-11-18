@@ -293,12 +293,12 @@ require("lazy").setup({
 	--]=]
 
         {
-                "menshikow/bark-nord.nvim",
+                "menshikow/winterash.nvim",
                 lazy = false,
                 priority = 1000,
                 config = function()
                         vim.opt.termguicolors = true
-                        vim.cmd.colorscheme("bark-nord")
+                        vim.cmd.colorscheme("winterash")
                 end,
         },
         -- {
