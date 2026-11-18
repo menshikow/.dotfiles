@@ -401,6 +401,19 @@ require("lazy").setup({
         -- :G status/diff/blame/commit, fills the gap left by dropping
         -- telescope's git_commits/git_branches pickers
         "tpope/vim-fugitive",
+        {
+                "nvim-neo-tree/neo-tree.nvim",
+                branch = "v3.x",
+                lazy = false,
+                dependencies = {
+                        "nvim-lua/plenary.nvim",
+                        "MunifTanjim/nui.nvim",
+                        "nvim-tree/nvim-web-devicons",
+                },
+                keys = {
+                        { "<leader>t", "<cmd>Neotree filesystem toggle<CR>", desc = "Toggle file tree" },
+                },
+        },
         -- respects a repo's .editorconfig, overriding your global
         -- tab/indent settings on a per-project basis when one is present
         "gpanders/editorconfig.nvim",
