@@ -1000,7 +1000,7 @@ require("lazy").setup({
                 end,
         },
         "khaveesh/vim-fish-syntax",
-        -- undotree
+        -- undotree 
         {
                 "mbbill/undotree",
                 keys = {
