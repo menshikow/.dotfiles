@@ -1,3 +1,5 @@
+-- Based on jonhoo's Neovim config: https://github.com/jonhoo/configs
+
 -- always set leader first!
 
 vim.keymap.set("n", "<Space>", "<Nop>", { silent = true })
