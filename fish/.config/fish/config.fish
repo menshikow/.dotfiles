@@ -1,25 +1,32 @@
 # fish configuration
 
+# Match Ghostty's Nord palette.
+if status is-interactive
+    fish_config theme choose Nord
+    set -g fish_color_autosuggestion 7b88a1
+    set -g fish_color_comment 7b88a1 --italics
+end
+
 # Prompt
 function fish_prompt
-    set_color 808080 # muted gray, for timestamp
+    set_color 7b88a1 # muted blue-gray, for timestamp
     echo -n "["(date "+%H:%M")"] "
 
     set_color 81A1C1 # blue, for hostname
     echo -n (command -q hostname; and hostname; or hostnamectl hostname)
 
     if [ $PWD != $HOME ]
-        set_color 808080 # gray
+        set_color 7b88a1 # muted blue-gray
         echo -n ':'
 
-        set_color E5C07B # yellow, for dir
+        set_color 88c0d0 # frost blue, for directory
         echo -n (basename $PWD)
     end
 
-    set_color 98C379 # green, for git status
+    set_color a3be8c # green, for git status
     printf '%s ' (__fish_git_prompt)
 
-    set_color E06C75 # red, for separator
+    set_color 81a1c1 # blue, for separator
     echo -n '| '
 
     set_color normal
@@ -32,9 +39,10 @@ set __fish_git_prompt_showupstream 'none'
 
 # Greeting
 function fish_greeting
-	set_color brblack
+	set_color 7b88a1
 	echo (hostname)" — "(uname -sr)
 	echo (uptime -p 2>/dev/null; or uptime)
+	set_color normal
 end
 
 # Colored Man Pages
