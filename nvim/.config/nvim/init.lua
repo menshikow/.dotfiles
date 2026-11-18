@@ -299,7 +299,8 @@ require("lazy").setup({
                 config = function()
                         vim.opt.termguicolors = true
                         vim.opt.background = "dark"
-                        vim.cmd.colorscheme("bark")
+                        -- vim.cmd.colorscheme("bark")
+                        vim.cmd.colorscheme("bark-nord")
                 end,
         },
         -- {
@@ -335,14 +336,26 @@ require("lazy").setup({
         -- },
         {
                 "nvim-lualine/lualine.nvim",
-                opts = {
-                        options = {
-                                icons_enabled = false,
-                                component_separators = "",
-                                section_separators = "",
-                                theme = "auto",
-                        },
-                },
+                opts = function()
+                        local active = {
+                                a = { fg = "#eeeeee", bg = "#303030", gui = "bold" },
+                                b = { fg = "#c0c0c0", bg = "#181818" },
+                                c = { fg = "#c0c0c0", bg = "#000000" },
+                        }
+                        local inactive = { fg = "#888888", bg = "#000000" }
+
+                        return {
+                                options = {
+                                        icons_enabled = false,
+                                        component_separators = "",
+                                        section_separators = "",
+                                        theme = {
+                                                normal = active,
+                                                inactive = { a = inactive, b = inactive, c = inactive },
+                                        },
+                                },
+                        }
+                end,
         },
         -- better %
         {
