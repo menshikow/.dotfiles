@@ -5,4 +5,4 @@
 ## Neovim theme
 
 > [Bark Nord](https://github.com/menshikow/bark-nord.nvim) is the colorscheme used
-> in these dotfiles.
+> in nvim.
