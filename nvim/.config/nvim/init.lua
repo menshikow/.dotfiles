@@ -293,13 +293,11 @@ require("lazy").setup({
 	--]=]
 
         {
-                "if-not-nil/bark",
+                "menshikow/bark-nord.nvim",
                 lazy = false,
                 priority = 1000,
                 config = function()
                         vim.opt.termguicolors = true
-                        vim.opt.background = "dark"
-                        -- vim.cmd.colorscheme("bark")
                         vim.cmd.colorscheme("bark-nord")
                 end,
         },
