@@ -1,6 +1,6 @@
 # fish configuration
 
-# Match Ghostty's Nord palette.
+# Shell syntax colors
 if status is-interactive
     fish_config theme choose Nord
     set -g fish_color_autosuggestion 7b88a1
@@ -9,33 +9,16 @@ end
 
 # Prompt
 function fish_prompt
-    set_color 7b88a1 # muted blue-gray, for timestamp
-    echo -n "["(date "+%H:%M")"] "
-
-    set_color 81A1C1 # blue, for hostname
-    echo -n (command -q hostname; and hostname; or hostnamectl hostname)
-
-    if [ $PWD != $HOME ]
-        set_color 7b88a1 # muted blue-gray
-        echo -n ':'
-
-        set_color 88c0d0 # frost blue, for directory
-        echo -n (basename $PWD)
-    end
-
-    set_color a3be8c # green, for git status
-    printf '%s ' (__fish_git_prompt)
-
-    set_color 81a1c1 # blue, for separator
-    echo -n '| '
-
     set_color normal
+    printf '%s@%s:' "$USER" (prompt_hostname)
+    set_color 579692
+    printf '%s' (prompt_pwd --dir-length=0)
+    set_color normal
+    printf '%s ' '$'
 end
 
-set __fish_git_prompt_showuntrackedfiles 'yes'
-set __fish_git_prompt_showdirtystate 'yes'
-set __fish_git_prompt_showstashstate ''
-set __fish_git_prompt_showupstream 'none'
+function fish_mode_prompt
+end
 
 # Greeting
 function fish_greeting
@@ -70,7 +53,6 @@ abbr -a vim "vim"
 abbr -a c "code --reuse-window"
 abbr -a .. "cd .."
 abbr -a ... "cd ../.."
-abbr -a ls "eza -l -a"
 abbr -a reload "source ~/.config/fish/config.fish"
 
 if command -v eza > /dev/null
