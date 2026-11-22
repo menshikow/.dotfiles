@@ -253,6 +253,9 @@ if not vim.loop.fs_stat(lazypath) then
         })
 end
 
+vim.opt.termguicolors = true
+vim.cmd.colorscheme("ghostty")
+
 vim.opt.rtp:prepend(lazypath)
 -- then, setup!
 require("lazy").setup({
@@ -294,11 +297,22 @@ require("lazy").setup({
 
         {
                 "menshikow/winterash.nvim",
-                lazy = false,
-                priority = 1000,
-                config = function()
-                        vim.opt.termguicolors = true
-                        vim.cmd.colorscheme("winterash")
+                lazy = true,
+                init = function()
+                        vim.api.nvim_create_autocmd("ColorScheme", {
+                                pattern = "winterash",
+                                callback = function()
+                                        for name, highlight in pairs(vim.api.nvim_get_hl(0, { link = true })) do
+                                                if not highlight.link and highlight.bg == 0x101010 then
+                                                        highlight.bg = 0x000000
+                                                        if name == "NeoTreeWinSeparator" then
+                                                                highlight.fg = 0x000000
+                                                        end
+                                                        vim.api.nvim_set_hl(0, name, highlight)
+                                                end
+                                        end
+                                end,
+                        })
                 end,
         },
         -- {
@@ -336,11 +350,11 @@ require("lazy").setup({
                 "nvim-lualine/lualine.nvim",
                 opts = function()
                         local active = {
-                                a = { fg = "#eeeeee", bg = "#303030", gui = "bold" },
-                                b = { fg = "#c0c0c0", bg = "#181818" },
-                                c = { fg = "#c0c0c0", bg = "#000000" },
+                                a = { fg = "#dedede", bg = "#3a3a3a", gui = "bold" },
+                                b = { fg = "#b5b5b5", bg = "#242424" },
+                                c = { fg = "#b5b5b5", bg = "#000000" },
                         }
-                        local inactive = { fg = "#888888", bg = "#000000" }
+                        local inactive = { fg = "#b5b5b5", bg = "#000000" }
 
                         return {
                                 options = {
@@ -411,10 +425,11 @@ require("lazy").setup({
                 keys = {
                         { "<leader>t", "<cmd>Neotree filesystem toggle<CR>", desc = "Toggle file tree" },
                 },
+                -- oil is the default directory handler; neo-tree is only the toggled sidebar
+                opts = {
+                        filesystem = { hijack_netrw_behavior = "disabled" },
+                },
         },
-        -- respects a repo's .editorconfig, overriding your global
-        -- tab/indent settings on a per-project basis when one is present
-        "gpanders/editorconfig.nvim",
         -- lets `:e file.rs:42` (or `nvim file.rs:42` from the shell) jump
         -- straight to that line instead of opening at line 1
         "lewis6991/fileline.nvim",
@@ -521,13 +536,25 @@ require("lazy").setup({
                         require("fff.download").download_or_build_binary()
                 end,
                 config = function()
+                        local function set_picker_colors()
+                                local background = "#000000"
+                                vim.api.nvim_set_hl(0, "FFFNormal", { fg = "#b5b5b5", bg = background })
+                                vim.api.nvim_set_hl(0, "FFFBorder", { fg = "#666666", bg = background })
+                        end
+                        set_picker_colors()
+                        vim.api.nvim_create_autocmd("ColorScheme", {
+                                group = vim.api.nvim_create_augroup("FFFPickerColors", { clear = true }),
+                                callback = set_picker_colors,
+                        })
                         require("fff").setup({
                                 wrap_around = true,
                                 prompt = "> ",
+                                hl = { normal = "FFFNormal", border = "FFFBorder" },
                                 grep = {
                                         trim_whitespace = true,
                                 },
                                 layout = {
+                                        border = "rounded",
                                         prompt_position = "bottom",
                                 },
                         })
@@ -778,8 +805,7 @@ require("lazy").setup({
 
                                         map("gD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
                                         map("gd", vim.lsp.buf.definition, "[G]oto [D]efinition")
-                                        map("gr", vim.lsp.buf.references, "[G]oto [R]eferences")
-                                        map("gi", vim.lsp.buf.implementation, "[G]oto [I]mplementation")
+                                        -- references/implementation: use the built-in grr / gri
                                         map("K", vim.lsp.buf.hover, "Hover documentation")
                                         map("<C-k>", vim.lsp.buf.signature_help, "Signature help")
                                         map("<leader>rn", vim.lsp.buf.rename, "[R]e[n]ame")
@@ -871,7 +897,7 @@ require("lazy").setup({
 
                 keys = {
                         {
-                                "<leader>f",
+                                "<leader>cf",
                                 function()
                                         require("conform").format({
                                                 async = true,
@@ -879,6 +905,7 @@ require("lazy").setup({
                                         })
                                 end,
                                 mode = { "n", "v" },
+                                desc = "[C]ode [F]ormat",
                         },
                 },
                 opts = {
@@ -981,15 +1008,7 @@ require("lazy").setup({
         {
                 "plasticboy/vim-markdown",
                 ft = { "markdown" },
-                dependencies = {
-                        "godlygeek/tabular",
-                        {
-                                "iamcco/markdown-preview.nvim",
-                                cmd = { "MarkdownPreview", "MarkdownPreviewStop", "MarkdownPreviewToggle" },
-                                ft = { "markdown" },
-                                build = "cd app && npx --yes yarn install",
-                        },
-                },
+                dependencies = { "godlygeek/tabular" },
                 config = function()
                         vim.g.vim_markdown_folding_disabled = 1
                         vim.g.vim_markdown_frontmatter = 1
